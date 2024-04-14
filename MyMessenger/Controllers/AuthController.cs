@@ -1,12 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MyMessenger.Domain.Entities;
-using MyMessenger.Domain.Interfaces;
 using MyMessenger.MApplication.DTO.AuthDTOs;
-using MyMessenger.MApplication.Services;
-using MyMessenger.MApplication.Services.Interfaces;
 using MyMessenger.MApplication.СommandsQueries.Users.Commands;
 using MyMessenger.MApplication.СommandsQueries.Users.Queries;
 

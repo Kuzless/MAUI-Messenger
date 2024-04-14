@@ -1,12 +1,5 @@
-﻿using Azure.Core;
-using MyMessenger.Maui.Library.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using MyMessenger.Maui.Library.Interface;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MyMessenger.Maui.Library
 {

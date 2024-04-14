@@ -1,10 +1,7 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyMessenger.Domain.Entities;
 using MyMessenger.MApplication.DTO;
 using MyMessenger.MApplication.СommandsQueries.Users.Queries;
-using System.Linq.Expressions;
 
 namespace MyMessenger.Controllers
 {

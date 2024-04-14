@@ -1,12 +1,5 @@
-﻿
-using MediatR;
-using MyMessenger.MApplication.DTO.UserDTOs;
+﻿using MediatR;
 using MyMessenger.MApplication.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MyMessenger.MApplication.DTO.MessagesDTOs;
 
 namespace MyMessenger.MApplication.СommandsQueries.Messages.Queries

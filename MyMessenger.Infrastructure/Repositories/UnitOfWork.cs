@@ -1,12 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyMessenger.Domain.Interfaces;
-using MyMessenger.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyMessenger.Domain.Interfaces;
 
 namespace MyMessenger.Domain.Repositories
 {
@@ -15,6 +7,7 @@ namespace MyMessenger.Domain.Repositories
         private readonly DatabaseContext context;
         private readonly Dictionary<Type, object> repos = new Dictionary<Type, object>();
         public IChatRepository Chat { get; private set; }
+        public IMessageRepository Message { get; private set; }
 
         public UnitOfWork(DatabaseContext context)
         {

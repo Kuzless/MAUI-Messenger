@@ -1,14 +1,8 @@
 using System.Text.Json;
-using System.Text;
 using Blazored.LocalStorage;
-using MyMessenger.Maui.Library;
 using MyMessenger.Maui.Library.Interface;
-using Azure;
 using MyMessenger.MApplication.DTO.AuthDTOs;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Components;
 
 namespace MyMessenger.Maui.Services;
 

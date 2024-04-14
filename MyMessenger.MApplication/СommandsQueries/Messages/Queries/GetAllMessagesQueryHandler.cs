@@ -1,15 +1,7 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using MyMessenger.Domain.Interfaces;
-using MyMessenger.MApplication.DTO.UserDTOs;
 using MyMessenger.MApplication.DTO;
-using MyMessenger.MApplication.СommandsQueries.Users.Queries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MyMessenger.MApplication.DTO.MessagesDTOs;
 using MyMessenger.Domain.Entities;
 

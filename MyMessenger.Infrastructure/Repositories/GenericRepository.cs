@@ -1,17 +1,7 @@
 ﻿using MyMessenger.Domain.Interfaces;
-using MyMessenger.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Reflection;
-using System.Globalization;
-using Microsoft.EntityFrameworkCore.Metadata;
 using LinqKit;
 
 namespace MyMessenger.Domain.Repositories

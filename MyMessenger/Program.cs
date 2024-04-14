@@ -1,6 +1,4 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -23,24 +21,25 @@ namespace MyMessenger
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-
             builder.Services.AddControllers();
 
             // 
+
             builder.Services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddIdentity<User, IdentityRole>().AddTokenProvider<UserAuthProvider<User>>("MyMessenger")
                 .AddEntityFrameworkStores<DatabaseContext>();
 
-            builder.Services.AddAutoMapper(typeof(AutoMappingProfile)); 
+            //
 
+            builder.Services.AddAutoMapper(typeof(AutoMappingProfile)); 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ILoginService, LoginService>();
             builder.Services.AddScoped<ISignUpService, SignUpService>();
             builder.Services.AddScoped<IJWTGeneratorService, JWTGeneratorService>();
             builder.Services.AddScoped<IJWTRetrievalService, JWTRetrievalService>();
+
+            //
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(LoginQueryHandler).Assembly));

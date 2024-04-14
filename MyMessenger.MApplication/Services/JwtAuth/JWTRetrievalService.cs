@@ -1,15 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MyMessenger.Domain.Entities;
 using MyMessenger.MApplication.DTO.AuthDTOs;
 using MyMessenger.MApplication.Services.JwtAuth.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MyMessenger.MApplication.Services.JwtAuth
 {

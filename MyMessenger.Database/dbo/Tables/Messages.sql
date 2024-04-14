@@ -5,7 +5,7 @@
     [Text]     NVARCHAR (MAX) NOT NULL,
     [DateTime] DATETIME2 (7)  NOT NULL,
     CONSTRAINT [PK_Messages] PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT [FK_Messages_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]),
+    CONSTRAINT [FK_Messages_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE,
     CONSTRAINT [FK_Messages_Chats_ChatId] FOREIGN KEY ([ChatId]) REFERENCES [dbo].[Chats] ([Id]) ON DELETE CASCADE
 );
 

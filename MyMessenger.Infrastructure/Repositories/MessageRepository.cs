@@ -1,33 +1,24 @@
 ﻿using MyMessenger.Domain.Entities;
 using MyMessenger.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyMessenger.Domain.Repositories
 {
     public class MessageRepository : GenericRepository<Message>, IMessageRepository
     {
-        public MessageRepository(DatabaseContext context) : base(context)
+        public MessageRepository(DatabaseContext context) : base(context) { }
+        public async Task Add(string userId, int chatId, string text)
         {
-
+            dbContext.Set<Message>().Add(new Message { UserId = userId, ChatId = chatId, Text = text, DateTime = DateTime.Now });
         }
-        public async Task<IEnumerable<Message>> GetAll()
+        public async Task Update(string userId, int chatId, string text, DateTime time)
         {
-            throw new NotImplementedException();
+            var message = dbContext.Set<Message>().FirstOrDefault(m => m.UserId == userId && m.ChatId == chatId && m.Text == text && m.DateTime == time);
+            message.Text = text;
+            dbContext.Set<Message>().Update(message);
         }
-        public async Task Add()
+        public async Task Delete(string userId, int chatId, string text, DateTime time)
         {
-            throw new NotImplementedException();
-        }
-        public async Task Update()
-        {
-            throw new NotImplementedException();
-        }
-        public async Task Delete()
-        {
+            var message = dbContext.Set<Message>().FirstOrDefault(m => m.UserId == userId && m.ChatId == chatId && m.Text == text && m.DateTime == time && m.Text == text);
             throw new NotImplementedException();
         }
     }

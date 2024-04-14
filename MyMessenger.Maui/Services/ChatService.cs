@@ -2,12 +2,7 @@
 using MyMessenger.MApplication.DTO;
 using MyMessenger.MApplication.DTO.ChatDTOs;
 using MyMessenger.Maui.Library.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyMessenger.Maui.Services
 {
