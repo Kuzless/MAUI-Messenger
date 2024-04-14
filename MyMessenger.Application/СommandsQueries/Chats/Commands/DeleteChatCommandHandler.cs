@@ -1,14 +1,24 @@
-﻿namespace MyMessenger.Application.СommandsQueries.Chats.Commands
-{
-    public class DeleteChatCommandHandler
-    {
-        public DeleteChatCommandHandler()
-        {
+﻿using MediatR;
+using MyMessenger.Domain.Entities;
+using MyMessenger.Domain.Interfaces;
 
-        }
-        public Task Handle(DeleteChatCommand command)
+namespace MyMessenger.Application.СommandsQueries.Chats.Commands
+{
+    public class DeleteChatCommandHandler : IRequestHandler<DeleteChatCommand>
+    {
+        private readonly IUnitOfWork unitOfWork;
+        public DeleteChatCommandHandler(IUnitOfWork unitOfWork)
         {
-            throw new NotImplementedException();
+            this.unitOfWork = unitOfWork;
+        }
+        public async Task Handle(DeleteChatCommand request, CancellationToken cancellationToken)
+        {
+            var chat = await unitOfWork.GetRepository<Chat>().GetById(request.Id);
+            if (chat.OwnerId == request.OwnerId) 
+            {
+                unitOfWork.GetRepository<Chat>().Delete(chat);
+                await unitOfWork.SaveAsync();
+            }
         }
     }
 }

@@ -12,5 +12,6 @@ namespace MyMessenger.Domain
         }
         public DbSet<Chat> Chats { get; set; } = null!;
         public DbSet<Message> Messages { get; set; } = null!;
+
     }
 }

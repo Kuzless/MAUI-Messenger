@@ -7,6 +7,7 @@ using MyMessenger.Application.Services.JwtAuth.Interfaces;
 using MyMessenger.Application.СommandsQueries.Chats.Commands;
 using MyMessenger.Application.СommandsQueries.Chats.Queries;
 using MyMessenger.Application.СommandsQueries.Users.Queries;
+using MyMessenger.Domain.Entities;
 
 namespace MyMessenger.Controllers
 {
@@ -35,10 +36,25 @@ namespace MyMessenger.Controllers
             var user = await mediator.Send(new GetUserByIdQuery(userid));
             await mediator.Send(new CreateChatCommand(userid, chat.Name, user));
         }
-       /*[HttpDelete]
-        public async Task DeleteChat()
+        [HttpPost("member/")]
+        public async Task JoinChat([FromBody] ChatDTO chat, [FromHeader] string userAccessToken)
         {
-            throw new NotImplementedException();
-        }*/
+            var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
+            var user = await mediator.Send(new GetUserByIdQuery(userid));
+            await mediator.Send(new JoinChatCommand(user, chat.Id));
+        }
+        [HttpDelete]
+        public async Task DeleteChat([FromBody] ChatDTO chat, [FromHeader] string userAccessToken)
+        {
+            var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
+            await mediator.Send(new DeleteChatCommand(userid, chat.Id));
+        }
+        [HttpDelete("member/")]
+        public async Task LeaveChat([FromBody] ChatDTO chat, [FromHeader] string userAccessToken)
+        {
+            var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
+            var user = await mediator.Send(new GetUserByIdQuery(userid));
+            await mediator.Send(new LeaveChatCommand(user, chat.Id));
+        }
     }
 }
