@@ -1,0 +1,12 @@
+﻿@page "/logout"
+@using MyMessenger.Maui.Services
+@inject AuthService authService
+@inject NavigationManager NavigationManager
+
+@code {
+    protected async override void OnInitialized()
+    {
+        await authService.Logout();
+        NavigationManager.NavigateTo("/");
+    }
+}

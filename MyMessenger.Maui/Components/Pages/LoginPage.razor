@@ -1,0 +1,29 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Forms
+@using MyMessenger.Maui.Services
+@inject AuthService authService
+@inject NavigationManager NavigationManager
+
+<h3>Login</h3>
+<InputText type="text" placeholder="Enter your username" @bind-Value="@Email"></InputText>
+<InputText type="text" placeholder="Enter your password" @bind-Value="@Password" isPassword="true"></InputText>
+<br>
+<button type="button" style="width: 90px" title="Login" @onclick="Login">Login</button>
+@if (!LoginSuccessfully)
+{
+    <p>An error occurred.</p>
+}
+
+@code {
+    private string Email { get; set; }
+    private string Password { get; set; }
+    private bool LoginSuccessfully { get; set; } = true;
+
+    private async Task Login() 
+    {
+       LoginSuccessfully = await authService.Login(Email, Password);
+       if (LoginSuccessfully) {
+           NavigationManager.NavigateTo("/users");
+       }
+    }
+}

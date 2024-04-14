@@ -1,0 +1,103 @@
+﻿@page "/messages"
+@using MyMessenger.MApplication.DTO.MessagesDTOs
+@using MyMessenger.MApplication.DTO
+@using MyMessenger.Maui.Services
+@using BlazorPagination
+@inject MessageService messageService
+
+<h1>Messages</h1>
+<button @onclick="ChangeParametersVisibility">Parameters</button>
+@if (isWindowVisible)
+{
+    <div class="window-overlay">
+        <div class="window">
+            <br />
+            <div class="search-bar">
+                <h3>Search</h3>
+                <input type="text" @bind="CurrentPage.Subs" placeholder="Search..." />
+            </div>
+            <h3>Sort</h3>
+            <div class="radio-group">
+                <input type="radio" id="radio" name="radioGroup" checked="true" value="value1" @onclick="() => SortByColumn(0)" />
+                <label for="radio1">Text</label>
+                <input type="radio" id="radio2" name="radioGroup" value="value2" @onclick="() => SortByColumn(1)" />
+                <label for="radio2">DateTime</label>
+            </div>
+            <br />
+            <div class="radio-group2">
+                <input type="radio" id="radio11" name="radioGroup2" checked="true" value="value1" @onclick="() => { SortType = false; ChangeSortType(); }" />
+                <label for="radio11">Asc</label>
+                <input type="radio" id="radio22" name="radioGroup2" value="value2" @onclick="() => { SortType = true; ChangeSortType(); }" />
+                <label for="radio22">Desc</label>
+            </div>
+            <br />
+            <button @onclick="() => GetAllMessages(CurrentPage)">Apply</button>
+        </div>
+    </div>
+}
+<SfGrid DataSource="@MessagesList">
+    <GridColumns>
+        <GridColumn Field="@nameof(MessageDTO.Text)" HeaderText="Message"></GridColumn>
+        <GridColumn Field="@nameof(MessageDTO.DateTime)" HeaderText="Time"></GridColumn>
+    </GridColumns>
+</SfGrid>
+<BlazorPager CurrentPage="@currentPage"
+             PageCount="@numberOfPages"
+             OnPageChanged="(async x => { currentPage = x; ChangePage(); })"
+             ShowFirstLast="false"
+             ShowPageNumbers="true"
+             VisiblePages=pageSize />
+
+@code {
+    private IEnumerable<MessageDTO> MessagesList;
+    private AllDataRetrievalParametersDTO CurrentPage;
+    private bool SortType = false;
+    private bool isWindowVisible = false;
+    private int numberOfPages;
+    private int currentPage;
+    private int pageSize;
+    protected override void OnInitialized()
+    {
+        numberOfPages = 1;
+        currentPage = 1;
+        pageSize = 10;
+        CurrentPage = new AllDataRetrievalParametersDTO() { PageNumber = currentPage, PageSize = pageSize, Sort = new Dictionary<string, bool>() { { "Text", false } }, Subs = ""};
+        GetAllMessages(CurrentPage);
+        base.OnInitialized();
+    }
+    private void SortByColumn(int index)
+    {
+        CurrentPage.Sort.Clear();
+        switch (index)
+        {
+            case 0:
+                CurrentPage.Sort.Add("Text", SortType);
+                break;
+            case 1:
+                CurrentPage.Sort.Add("DateTime", SortType);
+                break;
+        }
+    }
+    private void ChangeSortType()
+    {
+        var sortRule = CurrentPage.Sort.First();
+        CurrentPage.Sort[sortRule.Key] = SortType;
+    }
+    private void ChangePage()
+    {
+        CurrentPage.PageNumber = currentPage;
+        GetAllMessages(CurrentPage);
+    }
+    private async void GetAllMessages(AllDataRetrievalParametersDTO data)
+    {
+        CurrentPage = data;
+        DataForGridDTO<MessageDTO> newdata = await messageService.GetAllMessages(CurrentPage);
+        MessagesList = newdata.Data;
+        numberOfPages = newdata.NumberOfPages;
+        StateHasChanged();
+    }
+    void ChangeParametersVisibility()
+    {
+        isWindowVisible = !isWindowVisible;
+    }
+}

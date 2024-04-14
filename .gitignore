@@ -1,0 +1,101 @@
+# Ignore obj and bin directories
+obj/
+bin/
+
+# Ignore Visual Studio files
+.vs/
+*.vscode/
+*.sln
+*.suo
+*.bak
+*.cache
+*.user
+*.vspscc
+*_i.c
+*_p.c
+*.pidb
+*.log
+*.vspx
+*.vspx.c
+*.vssscc
+.build/
+.nuget/
+.idea/
+.vsconfig
+
+# Ignore project-specific files
+*.userprefs
+*.csproj.user
+*.user
+*.tlog
+*.cache
+*.dll
+*.pdb
+*.dbmdl
+*.pch
+*.sbr
+*.tlb
+*.tlh
+*.tmp
+*.log
+*.DS_Store
+*.tmp
+*.log
+*.zip
+*.rar
+*.exe
+*.nupkg
+*.log
+*.dll
+*.exe
+*.lock
+*.vsix
+*.sqlite
+
+# Ignore Visual Studio Code directories
+.vscode/
+
+# Ignore packages
+*.nuget.props
+*.paket.props
+*.paket.targets
+
+# Ignore .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.sw*
+*.*~
+
+
+# Ignore MAUI artifacts
+bin/
+obj/
+.sln.ide
+*.user
+*.suo
+*.userprefs
+*.pidb
+*.unityproj
+*.ipch
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*.builds
+*.pidb
+*.svclog
+*.scc
+
+# Ignore MAUI NuGet Packages Directory
+/packages/
+*.nupkg
+*.paket
+
+# Ignore Resharper files
+_ReSharper*/
+*.resharper
+*.DotSettings
+
+# Ignore dotnet SDK directory
+.dotnet/

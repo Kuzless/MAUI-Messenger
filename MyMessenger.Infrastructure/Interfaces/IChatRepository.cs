@@ -1,0 +1,14 @@
+﻿using MyMessenger.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MyMessenger.Domain.Interfaces
+{
+    public interface IChatRepository : IGenericRepository<Chat>
+    {
+        IQueryable<Chat> GetChatsByUserId(string userId);
+    }
+}

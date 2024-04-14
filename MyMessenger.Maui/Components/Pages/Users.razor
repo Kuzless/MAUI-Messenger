@@ -1,0 +1,132 @@
+﻿@page "/users"
+@using MyMessenger.MApplication.DTO.UserDTOs
+@using MyMessenger.MApplication.DTO
+@using MyMessenger.Maui.Services
+@using BlazorPagination
+@inject UserService userService
+
+<h1>Users</h1>
+<button @onclick="ChangeParametersVisibility">Parameters</button>
+@if (isWindowVisible)
+{
+    <div class="window-overlay">
+        <div class="window">
+            <br />
+            <div class="search-bar">
+                <h3>Search</h3>
+                <input type="text" @bind="CurrentPage.Subs" placeholder="Search..." />
+            </div>
+            <h3>Sort</h3>
+            <div class="radio-group">
+                <input type="radio" id="radio1" name="radioGroup" checked="true" value="value1" @onclick="() => SortByColumn(0)" />
+                <label for="radio1">Name</label>
+                <input type="radio" id="radio2" name="radioGroup" value="value2" @onclick="() => SortByColumn(1)" />
+                <label for="radio2">UserName</label>
+                <input type="radio" id="radio3" name="radioGroup" value="value3" @onclick="() => SortByColumn(2)" />
+                <label for="radio3">Email</label>
+                <input type="radio" id="radio4" name="radioGroup" value="value4" @onclick="() => SortByColumn(3)" />
+                <label for="radio4">Phone</label>
+            </div>
+            <br />
+            <div class="radio-group2">
+                <input type="radio" id="radio11" name="radioGroup2" checked="true" value="value1" @onclick="() => { SortType = false; ChangeSortType(); }" />
+                <label for="radio11">Asc</label>
+                <input type="radio" id="radio22" name="radioGroup2" value="value2" @onclick="() => { SortType = true; ChangeSortType(); }" />
+                <label for="radio22">Desc</label>
+            </div>
+            <br />
+            <!-- <div class="checkbox-group">
+                <input type="checkbox" @onclick='() => ChangeFields("Name")' /> Name <br />
+                <input type="checkbox" @onclick='() => ChangeFields("UserName")' /> UserName <br />
+                <input type="checkbox" @onclick='() => ChangeFields("Email")' /> Email <br />
+                <input type="checkbox" @onclick='() => ChangeFields("PhoneNumber")' /> PhoneNumber <br />
+            </div>-->
+            <button @onclick="() => GetAllUsers(CurrentPage)">Apply</button>
+        </div>
+    </div>
+}
+<SfGrid DataSource="@UsersList">
+    <GridColumns>
+        <GridColumn Field="@nameof(UserDTO.Name)" HeaderText="Name"></GridColumn>
+        <GridColumn Field="@nameof(UserDTO.UserName)" HeaderText="UserName"></GridColumn>
+        <GridColumn Field="@nameof(UserDTO.Email)" HeaderText="Email"></GridColumn>
+        <GridColumn Field="@nameof(UserDTO.PhoneNumber)" HeaderText="Phone"></GridColumn>
+    </GridColumns>
+</SfGrid>
+<BlazorPager CurrentPage="@currentPage"
+             PageCount="@numberOfPages"
+             OnPageChanged="(async x => { currentPage = x; ChangePage(); })"
+             ShowFirstLast="false"
+             ShowPageNumbers="true"
+             VisiblePages=pageSize />
+
+@code {
+    private IEnumerable<UserDTO> UsersList;
+    private AllDataRetrievalParametersDTO CurrentPage;
+    private bool SortType = false;
+    private bool isWindowVisible = false;
+    private int numberOfPages;
+    private int currentPage;
+    private int pageSize;
+    protected override void OnInitialized()
+    {
+        numberOfPages = 1;
+        currentPage = 1;
+        pageSize = 10;
+        CurrentPage = new AllDataRetrievalParametersDTO() { PageNumber = currentPage, PageSize = pageSize, Sort = new Dictionary<string, bool>() { { "Name", false } }, Subs = "" };
+        GetAllUsers(CurrentPage);
+        base.OnInitialized();
+    }
+    private void SortByColumn(int index)
+    {
+        CurrentPage.Sort.Clear();
+        switch (index)
+        {
+            case 0:
+                CurrentPage.Sort.Add("Name", SortType);
+                break;
+            case 1:
+                CurrentPage.Sort.Add("UserName", SortType);
+                break;
+            case 2:
+                CurrentPage.Sort.Add("Email", SortType);
+                break;
+            case 3:
+                CurrentPage.Sort.Add("PhoneNumber", SortType);
+                break;
+        }
+    }
+    private void ChangeSortType()
+    {
+        var sortRule = CurrentPage.Sort.First();
+        CurrentPage.Sort[sortRule.Key] = SortType;
+    }
+    private void ChangePage()
+    {
+        CurrentPage.PageNumber = currentPage;
+        GetAllUsers(CurrentPage);
+    }
+    /*private void ChangeFields(string field)
+    {
+        if (CurrentPage.Fields.Contains(field))
+        {
+            CurrentPage.Fields.Remove(field);
+        }
+        else
+        {
+            CurrentPage.Fields.Add(field);
+        }
+    }*/
+    private async void GetAllUsers(AllDataRetrievalParametersDTO data)
+    {
+        CurrentPage = data;
+        DataForGridDTO<UserDTO> newdata = await userService.GetAllUsers(CurrentPage);
+        UsersList = newdata.Data;
+        numberOfPages = newdata.NumberOfPages;
+        StateHasChanged();
+    }
+    void ChangeParametersVisibility()
+    {
+        isWindowVisible = !isWindowVisible;
+    }
+}

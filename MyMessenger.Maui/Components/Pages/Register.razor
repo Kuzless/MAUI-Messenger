@@ -1,0 +1,41 @@
+﻿@page "/register"
+@using Microsoft.AspNetCore.Components.Forms
+@using MyMessenger.Maui.Services
+@inject AuthService authService
+
+<h3>Sign Up</h3>
+<InputText type="text" placeholder="Enter your name" @bind-Value="@Name"></InputText> 
+<br>
+<InputText type="text" placeholder="Enter your username" @bind-Value="@Username"></InputText>
+<br>
+<InputText type="text" placeholder="Enter your email" @bind-Value="@Email"></InputText>
+<br>
+<InputText type="text" placeholder="Enter your password" @bind-Value="@Password" isPassword="true"></InputText>
+<br>
+<button type="button" style="width: 90px" title="Sign Up" @onclick="SignUp">Sign Up</button>
+@if (SignUpClicked)
+{
+    @if (SignUpSuccessfully)
+    {
+        <p>Sign-up successful!</p>
+    }
+    else
+    {
+        <p>An error occurred during sign-up. Please try again.</p>
+    }
+}
+
+@code {
+    private string Name { get; set; }
+    private string Username { get; set; }
+    private string Email { get; set; }
+    private string Password { get; set; }
+    private bool SignUpSuccessfully { get; set; } = true;
+    private bool SignUpClicked { get; set; } = false;
+
+    private async Task SignUp()
+    {
+        SignUpClicked = true;
+        SignUpSuccessfully = await authService.SignUp(Name, Username, Email, Password);
+    }
+}
