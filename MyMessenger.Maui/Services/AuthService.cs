@@ -1,8 +1,9 @@
 using System.Text.Json;
 using Blazored.LocalStorage;
 using MyMessenger.Maui.Library.Interface;
-using MyMessenger.MApplication.DTO.AuthDTOs;
+using MyMessenger.Application.DTO.AuthDTOs;
 using System.Security.Claims;
+using MyMessenger.Application.DTO;
 
 namespace MyMessenger.Maui.Services;
 
@@ -104,7 +105,7 @@ public class AuthService
             var response = await responseData.Content.ReadAsStringAsync();
             if (!string.IsNullOrWhiteSpace(response))
             {
-                var responseObject = JsonSerializer.Deserialize<SignUpResponseDTO>(response);
+                var responseObject = JsonSerializer.Deserialize<ResponseDTO>(response);
                 return responseObject.isSuccessful;
             }
             else

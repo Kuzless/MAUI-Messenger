@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using MyMessenger.MApplication.Services.JwtAuth;
+using MyMessenger.Application.Services.JwtAuth;
 
 namespace MyMessenger.Options
 {

@@ -68,7 +68,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MyMessenger.MApplication\MyMessenger.MApplication.csproj" />
+      <ProjectReference Include="..\MyMessenger.Application\MyMessenger.Application.csproj" />
     </ItemGroup>
 
 </Project>

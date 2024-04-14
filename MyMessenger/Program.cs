@@ -6,11 +6,11 @@ using MyMessenger.Domain;
 using MyMessenger.Domain.Entities;
 using MyMessenger.Domain.Interfaces;
 using MyMessenger.Domain.Repositories;
-using MyMessenger.MApplication.Services;
-using MyMessenger.MApplication.Services.Interfaces;
-using MyMessenger.MApplication.Services.JwtAuth;
-using MyMessenger.MApplication.Services.JwtAuth.Interfaces;
-using MyMessenger.MApplication.ÑommandsQueries.Users.Queries;
+using MyMessenger.Application.Services;
+using MyMessenger.Application.Services.Interfaces;
+using MyMessenger.Application.Services.JwtAuth;
+using MyMessenger.Application.Services.JwtAuth.Interfaces;
+using MyMessenger.Application.ÑommandsQueries.Users.Queries;
 using MyMessenger.Options;
 using System.Reflection;
 

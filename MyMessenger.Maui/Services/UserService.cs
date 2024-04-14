@@ -1,5 +1,5 @@
-﻿using MyMessenger.MApplication.DTO;
-using MyMessenger.MApplication.DTO.UserDTOs;
+﻿using MyMessenger.Application.DTO;
+using MyMessenger.Application.DTO.UserDTOs;
 using MyMessenger.Maui.Library.Interface;
 using System.Net.Http.Json;
 using Blazored.LocalStorage;

@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MyMessenger.MApplication.DTO;
-using MyMessenger.MApplication.DTO.AuthDTOs;
-using MyMessenger.MApplication.DTO.ChatDTOs;
-using MyMessenger.MApplication.Services.JwtAuth.Interfaces;
-using MyMessenger.MApplication.СommandsQueries.Chats.Commands;
-using MyMessenger.MApplication.СommandsQueries.Chats.Queries;
-using MyMessenger.MApplication.СommandsQueries.Users.Queries;
+using MyMessenger.Application.DTO;
+using MyMessenger.Application.DTO.AuthDTOs;
+using MyMessenger.Application.DTO.ChatDTOs;
+using MyMessenger.Application.Services.JwtAuth.Interfaces;
+using MyMessenger.Application.СommandsQueries.Chats.Commands;
+using MyMessenger.Application.СommandsQueries.Chats.Queries;
+using MyMessenger.Application.СommandsQueries.Users.Queries;
 
 namespace MyMessenger.Controllers
 {

@@ -1,8 +1,8 @@
 ﻿using Blazored.LocalStorage;
-using MyMessenger.MApplication.DTO;
+using MyMessenger.Application.DTO;
 using MyMessenger.Maui.Library.Interface;
 using System.Net.Http.Json;
-using MyMessenger.MApplication.DTO.MessagesDTOs;
+using MyMessenger.Application.DTO.MessagesDTOs;
 
 namespace MyMessenger.Maui.Services
 {

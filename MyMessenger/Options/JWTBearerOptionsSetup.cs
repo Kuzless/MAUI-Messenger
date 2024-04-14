@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MyMessenger.MApplication.Services.JwtAuth;
+using MyMessenger.Application.Services.JwtAuth;
 using System.Text;
 
 namespace MyMessenger.Options

@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyMessenger.Infrastructure\MyMessenger.Domain.csproj" />
-    <ProjectReference Include="..\MyMessenger.MApplication\MyMessenger.MApplication.csproj" />
+    <ProjectReference Include="..\MyMessenger.Application\MyMessenger.Application.csproj" />
+    <ProjectReference Include="..\MyMessenger.Domain\MyMessenger.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,8 @@
 obj/
 bin/
 
+MyMessenger.Database/
+
 
 # Ignore Visual Studio files
 .vs/

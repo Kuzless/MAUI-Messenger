@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MyMessenger.Domain.Entities;
-using MyMessenger.MApplication.DTO.ChatDTOs;
-using MyMessenger.MApplication.DTO.MessagesDTOs;
-using MyMessenger.MApplication.DTO.UserDTOs;
+using MyMessenger.Application.DTO.ChatDTOs;
+using MyMessenger.Application.DTO.MessagesDTOs;
+using MyMessenger.Application.DTO.UserDTOs;
 
 namespace MyMessenger.Options
 {
