@@ -1,6 +1,6 @@
-﻿namespace MyMessenger.MApplication.DTO.AuthDTOs
+﻿namespace MyMessenger.MApplication.DTO
 {
-    public class SignUpResponseDTO
+    public class ResponseDTO
     {
         public bool isSuccessful { get; set; }
         public string message { get; set; }

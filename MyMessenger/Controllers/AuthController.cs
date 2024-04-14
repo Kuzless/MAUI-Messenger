@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MyMessenger.MApplication.DTO;
 using MyMessenger.MApplication.DTO.AuthDTOs;
 using MyMessenger.MApplication.СommandsQueries.Users.Commands;
 using MyMessenger.MApplication.СommandsQueries.Users.Queries;
@@ -19,8 +20,6 @@ namespace MyMessenger.Controllers
         public async Task<ActionResult<TokensDTO>> Login([FromBody] LoginDTO user)
         {
             var tokens = await mediator.Send(new LoginQuery(user));
-            Console.WriteLine($"!!!\n{tokens.accessToken}\n!!!");
-            Console.WriteLine($"!!!\n{tokens.refreshToken}\n!!!");
             if (tokens.accessToken != null)
             {
                 return Ok(tokens);
@@ -33,8 +32,6 @@ namespace MyMessenger.Controllers
         public async Task<ActionResult<TokensDTO>> Refresh([FromBody] TokensDTO tokens)
         {
             var newTokens = await mediator.Send(new RefreshTokenQuery(tokens));
-            Console.WriteLine($"!!!\n{newTokens.accessToken}\n!!!");
-            Console.WriteLine($"!!!\n{newTokens.refreshToken}\n!!!");
             if (newTokens.accessToken != null)
             {
                 return Ok(newTokens);
@@ -45,7 +42,7 @@ namespace MyMessenger.Controllers
             }
         }
         [HttpPost("sign/")]
-        public async Task<ActionResult<SignUpResponseDTO>> SignUp([FromBody] SignUpDTO user)
+        public async Task<ActionResult<ResponseDTO>> SignUp([FromBody] SignUpDTO user)
         {
             var response = await mediator.Send(new SignUpCommand(user));
             return Ok(response);

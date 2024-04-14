@@ -1,15 +1,20 @@
-﻿namespace MyMessenger.MApplication.СommandsQueries.Chats.Commands
+﻿using MediatR;
+using MyMessenger.Domain.Interfaces;
+using MyMessenger.MApplication.Services.Interfaces;
+
+namespace MyMessenger.MApplication.СommandsQueries.Chats.Commands
 {
-    public class CreateChatCommandHandler
+    public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand>
     {
-        public CreateChatCommandHandler()
+        private readonly IUnitOfWork unitOfWork;
+        public CreateChatCommandHandler(IUnitOfWork unitOfWork)
         {
-
+            this.unitOfWork = unitOfWork;
         }
-
-        public Task Handle(CreateChatCommand command)
+        public async Task Handle(CreateChatCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await unitOfWork.Chat.AddChat(request.Name, request.OwnerId, request.User);
+            await unitOfWork.SaveAsync();
         }
     }
 }

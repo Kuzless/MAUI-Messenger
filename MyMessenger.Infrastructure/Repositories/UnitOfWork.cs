@@ -6,6 +6,7 @@ namespace MyMessenger.Domain.Repositories
     {
         private readonly DatabaseContext context;
         private readonly Dictionary<Type, object> repos = new Dictionary<Type, object>();
+        private bool disposed;
         public IChatRepository Chat { get; private set; }
         public IMessageRepository Message { get; private set; }
 
@@ -29,9 +30,22 @@ namespace MyMessenger.Domain.Repositories
         {   
             await context.SaveChangesAsync();
         }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    context.Dispose();
+                }
+            }
+            disposed = true;
+        }
+
         public void Dispose()
         {
-            context.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

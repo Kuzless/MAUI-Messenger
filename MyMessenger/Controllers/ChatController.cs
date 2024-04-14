@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using MyMessenger.MApplication.DTO;
 using MyMessenger.MApplication.DTO.AuthDTOs;
+using MyMessenger.MApplication.DTO.ChatDTOs;
 using MyMessenger.MApplication.Services.JwtAuth.Interfaces;
+using MyMessenger.MApplication.СommandsQueries.Chats.Commands;
 using MyMessenger.MApplication.СommandsQueries.Chats.Queries;
+using MyMessenger.MApplication.СommandsQueries.Users.Queries;
 
 namespace MyMessenger.Controllers
 {
@@ -26,14 +29,16 @@ namespace MyMessenger.Controllers
             return Ok(chats);
         }
         [HttpPost]
-        public async Task CreateChat()
+        public async Task CreateChat([FromBody] ChatDTO chat, [FromHeader] string userAccessToken)
         {
-            throw new NotImplementedException();
+            var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
+            var user = await mediator.Send(new GetUserByIdQuery(userid));
+            await mediator.Send(new CreateChatCommand(userid, chat.Name, user));
         }
-       [HttpDelete]
+       /*[HttpDelete]
         public async Task DeleteChat()
         {
             throw new NotImplementedException();
-        }
+        }*/
     }
 }

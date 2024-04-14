@@ -16,9 +16,11 @@ namespace MyMessenger.Domain.Repositories
             var chats = dbContext.Set<Chat>().Where(chat => chat.Users.Any(user => user.Id == userId));
             return chats;
         }
-        public async Task AddChat(string chatName, string ownerId)
+        public async Task AddChat(string chatName, string ownerId, User user)
         {
-            dbContext.Set<Chat>().Add(new Chat { Name = chatName, OwnerId = ownerId });
+            var chat = new Chat { Name = chatName, OwnerId = ownerId };
+            chat.Users = new List<User>() { user };
+            dbContext.Set<Chat>().Add(chat);
         }
         public async Task DeleteChat(Chat chat)
         {

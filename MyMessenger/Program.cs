@@ -27,7 +27,11 @@ namespace MyMessenger
 
             builder.Services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddIdentity<User, IdentityRole>().AddTokenProvider<UserAuthProvider<User>>("MyMessenger")
+            builder.Services.AddIdentity<User, IdentityRole>(options =>
+                    {
+                        options.User.RequireUniqueEmail = true;
+                    })
+                .AddTokenProvider<UserAuthProvider<User>>("MyMessenger")
                 .AddEntityFrameworkStores<DatabaseContext>();
 
             //
@@ -35,6 +39,7 @@ namespace MyMessenger
             builder.Services.AddAutoMapper(typeof(AutoMappingProfile)); 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ILoginService, LoginService>();
+            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ISignUpService, SignUpService>();
             builder.Services.AddScoped<IJWTGeneratorService, JWTGeneratorService>();
             builder.Services.AddScoped<IJWTRetrievalService, JWTRetrievalService>();

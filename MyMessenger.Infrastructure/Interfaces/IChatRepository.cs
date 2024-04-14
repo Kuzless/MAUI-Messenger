@@ -6,7 +6,7 @@ namespace MyMessenger.Domain.Interfaces
     {
         IQueryable<Chat> GetChatsByUserId(string userId);
         Chat GetChatByNameOwner(string chatName, string ownerId);
-        Task AddChat(string chatName, string ownerId);
+        Task AddChat(string chatName, string ownerId, User user);
         Task DeleteChat(Chat chat);
         Task AddMember(Chat chat, User user);
         Task DeleteMember(Chat chat, User user);
