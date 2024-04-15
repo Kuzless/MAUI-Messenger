@@ -29,6 +29,23 @@ namespace MyMessenger.Maui.Library
             response.EnsureSuccessStatusCode();
             return response;
         }
+        public async Task<HttpResponseMessage> PutAsync(string urlEnd, string content, string token = "")
+        {
+            AddHeaderToken(token);
+            string urlController = url + urlEnd;
+            StringContent httpContent = new StringContent(content, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await httpClient.PutAsync(urlController, httpContent);
+            response.EnsureSuccessStatusCode();
+            return response;
+        }
+        public async Task<HttpResponseMessage> DeleteAsync(string urlEnd, string content, string token = "")
+        {
+            AddHeaderToken(token);
+            string urlController = url + urlEnd;
+            HttpResponseMessage response = await httpClient.DeleteAsync(urlController);
+            response.EnsureSuccessStatusCode();
+            return response;
+        }
         private void AddHeaderToken(string token)
         {
             token = token.Replace("\"", "");

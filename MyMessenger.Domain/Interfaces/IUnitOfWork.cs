@@ -6,6 +6,10 @@
         {
             get;
         }
+        IMessageRepository Message
+        {
+            get;
+        }
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
          Task SaveAsync();
     }

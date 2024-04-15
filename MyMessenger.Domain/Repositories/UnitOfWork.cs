@@ -14,7 +14,9 @@ namespace MyMessenger.Domain.Repositories
         {
             this.context = context;
             Chat = new ChatRepository(context);
+            Message = new MessageRepository(context);
             repos[typeof(Entities.Chat)] = Chat;
+            repos[typeof(Entities.Message)] = Message;
         }
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : class
         {

@@ -13,6 +13,7 @@ using MyMessenger.Application.Services.JwtAuth.Interfaces;
 using MyMessenger.Application.ÑommandsQueries.Users.Queries;
 using MyMessenger.Options;
 using System.Reflection;
+using Microsoft.Extensions.Options;
 
 namespace MyMessenger
 {
@@ -81,7 +82,10 @@ namespace MyMessenger
                 });
             });
 
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x => { 
+                x.Authority = "MyMessenger";
+                x.RequireHttpsMetadata = false;
+            });
             builder.Services.ConfigureOptions<JWTOptionsSetup>();
             builder.Services.ConfigureOptions<JWTBearerOptionsSetup>();
 

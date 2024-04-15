@@ -22,16 +22,21 @@ namespace MyMessenger.Application.СommandsQueries.Messages.Queries
             int pageSize = query.PageSize ?? 10;
             int skipSize = (pageNumber - 1) * pageSize;
             string subs = query.Subs ?? "";
+            try
+            {
+                var dbQuery = unitOfWork.GetRepository<Message>().GetAll();
+                var queryResult = await unitOfWork.GetRepository<Message>().FilterByQuery(dbQuery, query.Sort, skipSize, pageSize, subs, query.UserId);
+                var resultMapped = mapper.Map<IEnumerable<MessageDTO>>(queryResult);
 
-            var dbQuery = unitOfWork.GetRepository<Message>().GetAll();
-            var queryResult = await unitOfWork.GetRepository<Message>().FilterByQuery(dbQuery, query.Sort, skipSize, pageSize, subs, query.UserId);
-            var resultMapped = mapper.Map<IEnumerable<MessageDTO>>(queryResult);
+                var numAllPages = unitOfWork.GetRepository<Message>().GetNumberOfRecords();
+                var numPages = (int)Math.Ceiling((double)numAllPages / pageSize);
 
-            var numAllPages = unitOfWork.GetRepository<Message>().GetNumberOfRecords();
-            var numPages = (int)Math.Ceiling((double)numAllPages / pageSize);
-
-            DataForGridDTO<MessageDTO> result = new DataForGridDTO<MessageDTO>() { Data = resultMapped, NumberOfPages = numPages };
-            return result;
+                DataForGridDTO<MessageDTO> result = new DataForGridDTO<MessageDTO>() { Data = resultMapped, NumberOfPages = numPages };
+                return result;
+            } catch (Exception ex) 
+            {
+                return new DataForGridDTO<MessageDTO>();
+            }
         }
     }
 }
