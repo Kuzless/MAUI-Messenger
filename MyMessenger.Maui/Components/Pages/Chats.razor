@@ -5,7 +5,7 @@
 @using BlazorPagination
 @inject ChatService chatService
 
-<h1>Messages</h1>
+<h1>Chats</h1>
 <button @onclick="ChangeParametersVisibility">Parameters</button>
 @if (isWindowVisible)
 {
@@ -35,7 +35,7 @@
 }
 <SfGrid DataSource="@ChatsList">
     <GridColumns>
-        <GridColumn Field="@nameof(ChatDTO.Name)" HeaderText="Message"></GridColumn>
+        <GridColumn Field="@nameof(ChatDTO.Name)" HeaderText="Name"></GridColumn>
         <GridColumn>
             <Template>
                 <button @onclick="() => DeleteChat((ChatDTO)context)">Delete</button>
@@ -47,7 +47,7 @@
 
 <button @onclick="ChangeAddChatVisibility">Add</button>
 
-@if (showDialog)
+@if (showAddMenu)
 {
     <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px;">
         <label for="chatName">Chat Name:</label>
@@ -73,7 +73,7 @@
     private int numberOfPages;
     private int currentPage;
     private int pageSize;
-    bool showDialog = false;
+    bool showAddMenu = false;
     string newChatName = "";
 
     protected override void OnInitialized()
@@ -120,7 +120,7 @@
 
     private void ChangeAddChatVisibility()
     {
-        showDialog = !showDialog;
+        showAddMenu = !showAddMenu;
     }
 
     private async void AddChat()
@@ -128,7 +128,7 @@
         if (!string.IsNullOrEmpty(newChatName))
         {
             await chatService.AddChat(new ChatDTO() { Name = newChatName });
-            showDialog = false;
+            showAddMenu = false;
             GetAllChats(CurrentPage);
         }
     }

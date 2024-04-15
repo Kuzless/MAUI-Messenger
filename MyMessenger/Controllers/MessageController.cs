@@ -40,13 +40,13 @@ namespace MyMessenger.Controllers
         public async Task SendMessage([FromBody] MessageDTO message, [FromHeader] string userAccessToken)
         {
             var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
-            await mediator.Send(new CreateMessageCommand(message.Id, userid, message.ChatId, message.Text));
+            await mediator.Send(new CreateMessageCommand(userid, message.ChatId, message.Text));
         }
-        [HttpDelete]
-        public async Task DeleteMessage([FromBody] MessageDTO message, [FromHeader] string userAccessToken)
+        [HttpDelete("{id}")]
+        public async Task DeleteMessage(int id, [FromHeader] string userAccessToken)
         {
             var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
-            await mediator.Send(new DeleteMessageCommand(message.Id, userid));
+            await mediator.Send(new DeleteMessageCommand(id, userid));
         }
     }
 }
