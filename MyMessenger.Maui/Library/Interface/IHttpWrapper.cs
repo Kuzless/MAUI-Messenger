@@ -2,7 +2,9 @@
 {
     public interface IHttpWrapper
     {
-        Task<HttpResponseMessage> GetAsync(string url, string token = "");
-        Task<HttpResponseMessage> PostAsync(string url, string content, string token = "");
+        Task<HttpResponseMessage> GetAsync(string urlEnd, string token = "");
+        Task<HttpResponseMessage> PostAsync(string urlEnd, string content, string token = "");
+        Task<HttpResponseMessage> DeleteAsync(string urlEnd, string token = "");
+        Task<HttpResponseMessage> PutAsync(string urlEnd, string content, string token = "");
     }
 }

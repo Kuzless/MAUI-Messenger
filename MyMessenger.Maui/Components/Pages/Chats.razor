@@ -36,14 +36,34 @@
 <SfGrid DataSource="@ChatsList">
     <GridColumns>
         <GridColumn Field="@nameof(ChatDTO.Name)" HeaderText="Message"></GridColumn>
+        <GridColumn>
+            <Template>
+                <button @onclick="() => DeleteChat((ChatDTO)context)">Delete</button>
+            </Template>
+        </GridColumn>
     </GridColumns>
 </SfGrid>
+
+
+<button @onclick="ChangeAddChatVisibility">Add</button>
+
+@if (showDialog)
+{
+    <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px;">
+        <label for="chatName">Chat Name:</label>
+        <input type="text" id="chatName" @bind="newChatName" required />
+        <div style="margin-top: 10px;">
+            <button @onclick="AddChat">Save</button>
+        </div>
+    </div>
+}
 <BlazorPager CurrentPage="@currentPage"
              PageCount="@numberOfPages"
              OnPageChanged="(async x => { currentPage = x; ChangePage(); })"
              ShowFirstLast="false"
              ShowPageNumbers="true"
              VisiblePages=pageSize />
+
 
 @code {
     private IEnumerable<ChatDTO> ChatsList;
@@ -53,6 +73,9 @@
     private int numberOfPages;
     private int currentPage;
     private int pageSize;
+    bool showDialog = false;
+    string newChatName = "";
+
     protected override void OnInitialized()
     {
         numberOfPages = 1;
@@ -85,13 +108,33 @@
     private async void GetAllChats(AllDataRetrievalParametersDTO data)
     {
         CurrentPage = data;
-        DataForGridDTO<ChatDTO> newdata = await chatService.GetAllMessages(CurrentPage);
+        DataForGridDTO<ChatDTO> newdata = await chatService.GetAllChats(CurrentPage);
         ChatsList = newdata.Data;
         numberOfPages = newdata.NumberOfPages;
         StateHasChanged();
     }
-    void ChangeParametersVisibility()
+    private void ChangeParametersVisibility()
     {
         isWindowVisible = !isWindowVisible;
+    }
+
+    private void ChangeAddChatVisibility()
+    {
+        showDialog = !showDialog;
+    }
+
+    private async void AddChat()
+    {
+        if (!string.IsNullOrEmpty(newChatName))
+        {
+            await chatService.AddChat(new ChatDTO() { Name = newChatName });
+            showDialog = false;
+            GetAllChats(CurrentPage);
+        }
+    }
+    private async void DeleteChat(ChatDTO chat)
+    {
+        await chatService.DeleteChat(chat.Id);
+        GetAllChats(CurrentPage);
     }
 }

@@ -38,7 +38,7 @@ namespace MyMessenger.Maui.Library
             response.EnsureSuccessStatusCode();
             return response;
         }
-        public async Task<HttpResponseMessage> DeleteAsync(string urlEnd, string content, string token = "")
+        public async Task<HttpResponseMessage> DeleteAsync(string urlEnd, string token = "")
         {
             AddHeaderToken(token);
             string urlController = url + urlEnd;

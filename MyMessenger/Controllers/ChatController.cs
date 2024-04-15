@@ -44,18 +44,18 @@ namespace MyMessenger.Controllers
             var user = await mediator.Send(new GetUserByIdQuery(userid));
             await mediator.Send(new JoinChatCommand(user, chat.Id));
         }
-        [HttpDelete]
-        public async Task DeleteChat([FromBody] ChatDTO chat, [FromHeader] string userAccessToken)
+        [HttpDelete("{id}")]
+        public async Task DeleteChat(int id, [FromHeader] string userAccessToken)
         {
             var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
-            await mediator.Send(new DeleteChatCommand(userid, chat.Id));
+            await mediator.Send(new DeleteChatCommand(userid, id));
         }
-        [HttpDelete("member/")]
-        public async Task LeaveChat([FromBody] ChatDTO chat, [FromHeader] string userAccessToken)
+        [HttpDelete("member/{id}")]
+        public async Task LeaveChat(int id, [FromHeader] string userAccessToken)
         {
             var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
             var user = await mediator.Send(new GetUserByIdQuery(userid));
-            await mediator.Send(new LeaveChatCommand(user, chat.Id));
+            await mediator.Send(new LeaveChatCommand(user, id));
         }
     }
 }

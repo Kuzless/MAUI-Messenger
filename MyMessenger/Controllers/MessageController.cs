@@ -26,7 +26,6 @@ namespace MyMessenger.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllMessages([FromQuery] AllDataRetrievalParametersDTO data, [FromHeader] string userAccessToken)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
             var messages = await mediator.Send(new GetAllMessagesQuery(data.Sort, data.PageNumber, data.PageSize, data.Subs, userid));
             return Ok(messages);

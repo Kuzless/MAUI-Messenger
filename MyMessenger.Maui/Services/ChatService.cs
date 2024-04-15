@@ -1,8 +1,11 @@
 ﻿using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Http;
 using MyMessenger.Application.DTO;
 using MyMessenger.Application.DTO.ChatDTOs;
 using MyMessenger.Maui.Library.Interface;
 using System.Net.Http.Json;
+using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyMessenger.Maui.Services
 {
@@ -15,7 +18,7 @@ namespace MyMessenger.Maui.Services
             this.httpWrapper = httpWrapper;
             this.storage = storage;
         }
-        public async Task<DataForGridDTO<ChatDTO>>? GetAllMessages(AllDataRetrievalParametersDTO data)
+        public async Task<DataForGridDTO<ChatDTO>>? GetAllChats(AllDataRetrievalParametersDTO data)
         {
             var queryString = $"PageNumber={data.PageNumber}&PageSize={data.PageSize}";
 
@@ -44,6 +47,17 @@ namespace MyMessenger.Maui.Services
                 DataForGridDTO<ChatDTO> users = new DataForGridDTO<ChatDTO>() { Data = Array.Empty<ChatDTO>(), NumberOfPages = 1 };
                 return users;
             }
+        }
+        public async Task AddChat(ChatDTO chat)
+        {
+            var accessToken = await storage.GetItemAsStringAsync("accessToken");
+            var json = JsonSerializer.Serialize(chat);
+            var response = await httpWrapper.PostAsync($"Chat", json, accessToken);
+        }
+        public async Task DeleteChat(int id)
+        {
+            var accessToken = await storage.GetItemAsStringAsync("accessToken");
+            await httpWrapper.DeleteAsync($"Chat/{id}", accessToken);
         }
     }
 }
