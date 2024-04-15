@@ -13,7 +13,6 @@ using MyMessenger.Application.Services.JwtAuth.Interfaces;
 using MyMessenger.Application.ÑommandsQueries.Users.Queries;
 using MyMessenger.Options;
 using System.Reflection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 

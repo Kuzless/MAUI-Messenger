@@ -25,6 +25,7 @@ namespace MyMessenger.Domain.Repositories
         {
             var properties = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);
             var type = typeof(T);
+
             //Filter
             if (!string.IsNullOrEmpty(subs))
             {

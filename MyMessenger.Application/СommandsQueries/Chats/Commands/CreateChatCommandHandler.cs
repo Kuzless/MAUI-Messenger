@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using MyMessenger.Domain.Interfaces;
-using MyMessenger.Application.Services.Interfaces;
 
 namespace MyMessenger.Application.СommandsQueries.Chats.Commands
 {

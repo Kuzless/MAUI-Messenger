@@ -13,8 +13,8 @@ namespace MyMessenger.Application.СommandsQueries.Chats.Commands
         }
         public async Task Handle(LeaveChatCommand request, CancellationToken cancellationToken)
         {
-            var chat = unitOfWork.Chat.GetChatById(request.Id);
-            await unitOfWork.Chat.DeleteMember(chat, request.User);
+            var chat = await unitOfWork.Chat.GetChatById(request.Id);
+            unitOfWork.Chat.DeleteMember(chat, request.User);
             if (chat.OwnerId == request.User.Id)
             {
                 unitOfWork.GetRepository<Chat>().Delete(chat);

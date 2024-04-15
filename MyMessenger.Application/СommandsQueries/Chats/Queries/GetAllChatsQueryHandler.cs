@@ -18,17 +18,14 @@ namespace MyMessenger.Application.СommandsQueries.Chats.Queries
         }
         public async Task<DataForGridDTO<ChatDTO>> Handle(GetAllChatsQuery query, CancellationToken cancellationToken)
         {
-            int pageNumber = query.PageNumber ?? 1;
-            int pageSize = query.PageSize ?? 10;
-            int skipSize = (pageNumber - 1) * pageSize;
-            string subs = query.Subs ?? "";
+            int skipSize = (query.PageNumber - 1) * query.PageSize;
 
             var dbQuery = unitOfWork.Chat.GetChatsByUserId(query.UserId);
-            var queryResult = await unitOfWork.GetRepository<Chat>().FilterByQuery(dbQuery, query.Sort, skipSize, pageSize, subs);
+            var queryResult = await unitOfWork.GetRepository<Chat>().FilterByQuery(dbQuery, query.Sort, skipSize, query.PageSize, query.Subs);
             var resultMapped = mapper.Map<IEnumerable<ChatDTO>>(queryResult);
 
             var numAllPages = unitOfWork.GetRepository<Chat>().GetNumberOfRecords();
-            var numPages = (int)Math.Ceiling((double)numAllPages / pageSize);
+            var numPages = (int)Math.Ceiling((double)numAllPages / query.PageSize);
 
             DataForGridDTO<ChatDTO> result = new DataForGridDTO<ChatDTO>() { Data = resultMapped, NumberOfPages = numPages };
             return result;

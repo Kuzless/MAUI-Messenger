@@ -18,17 +18,14 @@ namespace MyMessenger.Application.СommandsQueries.Users.Queries
         }
         public async Task<DataForGridDTO<UserDTO>> Handle(GetAllUsersQuery query, CancellationToken cancellationToken)
         {
-            int pageNumber = query.PageNumber ?? 1;
-            int pageSize = query.PageSize ?? 10;
-            int skipSize = (pageNumber - 1) * pageSize;
-            string subs = query.Subs ?? "";
+            int skipSize = (query.PageNumber - 1) * query.PageSize;
 
             var dbQuery = unitOfWork.GetRepository<User>().GetAll();
-            var queryResult = await unitOfWork.GetRepository<User>().FilterByQuery(dbQuery, query.Sort, skipSize, pageSize, subs);
+            var queryResult = await unitOfWork.GetRepository<User>().FilterByQuery(dbQuery, query.Sort, skipSize, query.PageSize, query.Subs);
             var resultMapped = mapper.Map<IEnumerable<UserDTO>>(queryResult);
 
             var numAllPages = unitOfWork.GetRepository<User>().GetNumberOfRecords();
-            var numPages = (int)Math.Ceiling((double)numAllPages / pageSize);
+            var numPages = (int)Math.Ceiling((double)numAllPages / query.PageSize);
 
             DataForGridDTO <UserDTO> result = new DataForGridDTO<UserDTO>() { Data = resultMapped, NumberOfPages = numPages };
             return result;
