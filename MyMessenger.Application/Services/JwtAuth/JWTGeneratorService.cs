@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyMessenger.Application.DTO.AuthDTOs;
 using MyMessenger.Application.Services.JwtAuth.Interfaces;
@@ -11,10 +12,10 @@ namespace MyMessenger.Application.Services.JwtAuth
 {
     public class JWTGeneratorService : IJWTGeneratorService
     {
-        private readonly JWTOptions options;
-        public JWTGeneratorService(IOptions<JWTOptions> options)
+        private readonly IConfiguration configuration;
+        public JWTGeneratorService(IConfiguration configuration)
         {
-            this.options = options.Value;
+            this.configuration = configuration;
         }
         public TokensDTO GenerateToken(string email, string id)
         {
@@ -23,13 +24,11 @@ namespace MyMessenger.Application.Services.JwtAuth
                 new Claim(JwtRegisteredClaimNames.Sub, id),
                 new Claim(JwtRegisteredClaimNames.Email, email)
             };
-            var signingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(
-                    Encoding.ASCII.GetBytes(options.SecretKey)),
-                SecurityAlgorithms.HmacSha256);
+            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Jwt:SecretKey"]));
+            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
-                options.Issuer,
-                options.Audience,
+                configuration["Jwt:Issuer"],
+                configuration["Jwt:Audience"],
                 claims,
                 null,
                 DateTime.UtcNow.AddHours(1),

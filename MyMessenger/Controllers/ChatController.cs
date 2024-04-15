@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyMessenger.Application.DTO;
 using MyMessenger.Application.DTO.AuthDTOs;
@@ -10,6 +11,7 @@ using MyMessenger.Application.СommandsQueries.Users.Queries;
 
 namespace MyMessenger.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class ChatController : Controller

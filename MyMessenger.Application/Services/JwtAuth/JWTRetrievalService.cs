@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyMessenger.Application.DTO.AuthDTOs;
 using MyMessenger.Application.Services.JwtAuth.Interfaces;
@@ -9,10 +10,10 @@ namespace MyMessenger.Application.Services.JwtAuth
 {
     public class JWTRetrievalService : IJWTRetrievalService
     {
-        private readonly JWTOptions options;
-        public JWTRetrievalService(IOptions<JWTOptions> options)
+        private readonly IConfiguration configuration;
+        public JWTRetrievalService(IConfiguration configuration)
         {
-            this.options = options.Value;
+            this.configuration = configuration;
         }
         public string? GetEmailByToken(TokensDTO tokens)
         {
@@ -41,7 +42,7 @@ namespace MyMessenger.Application.Services.JwtAuth
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(options.SecretKey)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Jwt:SecretKey"])),
                 ValidateIssuer = false,
                 ValidateLifetime = false,
                 ValidateAudience = false,

@@ -7,6 +7,7 @@ using MyMessenger.Application.СommandsQueries.Users.Queries;
 
 namespace MyMessenger.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : Controller

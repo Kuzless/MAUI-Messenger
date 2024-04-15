@@ -14,6 +14,8 @@ using MyMessenger.Application.ÑommandsQueries.Users.Queries;
 using MyMessenger.Options;
 using System.Reflection;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MyMessenger
 {
@@ -82,12 +84,19 @@ namespace MyMessenger
                 });
             });
 
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x => { 
-                x.Authority = "MyMessenger";
-                x.RequireHttpsMetadata = false;
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
+                };
             });
-            builder.Services.ConfigureOptions<JWTOptionsSetup>();
-            builder.Services.ConfigureOptions<JWTBearerOptionsSetup>();
 
             var app = builder.Build();
     

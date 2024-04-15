@@ -7,11 +7,10 @@ using MyMessenger.Application.DTO.MessagesDTOs;
 using MyMessenger.Application.Services.JwtAuth.Interfaces;
 using MyMessenger.Application.СommandsQueries.Messages.Commands;
 using MyMessenger.Application.СommandsQueries.Messages.Queries;
-using MyMessenger.Application.СommandsQueries.Users.Queries;
-using System.Security.Claims;
 
 namespace MyMessenger.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class MessageController : Controller
