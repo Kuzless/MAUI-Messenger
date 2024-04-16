@@ -21,7 +21,7 @@ namespace MyMessenger.Domain.Repositories
         {
             return dbContext.Set<T>();
         }
-        public async Task<IEnumerable<T>> FilterByQuery(IQueryable<T> query, Dictionary<string, bool>? sort, int skipSize, int pageSize, string subs, string owner = "")
+        public async Task<Dictionary<IEnumerable<T>, int>> FilterByQuery(IQueryable<T> query, Dictionary<string, bool>? sort, int skipSize, int pageSize, string subs, string owner = "")
         {
             var properties = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);
             var type = typeof(T);
@@ -76,11 +76,10 @@ namespace MyMessenger.Domain.Repositories
                     }
                 }
             }
-
-            var orderedQuery = await query.ToListAsync();
-
             //Paging
-            return await query.Skip(skipSize).Take(pageSize).ToListAsync();
+            int numOfPages = query.Count();
+            var result = await query.Skip(skipSize).Take(pageSize).ToListAsync();
+            return new Dictionary<IEnumerable<T>, int> { { result, numOfPages } };
         }
 
         public void Add(T item)
@@ -96,12 +95,6 @@ namespace MyMessenger.Domain.Repositories
         public void Delete(T item)
         {
             dbContext.Set<T>().Remove(item);
-        }
-
-        public int GetNumberOfRecords()
-        {
-            IQueryable<T> query = dbContext.Set<T>();
-            return query.Count();
         }
         private static Expression<Func<T, bool>> GetColumnContains<T>(PropertyInfo property, string term)
         {

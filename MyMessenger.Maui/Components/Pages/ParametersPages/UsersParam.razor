@@ -1,0 +1,84 @@
+﻿@using MyMessenger.Application.DTO
+<div class="parameters">
+    <div class="content">
+        <div class="search-bar">
+            <h3>Search</h3>
+            <input type="text" @bind="CurrentPage.Subs" placeholder="Search..." />
+        </div>
+        <h3>Sort</h3>
+        <div class="radio-group">
+            <input type="radio" id="radio1" name="radioGroup" checked="true" value="value1" @onclick="() => SortByColumn(0)" />
+            <label for="radio1">Name</label>
+            <input type="radio" id="radio2" name="radioGroup" value="value2" @onclick="() => SortByColumn(1)" />
+            <label for="radio2">UserName</label>
+            <input type="radio" id="radio3" name="radioGroup" value="value3" @onclick="() => SortByColumn(2)" />
+            <label for="radio3">Email</label>
+            <input type="radio" id="radio4" name="radioGroup" value="value4" @onclick="() => SortByColumn(3)" />
+            <label for="radio4">Phone</label>
+        </div>
+        <br />
+        <div class="radio-group2">
+            <input type="radio" id="radio11" name="radioGroup2" checked="true" value="value1" @onclick="() => { SortType = false; ChangeSortType(); }" />
+            <label for="radio11">Asc</label>
+            <input type="radio" id="radio22" name="radioGroup2" value="value2" @onclick="() => { SortType = true; ChangeSortType(); }" />
+            <label for="radio22">Desc</label>
+        </div>
+        <br />
+        <button @onclick="SaveAndClose">Apply</button>
+        <button @onclick="ClosePopup">Close</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+    [Parameter]
+    public EventCallback<string> OnSave { get; set; }
+    [Parameter]
+    public AllDataRetrievalParametersDTO CurrentPage { get; set; }
+    private Dictionary<string, bool> Sort = new Dictionary<string, bool>();
+    private string Subs;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Sort.Add("Name", SortType);
+        Sort = new Dictionary<string, bool>(CurrentPage.Sort);
+    }
+
+    private bool SortType = false;
+    private void SaveAndClose()
+    {
+        CurrentPage.Sort = Sort;
+        OnSave.InvokeAsync();
+        ClosePopup();
+    }
+    private void ClosePopup()
+    {
+        OnClose.InvokeAsync();
+    }
+    private void SortByColumn(int index)
+    {
+        Sort.Clear();
+        switch (index)
+        {
+            case 0:
+                Sort.Add("Name", SortType);
+                break;
+            case 1:
+                Sort.Add("UserName", SortType);
+                break;
+            case 2:
+                Sort.Add("Email", SortType);
+                break;
+            case 3:
+                Sort.Add("PhoneNumber", SortType);
+                break;
+        }
+    }
+    private void ChangeSortType()
+    {
+        var sortRule = Sort.First();
+        Sort[sortRule.Key] = SortType;
+    }
+}

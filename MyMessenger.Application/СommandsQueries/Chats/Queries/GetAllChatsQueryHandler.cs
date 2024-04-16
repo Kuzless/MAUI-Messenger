@@ -22,10 +22,9 @@ namespace MyMessenger.Application.СommandsQueries.Chats.Queries
 
             var dbQuery = unitOfWork.Chat.GetChatsByUserId(query.UserId);
             var queryResult = await unitOfWork.GetRepository<Chat>().FilterByQuery(dbQuery, query.Sort, skipSize, query.PageSize, query.Subs);
-            var resultMapped = mapper.Map<IEnumerable<ChatDTO>>(queryResult);
+            var resultMapped = mapper.Map<IEnumerable<ChatDTO>>(queryResult.Keys.First());
 
-            var numAllPages = unitOfWork.GetRepository<Chat>().GetNumberOfRecords();
-            var numPages = (int)Math.Ceiling((double)numAllPages / query.PageSize);
+            var numPages = (int)Math.Ceiling((double)queryResult.Values.First() / query.PageSize);
 
             DataForGridDTO<ChatDTO> result = new DataForGridDTO<ChatDTO>() { Data = resultMapped, NumberOfPages = numPages };
             return result;

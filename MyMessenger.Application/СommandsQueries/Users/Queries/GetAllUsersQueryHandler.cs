@@ -22,10 +22,9 @@ namespace MyMessenger.Application.СommandsQueries.Users.Queries
 
             var dbQuery = unitOfWork.GetRepository<User>().GetAll();
             var queryResult = await unitOfWork.GetRepository<User>().FilterByQuery(dbQuery, query.Sort, skipSize, query.PageSize, query.Subs);
-            var resultMapped = mapper.Map<IEnumerable<UserDTO>>(queryResult);
+            var resultMapped = mapper.Map<IEnumerable<UserDTO>>(queryResult.Keys.First());
 
-            var numAllPages = unitOfWork.GetRepository<User>().GetNumberOfRecords();
-            var numPages = (int)Math.Ceiling((double)numAllPages / query.PageSize);
+            var numPages = (int)Math.Ceiling((double)queryResult.Values.First() / query.PageSize);
 
             DataForGridDTO <UserDTO> result = new DataForGridDTO<UserDTO>() { Data = resultMapped, NumberOfPages = numPages };
             return result;
