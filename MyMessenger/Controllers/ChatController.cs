@@ -34,15 +34,13 @@ namespace MyMessenger.Controllers
         public async Task CreateChat([FromBody] ChatDTO chat, [FromHeader] string userAccessToken)
         {
             var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
-            var user = await mediator.Send(new GetUserByIdQuery(userid));
-            await mediator.Send(new CreateChatCommand(userid, chat.Name, user));
+            await mediator.Send(new CreateChatCommand(userid, chat.Name, userid));
         }
         [HttpPost("member/")]
         public async Task JoinChat([FromBody] ChatDTO chat, [FromHeader] string userAccessToken)
         {
             var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
-            var user = await mediator.Send(new GetUserByIdQuery(userid));
-            await mediator.Send(new JoinChatCommand(user, chat.Id));
+            await mediator.Send(new JoinChatCommand(userid, chat.Id));
         }
         [HttpDelete("{id}")]
         public async Task DeleteChat(int id, [FromHeader] string userAccessToken)
@@ -54,8 +52,7 @@ namespace MyMessenger.Controllers
         public async Task LeaveChat(int id, [FromHeader] string userAccessToken)
         {
             var userid = jWTRetrievalService.GetIdByToken(new TokensDTO() { accessToken = userAccessToken });
-            var user = await mediator.Send(new GetUserByIdQuery(userid));
-            await mediator.Send(new LeaveChatCommand(user, id));
+            await mediator.Send(new LeaveChatCommand(userid, id));
         }
     }
 }

@@ -6,10 +6,10 @@ namespace MyMessenger.Application.СommandsQueries.Chats.Commands
     public class LeaveChatCommand : IRequest
     {
         public int Id { get; set; }
-        public User User { get; set; }
-        public LeaveChatCommand(User User, int Id)
+        public string UserId { get; set; }
+        public LeaveChatCommand(string UserId, int Id)
         {
-            this.User = User;
+            this.UserId = UserId;
             this.Id = Id;
         }
     }
