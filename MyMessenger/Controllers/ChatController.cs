@@ -7,7 +7,6 @@ using MyMessenger.Application.DTO.ChatDTOs;
 using MyMessenger.Application.Services.JwtAuth.Interfaces;
 using MyMessenger.Application.СommandsQueries.Chats.Commands;
 using MyMessenger.Application.СommandsQueries.Chats.Queries;
-using MyMessenger.Application.СommandsQueries.Users.Queries;
 
 namespace MyMessenger.Controllers
 {

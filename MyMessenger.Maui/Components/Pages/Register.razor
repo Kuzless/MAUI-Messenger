@@ -3,27 +3,30 @@
 @using MyMessenger.Maui.Services
 @inject AuthService authService
 
-<h3>Sign Up</h3>
-<InputText type="text" placeholder="Enter your name" @bind-Value="@Name"></InputText> 
-<br>
-<InputText type="text" placeholder="Enter your username" @bind-Value="@Username"></InputText>
-<br>
-<InputText type="text" placeholder="Enter your email" @bind-Value="@Email"></InputText>
-<br>
-<InputText type="text" placeholder="Enter your password" @bind-Value="@Password" isPassword="true"></InputText>
-<br>
-<button type="button" style="width: 90px" title="Sign Up" @onclick="SignUp">Sign Up</button>
-@if (SignUpClicked)
-{
-    @if (SignUpSuccessfully)
+<div class="auth-container">
+    <h3>Sign Up</h3>
+    <InputText type="text" class="@((string.IsNullOrWhiteSpace(Name) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your name" @bind-Value="@Name"></InputText>
+    <br>
+    <InputText type="text" class="@((string.IsNullOrWhiteSpace(Username) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your username" @bind-Value="@Username"></InputText>
+    <br>
+    <InputText type="text" class="@((string.IsNullOrWhiteSpace(Email) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your email" @bind-Value="@Email"></InputText>
+    <br>
+    <InputText type="text" class="@((string.IsNullOrWhiteSpace(Password) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your password" @bind-Value="@Password" isPassword="true"></InputText>
+    <br>
+    <button type="button" class="btn-primary" style="width: 350px" title="Sign Up" @onclick="SignUp">Sign Up</button>
+    @if (SignUpAttempted)
     {
-        <p>Sign-up successful!</p>
+        @if (SignUpSuccessfully)
+        {
+            <p>Sign-up successful!</p>
+        }
+        else
+        {
+            <p>An error occurred during sign-up.<br>Please try again.</p>
+        }
     }
-    else
-    {
-        <p>An error occurred during sign-up. Please try again.</p>
-    }
-}
+</div>
+
 
 @code {
     private string Name { get; set; }
@@ -32,10 +35,15 @@
     private string Password { get; set; }
     private bool SignUpSuccessfully { get; set; } = true;
     private bool SignUpClicked { get; set; } = false;
+    private bool SignUpAttempted { get; set; } = false;
 
     private async Task SignUp()
     {
         SignUpClicked = true;
-        SignUpSuccessfully = await authService.SignUp(Name, Username, Email, Password);
+        if (!string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Email) && !string.IsNullOrEmpty(Password))
+        {
+            SignUpSuccessfully = await authService.SignUp(Name, Username, Email, Password);
+            SignUpAttempted = true;
+        }
     }
 }
