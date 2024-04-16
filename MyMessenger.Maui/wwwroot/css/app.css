@@ -5,7 +5,21 @@
 a, .btn-link {
     color: #006bb7;
 }
+.auth-container {
+    width: 350px;
+    margin: auto;
+    margin-top: 5%;
+    text-align: center;
+}
 
+.auth-container .element {
+    width: 350px;
+    margin-bottom: 10px;
+}
+.auth-required {
+    border-style: solid;
+    border-color: red;
+}
 .btn-primary {
     color: #fff;
     background-color: #1b6ec2;
