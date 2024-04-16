@@ -5,15 +5,23 @@
 @inject NavigationManager NavigationManager
 
 <div class="auth-container">
-    <h3>Login</h3>
-    <InputText type="text" class="@((string.IsNullOrWhiteSpace(Email) && ButtonClicked ? "element auth-required" : "element"))" placeholder="Enter your username" @bind-Value="@Email"></InputText>
-    <br>
-    <InputText type="text" class="@((string.IsNullOrWhiteSpace(Password) && ButtonClicked ? "element auth-required" : "element"))" placeholder="Enter your password" @bind-Value="@Password" isPassword="true"></InputText>
-    <br>
-    <button type="submit" class="btn-primary" style="width: 350px" title="Login" @onclick="Login">Login</button>
-    @if (!LoginSuccessfully)
+    @if (IsLoaded)
     {
-        <p>An error occurred.<br>Please recheck your credentials.</p>
+        <h3>Login</h3>
+        <InputText type="text" class="@((string.IsNullOrWhiteSpace(Email) && ButtonClicked ? "element auth-required" : "element"))" placeholder="Enter your username" @bind-Value="@Email"></InputText>
+        <br>
+        <InputText type="text" class="@((string.IsNullOrWhiteSpace(Password) && ButtonClicked ? "element auth-required" : "element"))" placeholder="Enter your password" @bind-Value="@Password" isPassword="true"></InputText>
+        <br>
+        <button type="submit" class="btn-primary" style="width: 350px" title="Login" @onclick="Login">Login</button>
+        @if (!LoginSuccessfully)
+        {
+            <p>An error occurred.<br>Please recheck your credentials.</p>
+        }
+    }
+    else
+    {
+        <br>
+        <h3>Loading...</h3>
     }
 </div>
 
@@ -22,9 +30,15 @@
 @code {
     private string Email { get; set; }
     private string Password { get; set; }
+    private bool IsLoaded { get; set; } = false;
     private bool ButtonClicked { get; set; } = false;
     private bool LoginSuccessfully { get; set; } = true;
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        IsLoaded = true;
+    }
     private async Task Login() 
     {
         ButtonClicked = true;
