@@ -13,9 +13,9 @@ namespace MyMessenger.Domain.Repositories
             var chats = dbContext.Set<Chat>().Where(chat => chat.Users.Any(user => user.Id == userId));
             return chats;
         }
-        public Chat GetChatById(int id)
+        public async Task<Chat> GetChatById(int id)
         {
-            return dbContext.Set<Chat>().Include(x => x.Users).FirstOrDefault(x => x.Id == id);
+            return await dbContext.Set<Chat>().Include(x => x.Users).FirstOrDefaultAsync(x => x.Id == id);
         }
         public async Task AddChat(string chatName, string ownerId, User user)
         {
@@ -23,11 +23,11 @@ namespace MyMessenger.Domain.Repositories
             chat.Users.Add(user);
             await dbContext.Set<Chat>().AddAsync(chat);
         }
-        public async Task AddMember(Chat chat, User user)
+        public void AddMember(Chat chat, User user)
         {
             chat.Users.Add(user);
         }
-        public async Task DeleteMember(Chat chat, User user)
+        public void DeleteMember(Chat chat, User user)
         {
             chat.Users.Remove(user);
         }

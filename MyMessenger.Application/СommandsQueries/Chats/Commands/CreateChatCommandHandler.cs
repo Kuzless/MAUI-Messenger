@@ -1,19 +1,22 @@
 ﻿using MediatR;
-using MyMessenger.Domain.Interfaces;
 using MyMessenger.Application.Services.Interfaces;
+using MyMessenger.Domain.Interfaces;
 
 namespace MyMessenger.Application.СommandsQueries.Chats.Commands
 {
     public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand>
     {
         private readonly IUnitOfWork unitOfWork;
-        public CreateChatCommandHandler(IUnitOfWork unitOfWork)
+        private readonly IUserService userService;
+        public CreateChatCommandHandler(IUnitOfWork unitOfWork, IUserService userService)
         {
             this.unitOfWork = unitOfWork;
+            this.userService = userService;
         }
         public async Task Handle(CreateChatCommand request, CancellationToken cancellationToken)
         {
-            await unitOfWork.Chat.AddChat(request.Name, request.OwnerId, request.User);
+            var user = await userService.GetUserById(request.UserId);
+            await unitOfWork.Chat.AddChat(request.Name, request.OwnerId, user);
             await unitOfWork.SaveAsync();
         }
     }

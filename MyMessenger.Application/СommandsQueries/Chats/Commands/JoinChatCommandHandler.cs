@@ -1,25 +1,24 @@
 ﻿using MediatR;
+using MyMessenger.Application.Services.Interfaces;
 using MyMessenger.Domain.Entities;
 using MyMessenger.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyMessenger.Application.СommandsQueries.Chats.Commands
 {
     public class JoinChatCommandHandler : IRequestHandler<JoinChatCommand>
     {
         private readonly IUnitOfWork unitOfWork;
-        public JoinChatCommandHandler(IUnitOfWork unitOfWork)
+        private readonly IUserService userService;
+        public JoinChatCommandHandler(IUnitOfWork unitOfWork, IUserService userService)
         {
             this.unitOfWork = unitOfWork;
+            this.userService = userService;
         }
         public async Task Handle(JoinChatCommand request, CancellationToken cancellationToken)
         {
+            var user = await userService.GetUserById(request.UserId);
             var chat = await unitOfWork.GetRepository<Chat>().GetById(request.Id);
-            await unitOfWork.Chat.AddMember(chat, request.User);
+            unitOfWork.Chat.AddMember(chat, user);
             await unitOfWork.SaveAsync();
         }
     }

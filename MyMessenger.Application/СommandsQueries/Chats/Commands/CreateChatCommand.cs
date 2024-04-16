@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MyMessenger.Domain.Entities;
 
 namespace MyMessenger.Application.СommandsQueries.Chats.Commands
 {
@@ -7,12 +6,12 @@ namespace MyMessenger.Application.СommandsQueries.Chats.Commands
     {
         public string OwnerId { get; set; }
         public string Name { get; set; }
-        public User User { get; set; }
-        public CreateChatCommand(string OwnerId, string Name, User User)
+        public string UserId { get; set; }
+        public CreateChatCommand(string OwnerId, string Name, string UserId)
         {
             this.OwnerId = OwnerId;
             this.Name = Name;
-            this.User = User;
+            this.UserId = UserId;
         }
     }
 }
