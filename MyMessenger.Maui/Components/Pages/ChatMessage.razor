@@ -1,0 +1,96 @@
+﻿@page "/chatmessages/{id}"
+@using MyMessenger.Application.DTO.MessagesDTOs
+@using MyMessenger.Application.DTO
+@using MyMessenger.Maui.Services
+@using BlazorPagination
+@inject MessageService messageService
+
+<h1>Messages</h1>
+@if (IsLoaded)
+{
+    <SfGrid DataSource="@MessagesList">
+        <GridColumns>
+            <GridColumn Field="@nameof(MessageDTO.Name)" HeaderText="Sender"></GridColumn>
+            <GridColumn Field="@nameof(MessageDTO.Text)" HeaderText="Message"></GridColumn>
+            <GridColumn Field="@nameof(MessageDTO.DateTime)" HeaderText="Time"></GridColumn>
+        </GridColumns>
+    </SfGrid>
+    <BlazorPager CurrentPage="@currentPage"
+                 PageCount="@numberOfPages"
+                 OnPageChanged="(async x => { currentPage = x; ChangePage(); })"
+                 ShowFirstLast="false"
+                 ShowPageNumbers="true"
+                 VisiblePages=pageSize />
+
+    <button @onclick="ChangeAddMessageVisibility">Add</button>
+
+    @if (showAddMenu)
+    {
+        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px;">
+            <label for="chatName">Text:</label>
+            <input type="text" id="messageText" @bind="newMessage" required />
+            <div style="margin-top: 10px;">
+                <button @onclick="AddMessage">Save</button>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <br>
+    <h3>Loading...</h3>
+}
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+    private int ChatId { get; set; }
+    private IEnumerable<MessageDTO> MessagesList;
+    private AllDataRetrievalParametersDTO CurrentPage;
+    private bool isWindowVisible = false;
+    private int numberOfPages;
+    private int currentPage;
+    private int pageSize;
+    bool showAddMenu = false;
+    string newMessage = "";
+    private bool IsLoaded { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        ChatId = Convert.ToInt32(id);
+        numberOfPages = 1;
+        currentPage = 1;
+        pageSize = 10;
+        CurrentPage = new AllDataRetrievalParametersDTO() { PageNumber = currentPage, PageSize = pageSize, Sort = new Dictionary<string, bool>(), Subs = "" };
+        GetAllMessages(CurrentPage);
+        base.OnInitialized();
+        IsLoaded = true;
+    }
+    private void ChangePage()
+    {
+        CurrentPage.PageNumber = currentPage;
+        GetAllMessages(CurrentPage);
+    }
+    private async void GetAllMessages(AllDataRetrievalParametersDTO data)
+    {
+        CurrentPage = data;
+        DataForGridDTO<MessageDTO> newdata = await messageService.GetAllMessages(CurrentPage, ChatId);
+        MessagesList = newdata.Data;
+        numberOfPages = newdata.NumberOfPages;
+        StateHasChanged();
+    }
+    private void ChangeAddMessageVisibility()
+    {
+        showAddMenu = !showAddMenu;
+    }
+    private async void AddMessage()
+    {
+        if (!string.IsNullOrEmpty(newMessage))
+        {
+            await messageService.AddMessage(new MessageDTO() { ChatId = ChatId, Text = newMessage });
+            showAddMenu = false;
+            GetAllMessages(CurrentPage);
+        }
+    }
+}
+

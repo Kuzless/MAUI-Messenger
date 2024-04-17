@@ -3,6 +3,7 @@
 @using MyMessenger.Application.DTO
 @using MyMessenger.Maui.Services
 @using BlazorPagination
+@inject NavigationManager NavigationManager
 @inject ChatService chatService
 
 <h1>Chats</h1>
@@ -40,6 +41,7 @@
             <GridColumn Field="@nameof(ChatDTO.Name)" HeaderText="Name"></GridColumn>
             <GridColumn>
                 <Template>
+                    <button @onclick="() => GoToChat(((ChatDTO)context).Id)">Open</button>
                     <button @onclick="() => DeleteChat((ChatDTO)context)">Delete</button>
                 </Template>
             </GridColumn>
@@ -145,5 +147,8 @@ else
     {
         await chatService.DeleteChat(chat.Id);
         GetAllChats(CurrentPage);
+    }
+    private void GoToChat(int id) {
+        NavigationManager.NavigateTo($"/chatmessages/{id}");
     }
 }

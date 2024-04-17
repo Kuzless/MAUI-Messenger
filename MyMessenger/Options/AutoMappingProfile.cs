@@ -11,7 +11,8 @@ namespace MyMessenger.Options
         public AutoMappingProfile()
         {
             CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<Message, MessageDTO>().ReverseMap();
+            CreateMap<Message, MessageDTO>()
+    .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.User.Name)).ReverseMap();
             CreateMap<Chat, ChatDTO>().ReverseMap();
         }
     }

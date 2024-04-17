@@ -54,20 +54,6 @@
                  ShowFirstLast="false"
                  ShowPageNumbers="true"
                  VisiblePages=pageSize />
-
-
-    <button @onclick="ChangeAddMessageVisibility">Add</button>
-
-    @if (showAddMenu)
-    {
-        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px;">
-            <label for="chatName">Text:</label>
-            <input type="text" id="messageText" @bind="newMessage" required />
-            <div style="margin-top: 10px;">
-                <button @onclick="AddMessage">Save</button>
-            </div>
-        </div>
-    }
 }
 else
 {
@@ -83,7 +69,6 @@ else
     private int numberOfPages;
     private int currentPage;
     private int pageSize;
-    bool showAddMenu = false;
     string newMessage = "";
     private bool IsLoaded { get; set; } = false;
 
@@ -132,22 +117,9 @@ else
     {
         isWindowVisible = !isWindowVisible;
     }
-    private void ChangeAddMessageVisibility()
+    private async void DeleteMessage(MessageDTO message)
     {
-        showAddMenu = !showAddMenu;
-    }
-    private async void AddMessage()
-    {
-        if (!string.IsNullOrEmpty(newMessage))
-        {
-            await messageService.AddMessage(new MessageDTO() { ChatId = 26, Text = newMessage });
-            showAddMenu = false;
-            GetAllMessages(CurrentPage);
-        }
-    }
-    private async void DeleteMessage(MessageDTO chat)
-    {
-        await messageService.DeleteMessage(chat.Id);
+        await messageService.DeleteMessage(message.Id);
         GetAllMessages(CurrentPage);
     }
 }

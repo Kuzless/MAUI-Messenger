@@ -4,6 +4,7 @@ using MyMessenger.Maui.Library.Interface;
 using System.Net.Http.Json;
 using MyMessenger.Application.DTO.MessagesDTOs;
 using System.Text.Json;
+using System.Drawing.Drawing2D;
 
 namespace MyMessenger.Maui.Services
 {
@@ -16,7 +17,7 @@ namespace MyMessenger.Maui.Services
             this.httpWrapper = httpWrapper;
             this.storage = storage;
         }
-        public async Task<DataForGridDTO<MessageDTO>>? GetAllMessages(AllDataRetrievalParametersDTO data)
+        public async Task<DataForGridDTO<MessageDTO>>? GetAllMessages(AllDataRetrievalParametersDTO data, int id = 0)
         {
             var queryString = $"PageNumber={data.PageNumber}&PageSize={data.PageSize}";
 
@@ -35,8 +36,16 @@ namespace MyMessenger.Maui.Services
             try
             {
                 var accessToken = await storage.GetItemAsStringAsync("accessToken");
-                var response = await httpWrapper.GetAsync($"Message?{queryString}", accessToken);
-
+                string urlEnd;
+                if (id == 0)
+                {
+                    urlEnd = $"Message?{queryString}";
+                }
+                else
+                {
+                    urlEnd = $"Message/{id}?{queryString}";
+                }
+                var response = await httpWrapper.GetAsync(urlEnd, accessToken);
                 var users = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
                 return users;
             }

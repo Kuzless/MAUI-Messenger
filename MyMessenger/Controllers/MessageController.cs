@@ -29,6 +29,12 @@ namespace MyMessenger.Controllers
             var messages = await mediator.Send(new GetAllMessagesQuery(data.Sort, data.PageNumber, data.PageSize, data.Subs, userid));
             return Ok(messages);
         }
+        [HttpGet("{chatId}")]
+        public async Task<IActionResult> GetMessagesByChatId(int chatId, [FromQuery] AllDataRetrievalParametersDTO data, [FromHeader] string userAccessToken)
+        {
+            var messages = await mediator.Send(new GetMessagesByChatIdQuery(data.PageNumber, data.PageSize, data.Subs, chatId));
+            return Ok(messages);
+        }
         [HttpPut]
         public async Task UpdateMessage([FromBody] MessageDTO message, [FromHeader] string userAccessToken)
         {
