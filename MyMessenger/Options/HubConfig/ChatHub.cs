@@ -25,7 +25,7 @@ namespace MyMessenger.Options.HubConfig
             var userId = Context.GetHttpContext().User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var messageId = await mediator.Send(new CreateMessageCommand(userId, message.ChatId, message.Text));
             var newMessage = await mediator.Send(new GetMessageByIdQuery(messageId));
-            await Clients.All.SendAsync("ReceiveMessage", newMessage);
+            await Clients.Group(Convert.ToString(newMessage.ChatId)).SendAsync("ReceiveMessage", newMessage);
         }
     }
 }

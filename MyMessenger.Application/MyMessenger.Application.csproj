@@ -19,4 +19,8 @@
     <ProjectReference Include="..\MyMessenger.Domain\MyMessenger.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTO\HubDTOs\" />
+  </ItemGroup>
+
 </Project>
