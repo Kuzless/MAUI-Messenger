@@ -5,7 +5,6 @@ using MyMessenger.Application.DTO.ChatDTOs;
 using MyMessenger.Maui.Library.Interface;
 using System.Net.Http.Json;
 using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyMessenger.Maui.Services
 {

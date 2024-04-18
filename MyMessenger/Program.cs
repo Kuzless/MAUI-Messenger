@@ -15,6 +15,7 @@ using MyMessenger.Options;
 using System.Reflection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using MyMessenger.Options.HubConfig;
 
 namespace MyMessenger
 {
@@ -52,6 +53,8 @@ namespace MyMessenger
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(LoginQueryHandler).Assembly));
+
+            builder.Services.AddSignalR();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -105,6 +108,8 @@ namespace MyMessenger
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.MapHub<ChatHub>("/chathub");
 
             app.UseHttpsRedirection();
             app.UseAuthentication();

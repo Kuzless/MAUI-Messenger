@@ -1,6 +1,7 @@
 ﻿@page "/chatmessages/{id}"
 @using MyMessenger.Application.DTO.MessagesDTOs
 @using MyMessenger.Application.DTO
+@using Microsoft.AspNetCore.SignalR.Client
 @using MyMessenger.Maui.Services
 @using BlazorPagination
 @inject MessageService messageService
@@ -8,7 +9,7 @@
 <h1>Messages</h1>
 @if (IsLoaded)
 {
-    <SfGrid DataSource="@MessagesList">
+    <SfGrid DataSource="@MessagesList" @ref="grid">
         <GridColumns>
             <GridColumn Field="@nameof(MessageDTO.Name)" HeaderText="Sender"></GridColumn>
             <GridColumn Field="@nameof(MessageDTO.Text)" HeaderText="Message"></GridColumn>
@@ -45,7 +46,9 @@ else
     [Parameter]
     public string id { get; set; }
     private int ChatId { get; set; }
-    private IEnumerable<MessageDTO> MessagesList;
+    private HubConnection hubConnection;
+    private SfGrid<MessageDTO> grid;
+    private List<MessageDTO> MessagesList = new List<MessageDTO>();
     private AllDataRetrievalParametersDTO CurrentPage;
     private bool isWindowVisible = false;
     private int numberOfPages;
@@ -57,6 +60,15 @@ else
 
     protected override void OnInitialized()
     {
+        hubConnection = new HubConnectionBuilder().WithUrl("https://localhost:7081/chathub").Build();
+
+        hubConnection.On<MessageDTO>("ReceiveMessage", async (receivedMessage) =>
+        {
+            MessagesList.Add(receivedMessage);
+            await grid.Refresh();
+        });
+        hubConnection.StartAsync();
+
         ChatId = Convert.ToInt32(id);
         numberOfPages = 1;
         currentPage = 1;
@@ -75,7 +87,7 @@ else
     {
         CurrentPage = data;
         DataForGridDTO<MessageDTO> newdata = await messageService.GetAllMessages(CurrentPage, ChatId);
-        MessagesList = newdata.Data;
+        MessagesList = newdata.Data.ToList();
         numberOfPages = newdata.NumberOfPages;
         StateHasChanged();
     }
@@ -87,9 +99,8 @@ else
     {
         if (!string.IsNullOrEmpty(newMessage))
         {
-            await messageService.AddMessage(new MessageDTO() { ChatId = ChatId, Text = newMessage });
+            await hubConnection.SendAsync("SendMessage", new MessageDTO() { ChatId = ChatId, Text = newMessage });
             showAddMenu = false;
-            GetAllMessages(CurrentPage);
         }
     }
 }
