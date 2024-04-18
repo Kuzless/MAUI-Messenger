@@ -41,19 +41,29 @@ else
     [Parameter]
     public string id { get; set; }
     private int ChatId { get; set; }
-    private HubConnection hubConnection;
-    private SfGrid<MessageDTO> grid;
-    private List<MessageDTO> MessagesList = new List<MessageDTO>();
-    private AllDataRetrievalParametersDTO CurrentPage;
     private bool isWindowVisible = false;
     bool showAddMenu = false;
     string newMessage = "";
     private bool IsLoaded { get; set; } = false;
 
-    protected override async void OnInitialized()
-    {
-        // Hub Connection
+    private SfGrid<MessageDTO> grid;
+    private List<MessageDTO> MessagesList = new List<MessageDTO>();
+    private AllDataRetrievalParametersDTO CurrentPage;
 
+    private HubConnection hubConnection;
+
+    protected override void OnInitialized()
+    {
+        ChatId = Convert.ToInt32(id);    
+
+        ConfigureHub();
+        RetrieveData();
+
+        base.OnInitialized();
+        IsLoaded = true;
+    }
+    private async Task ConfigureHub()
+    {
         var token = (await storage.GetItemAsStringAsync("accessToken")).Replace("\"", "");
         hubConnection = new HubConnectionBuilder().WithUrl("https://localhost:7081/chathub", options =>
             {
@@ -66,22 +76,15 @@ else
             await grid.Refresh();
         });
         await hubConnection.StartAsync();
-        await hubConnection.SendAsync("AddToGroup", id);
-        
-        //
-        ChatId = Convert.ToInt32(id);
-        CurrentPage = new AllDataRetrievalParametersDTO() { PageNumber = 1, PageSize = 9999, Sort = new Dictionary<string, bool>(), Subs = "" };
-        GetAllMessages(CurrentPage);
-        base.OnInitialized();
-        IsLoaded = true;
+        await hubConnection.InvokeAsync("AddToGroup", id);
     }
-    private async void GetAllMessages(AllDataRetrievalParametersDTO data)
+    private async Task RetrieveData() 
     {
-        CurrentPage = data;
-        DataForGridDTO<MessageDTO> newdata = await messageService.GetAllMessages(CurrentPage, ChatId);
-        MessagesList = newdata.Data.ToList();
+        CurrentPage = new AllDataRetrievalParametersDTO() { PageNumber = 1, PageSize = 9999, Sort = new Dictionary<string, bool>(), Subs = "" };
+        DataForGridDTO<MessageDTO> newData = await messageService.GetAllMessages(CurrentPage, ChatId);
+        MessagesList = newData.Data.ToList();
         StateHasChanged();
-    }
+    } 
     private void ChangeAddMessageVisibility()
     {
         showAddMenu = !showAddMenu;

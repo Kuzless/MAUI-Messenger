@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 using MyMessenger.Application.DTO.MessagesDTOs;
 using MyMessenger.Application.СommandsQueries.Messages.Commands;
 using MyMessenger.Application.СommandsQueries.Messages.Queries;
+using System.Security.Claims;
 
 namespace MyMessenger.Options.HubConfig
 {
@@ -21,8 +22,8 @@ namespace MyMessenger.Options.HubConfig
         }
         public async Task SendMessage(MessageDTO message)
         {
-            var userid = "dd63f11c-c322-45ba-8e21-55271e183ff3";
-            var messageId = await mediator.Send(new CreateMessageCommand(userid, message.ChatId, message.Text));
+            var userId = Context.GetHttpContext().User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var messageId = await mediator.Send(new CreateMessageCommand(userId, message.ChatId, message.Text));
             var newMessage = await mediator.Send(new GetMessageByIdQuery(messageId));
             await Clients.All.SendAsync("ReceiveMessage", newMessage);
         }

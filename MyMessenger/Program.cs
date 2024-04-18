@@ -47,7 +47,6 @@ namespace MyMessenger
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ISignUpService, SignUpService>();
             builder.Services.AddScoped<IJWTGeneratorService, JWTGeneratorService>();
-            builder.Services.AddScoped<IJWTRetrievalService, JWTRetrievalService>();
 
             //
 
@@ -109,7 +108,6 @@ namespace MyMessenger
                 app.UseSwaggerUI();
             }
 
-            app.MapGet("/", (HttpContext context) => context);
             app.MapHub<ChatHub>("/chathub");
 
             app.UseHttpsRedirection();

@@ -6,7 +6,6 @@ using MyMessenger.Application.СommandsQueries.Users.Queries;
 
 namespace MyMessenger.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : Controller
@@ -16,6 +15,7 @@ namespace MyMessenger.Controllers
         {
             this.mediator = mediator;
         }
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers([FromQuery] AllDataRetrievalParametersDTO data)
         {
