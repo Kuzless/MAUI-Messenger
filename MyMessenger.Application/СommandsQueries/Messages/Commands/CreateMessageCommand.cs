@@ -1,8 +1,9 @@
 ﻿using MediatR;
+using MyMessenger.Application.DTO.MessagesDTOs;
 
 namespace MyMessenger.Application.СommandsQueries.Messages.Commands
 {
-    public class CreateMessageCommand : IRequest
+    public class CreateMessageCommand : IRequest<int>
     {
         public string UserId { get; set; }
         public int ChatId { get; set; }

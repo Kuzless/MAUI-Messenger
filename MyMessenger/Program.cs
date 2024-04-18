@@ -109,6 +109,7 @@ namespace MyMessenger
                 app.UseSwaggerUI();
             }
 
+            app.MapGet("/", (HttpContext context) => context);
             app.MapHub<ChatHub>("/chathub");
 
             app.UseHttpsRedirection();

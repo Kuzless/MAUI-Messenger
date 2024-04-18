@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyMessenger.Application.DTO;
@@ -22,6 +23,7 @@ namespace MyMessenger.Controllers
             this.jWTRetrievalService = jWTRetrievalService;
             this.mediator = mediator;
         }
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<IActionResult> GetAllChats([FromQuery] AllDataRetrievalParametersDTO data, [FromHeader] string userAccessToken)
         {
