@@ -3,40 +3,14 @@
 @using MyMessenger.Application.DTO
 @using MyMessenger.Maui.Services
 @using BlazorPagination
+@using MyMessenger.Maui.Components.Pages.ParametersPages
 @inject MessageService messageService
 
-<h1>Messages</h1>
+<h1>Your Messages</h1>
 @if (IsLoaded)
 {
-    <button @onclick="ChangeParametersVisibility">Parameters</button>
-    @if (isWindowVisible)
-    {
-        <div class="window-overlay">
-            <div class="window">
-                <br />
-                <div class="search-bar">
-                    <h3>Search</h3>
-                    <input type="text" @bind="CurrentPage.Subs" placeholder="Search..." />
-                </div>
-                <h3>Sort</h3>
-                <div class="radio-group">
-                    <input type="radio" id="radio" name="radioGroup" checked="true" value="value1" @onclick="() => SortByColumn(0)" />
-                    <label for="radio1">Text</label>
-                    <input type="radio" id="radio2" name="radioGroup" value="value2" @onclick="() => SortByColumn(1)" />
-                    <label for="radio2">DateTime</label>
-                </div>
-                <br />
-                <div class="radio-group2">
-                    <input type="radio" id="radio11" name="radioGroup2" checked="true" value="value1" @onclick="() => { SortType = false; ChangeSortType(); }" />
-                    <label for="radio11">Asc</label>
-                    <input type="radio" id="radio22" name="radioGroup2" value="value2" @onclick="() => { SortType = true; ChangeSortType(); }" />
-                    <label for="radio22">Desc</label>
-                </div>
-                <br />
-                <button @onclick="() => GetAllMessages(CurrentPage)">Apply</button>
-            </div>
-        </div>
-    }
+    <button @onclick="OpenPopup">Parameters</button>
+
     <SfGrid DataSource="@MessagesList">
         <GridColumns>
             <GridColumn Field="@nameof(MessageDTO.Text)" HeaderText="Message"></GridColumn>
@@ -54,6 +28,10 @@
                  ShowFirstLast="false"
                  ShowPageNumbers="true"
                  VisiblePages=pageSize />
+    if (isWindowVisible)
+    {
+        <GenericParameters Columns="@Columns" CurrentPage="@CurrentPage" OnSave="@SaveChanges" OnClose="@ClosePopup"></GenericParameters>
+    }
 }
 else
 {
@@ -64,7 +42,7 @@ else
 @code {
     private IEnumerable<MessageDTO> MessagesList;
     private AllDataRetrievalParametersDTO CurrentPage;
-    private bool SortType = false;
+    private List<string> Columns = new List<string> { "Text", "DateTime" };
     private bool isWindowVisible = false;
     private int numberOfPages;
     private int currentPage;
@@ -78,36 +56,17 @@ else
         currentPage = 1;
         pageSize = 10;
         CurrentPage = new AllDataRetrievalParametersDTO() { PageNumber = currentPage, PageSize = pageSize, Sort = new Dictionary<string, bool>() { { "Text", false } }, Subs = ""};
-        GetAllMessages(CurrentPage);
+        GetAllMessages();
         base.OnInitialized();
         IsLoaded = true;
-    }
-    private void SortByColumn(int index)
-    {
-        CurrentPage.Sort.Clear();
-        switch (index)
-        {
-            case 0:
-                CurrentPage.Sort.Add("Text", SortType);
-                break;
-            case 1:
-                CurrentPage.Sort.Add("DateTime", SortType);
-                break;
-        }
-    }
-    private void ChangeSortType()
-    {
-        var sortRule = CurrentPage.Sort.First();
-        CurrentPage.Sort[sortRule.Key] = SortType;
     }
     private void ChangePage()
     {
         CurrentPage.PageNumber = currentPage;
-        GetAllMessages(CurrentPage);
+        GetAllMessages();
     }
-    private async void GetAllMessages(AllDataRetrievalParametersDTO data)
+    private async void GetAllMessages()
     {
-        CurrentPage = data;
         DataForGridDTO<MessageDTO> newdata = await messageService.GetAllMessages(CurrentPage);
         MessagesList = newdata.Data;
         numberOfPages = newdata.NumberOfPages;
@@ -120,7 +79,21 @@ else
     private async void DeleteMessage(MessageDTO message)
     {
         await messageService.DeleteMessage(message.Id);
-        GetAllMessages(CurrentPage);
+        GetAllMessages();
+    }
+
+    //Parameters
+    void SaveChanges()
+    {
+        GetAllMessages();
+    }
+    void OpenPopup()
+    {
+        isWindowVisible = true;
+    }
+    void ClosePopup()
+    {
+        isWindowVisible = false;
     }
 }
 

@@ -6,15 +6,13 @@
             <input type="text" @bind="CurrentPage.Subs" placeholder="Search..." />
         </div>
         <h3>Sort</h3>
-        <div class="radio-group">
-            <input type="radio" id="radio1" name="radioGroup" checked="true" value="value1" @onclick="() => SortByColumn(0)" />
-            <label for="radio1">Name</label>
-            <input type="radio" id="radio2" name="radioGroup" value="value2" @onclick="() => SortByColumn(1)" />
-            <label for="radio2">UserName</label>
-            <input type="radio" id="radio3" name="radioGroup" value="value3" @onclick="() => SortByColumn(2)" />
-            <label for="radio3">Email</label>
-            <input type="radio" id="radio4" name="radioGroup" value="value4" @onclick="() => SortByColumn(3)" />
-            <label for="radio4">Phone</label>
+        <div class="dropdown">
+            <select @onchange="(e) => SortByColumn(e)">
+                @foreach (var column in Columns)
+                {
+                    <option value="@column">@column</option>
+                }
+            </select>
         </div>
         <br />
         <div class="radio-group2">
@@ -36,17 +34,22 @@
     public EventCallback<string> OnSave { get; set; }
     [Parameter]
     public AllDataRetrievalParametersDTO CurrentPage { get; set; }
+    [Parameter]
+    public List<string> Columns { get; set; }
+
+    private bool SortType;
+    private string SelectedColumn;
     private Dictionary<string, bool> Sort = new Dictionary<string, bool>();
     private string Subs;
 
     protected override void OnInitialized()
     {
+        SortType = false;
+        Sort.Add(Columns[0], SortType);
+        SelectedColumn = Columns[0];
+        Sort = new Dictionary<string, bool>() { { Columns[0], SortType } };
         base.OnInitialized();
-        Sort.Add("Name", SortType);
-        Sort = new Dictionary<string, bool>(CurrentPage.Sort);
     }
-
-    private bool SortType = false;
     private void SaveAndClose()
     {
         CurrentPage.Sort = Sort;
@@ -57,24 +60,11 @@
     {
         OnClose.InvokeAsync();
     }
-    private void SortByColumn(int index)
+    private void SortByColumn(Microsoft.AspNetCore.Components.ChangeEventArgs e)
     {
+        SelectedColumn = e.Value.ToString();
         Sort.Clear();
-        switch (index)
-        {
-            case 0:
-                Sort.Add("Name", SortType);
-                break;
-            case 1:
-                Sort.Add("UserName", SortType);
-                break;
-            case 2:
-                Sort.Add("Email", SortType);
-                break;
-            case 3:
-                Sort.Add("PhoneNumber", SortType);
-                break;
-        }
+        Sort.Add(SelectedColumn, SortType);
     }
     private void ChangeSortType()
     {

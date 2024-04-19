@@ -2,6 +2,7 @@
 @using MyMessenger.Application.DTO.ChatDTOs
 @using MyMessenger.Application.DTO
 @using MyMessenger.Maui.Services
+@using MyMessenger.Maui.Components.Pages.ParametersPages
 @using BlazorPagination
 @inject NavigationManager NavigationManager
 @inject ChatService chatService
@@ -9,35 +10,11 @@
 <h1>Chats</h1>
 @if (IsLoaded)
 {
-    <button @onclick="ChangeParametersVisibility">Parameters</button>
-    @if (isWindowVisible)
-    {
-        <div class="window-overlay">
-            <div class="window">
-                <br />
-                <div class="search-bar">
-                    <h3>Search</h3>
-                    <input type="text" @bind="CurrentPage.Subs" placeholder="Search..." />
-                </div>
-                <h3>Sort</h3>
-                <div class="radio-group">
-                    <input type="radio" id="radio" name="radioGroup" checked="true" value="value1" @onclick="() => SortByColumn(0)" />
-                    <label for="radio1">ChatName</label>
-                </div>
-                <br />
-                <div class="radio-group2">
-                    <input type="radio" id="radio11" name="radioGroup2" checked="true" value="value1" @onclick="() => { SortType = false; ChangeSortType(); }" />
-                    <label for="radio11">Asc</label>
-                    <input type="radio" id="radio22" name="radioGroup2" value="value2" @onclick="() => { SortType = true; ChangeSortType(); }" />
-                    <label for="radio22">Desc</label>
-                </div>
-                <br />
-                <button @onclick="() => GetAllChats(CurrentPage)">Apply</button>
-            </div>
-        </div>
-    }
+    <button @onclick="OpenPopup">Parameters</button>
+
     <SfGrid DataSource="@ChatsList">
         <GridColumns>
+            <GridColumn Field="@nameof(ChatDTO.Id)" HeaderText="Id"></GridColumn>
             <GridColumn Field="@nameof(ChatDTO.Name)" HeaderText="Name"></GridColumn>
             <GridColumn>
                 <Template>
@@ -53,7 +30,7 @@
 
     @if (showAddMenu)
     {
-        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px;">
+        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: grey; padding: 20px; border-block-color: black;">
             <label for="chatName">Chat Name:</label>
             <input type="text" id="chatName" @bind="newChatName" required />
             <div style="margin-top: 10px;">
@@ -67,6 +44,11 @@
                  ShowFirstLast="false"
                  ShowPageNumbers="true"
                  VisiblePages=pageSize />
+
+    if (isWindowVisible)
+    {
+        <GenericParameters Columns="@Columns" CurrentPage="@CurrentPage" OnSave="@SaveChanges" OnClose="@ClosePopup"></GenericParameters>
+    }
 }
 else
 {
@@ -77,7 +59,7 @@ else
 @code {
     private IEnumerable<ChatDTO> ChatsList;
     private AllDataRetrievalParametersDTO CurrentPage;
-    private bool SortType = false;
+    private List<string> Columns = new List<string> { "Id", "Name" };
     private bool isWindowVisible = false;
     private int numberOfPages;
     private int currentPage;
@@ -92,33 +74,17 @@ else
         currentPage = 1;
         pageSize = 10;
         CurrentPage = new AllDataRetrievalParametersDTO() { PageNumber = currentPage, PageSize = pageSize, Sort = new Dictionary<string, bool>() { { "Name", false } }, Subs = ""};
-        GetAllChats(CurrentPage);
+        GetAllChats();
         base.OnInitialized();
         IsLoaded = true;
-    }
-    private void SortByColumn(int index)
-    {
-        CurrentPage.Sort.Clear();
-        switch (index)
-        {
-            case 0:
-                CurrentPage.Sort.Add("Name", SortType);
-                break;
-        }
-    }
-    private void ChangeSortType()
-    {
-        var sortRule = CurrentPage.Sort.First();
-        CurrentPage.Sort[sortRule.Key] = SortType;
     }
     private void ChangePage()
     {
         CurrentPage.PageNumber = currentPage;
-        GetAllChats(CurrentPage);
+        GetAllChats();
     }
-    private async void GetAllChats(AllDataRetrievalParametersDTO data)
+    private async void GetAllChats()
     {
-        CurrentPage = data;
         DataForGridDTO<ChatDTO> newdata = await chatService.GetAllChats(CurrentPage);
         ChatsList = newdata.Data;
         numberOfPages = newdata.NumberOfPages;
@@ -140,15 +106,29 @@ else
         {
             await chatService.AddChat(new ChatDTO() { Name = newChatName });
             showAddMenu = false;
-            GetAllChats(CurrentPage);
+            GetAllChats();
         }
     }
     private async void DeleteChat(ChatDTO chat)
     {
         await chatService.DeleteChat(chat.Id);
-        GetAllChats(CurrentPage);
+        GetAllChats();
     }
     private void GoToChat(int id) {
         NavigationManager.NavigateTo($"/chatmessages/{id}");
+    }
+
+    // Parameters
+    void SaveChanges()
+    {
+        GetAllChats();
+    }
+    void OpenPopup()
+    {
+        isWindowVisible = true;
+    }
+    void ClosePopup()
+    {
+        isWindowVisible = false;
     }
 }

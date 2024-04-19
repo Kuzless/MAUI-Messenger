@@ -9,6 +9,7 @@
 <h1>Users</h1>
 @if (IsLoaded) {
     <button @onclick="OpenPopup">Parameters</button>
+
     <SfGrid DataSource="@UsersList">
         <GridColumns>
             <GridColumn Field="@nameof(UserDTO.Name)" HeaderText="Name"></GridColumn>
@@ -23,14 +24,13 @@
                  ShowFirstLast="false"
                  ShowPageNumbers="true"
     VisiblePages=pageSize />
+
     if (isWindowVisible)
     {
-        <UsersParam CurrentPage="@CurrentPage" OnSave="@SaveChanges" OnClose="@ClosePopup">
-
-        </UsersParam>
+        <GenericParameters Columns="@Columns" CurrentPage="@CurrentPage" OnSave="@SaveChanges" OnClose="@ClosePopup"></GenericParameters>
     }
-} else
-{
+} 
+else {
     <br>
     <h3>Loading...</h3>
 }
@@ -38,6 +38,7 @@
 @code {
     private IEnumerable<UserDTO> UsersList;
     private AllDataRetrievalParametersDTO CurrentPage;
+    private List<string> Columns = new List<string> { "Name", "UserName", "Email", "PhoneNumber" };
     private bool isWindowVisible = false;
     private int numberOfPages;
     private int currentPage;
@@ -50,26 +51,27 @@
         currentPage = 1;
         pageSize = 10;
         CurrentPage = new AllDataRetrievalParametersDTO() { PageNumber = currentPage, PageSize = pageSize, Sort = new Dictionary<string, bool>() { { "Name", false } }, Subs = "" };
-        GetAllUsers(CurrentPage);
+        GetAllUsers();
         base.OnInitialized();
         IsLoaded = true;
     }
     private void ChangePage()
     {
         CurrentPage.PageNumber = currentPage;
-        GetAllUsers(CurrentPage);
+        GetAllUsers();
     }
-    private async void GetAllUsers(AllDataRetrievalParametersDTO data)
+    private async void GetAllUsers()
     {
-        CurrentPage = data;
         DataForGridDTO<UserDTO> newdata = await userService.GetAllUsers(CurrentPage);
         UsersList = newdata.Data;
         numberOfPages = newdata.NumberOfPages;
         StateHasChanged();
     }
+
+    // Parameters
     void SaveChanges()
     {
-        GetAllUsers(CurrentPage);
+        GetAllUsers();
     }
     void OpenPopup()
     {
