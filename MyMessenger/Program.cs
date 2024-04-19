@@ -15,7 +15,7 @@ using MyMessenger.Options;
 using System.Reflection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using MyMessenger.Options.HubConfig;
+using MyMessenger.HubConfig;
 
 namespace MyMessenger
 {

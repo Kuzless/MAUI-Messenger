@@ -4,6 +4,6 @@ namespace MyMessenger.Application.Services.JwtAuth.Interfaces
 {
     public interface IJWTGeneratorService
     {
-        public TokensDTO GenerateToken(string email, string id);
+        public TokensDTO GenerateToken(string email, string id, string name);
     }
 }

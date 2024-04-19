@@ -28,7 +28,7 @@ namespace MyMessenger.Maui
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<MessageService>();
             builder.Services.AddScoped<ChatService>();
-            builder.Services.AddScoped<SignalRMessageService>();
+            builder.Services.AddTransient<SignalRMessageService>();
 
             builder.Services.AddBlazoredLocalStorage();
 

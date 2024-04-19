@@ -3,8 +3,6 @@ using MyMessenger.Application.DTO;
 using MyMessenger.Maui.Library.Interface;
 using System.Net.Http.Json;
 using MyMessenger.Application.DTO.MessagesDTOs;
-using System.Text.Json;
-using System.Drawing.Drawing2D;
 
 namespace MyMessenger.Maui.Services
 {
@@ -54,12 +52,6 @@ namespace MyMessenger.Maui.Services
                 DataForGridDTO<MessageDTO> users = new DataForGridDTO<MessageDTO>() { Data = Array.Empty<MessageDTO>(), NumberOfPages = 1 };
                 return users;
             }
-        }
-        public async Task AddMessage(MessageDTO message)
-        {
-            var accessToken = await storage.GetItemAsStringAsync("accessToken");
-            var json = JsonSerializer.Serialize(message);
-            var response = await httpWrapper.PostAsync($"Message", json, accessToken);
         }
         public async Task DeleteMessage(int id)
         {

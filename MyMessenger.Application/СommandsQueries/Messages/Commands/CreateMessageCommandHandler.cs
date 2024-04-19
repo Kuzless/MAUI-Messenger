@@ -9,11 +9,9 @@ namespace MyMessenger.Application.СommandsQueries.Messages.Commands
     internal class CreateMessageCommandHandler : IRequestHandler<CreateMessageCommand, int>
     {
         private readonly IUnitOfWork unitOfWork;
-        private readonly IMapper mapper;
-        public CreateMessageCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public CreateMessageCommandHandler(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
-            this.mapper = mapper;
         }
         public async Task<int> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
         {

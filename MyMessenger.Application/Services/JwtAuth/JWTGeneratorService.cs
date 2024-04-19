@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyMessenger.Application.DTO.AuthDTOs;
 using MyMessenger.Application.Services.JwtAuth.Interfaces;
@@ -17,10 +16,11 @@ namespace MyMessenger.Application.Services.JwtAuth
         {
             this.configuration = configuration;
         }
-        public TokensDTO GenerateToken(string email, string id)
+        public TokensDTO GenerateToken(string email, string id, string name)
         {
             var claims = new Claim[]
             {
+                new Claim("Name", name),
                 new Claim(JwtRegisteredClaimNames.Sub, id),
                 new Claim(JwtRegisteredClaimNames.Email, email)
             };

@@ -26,7 +26,7 @@ namespace MyMessenger.Application.Services
             var validUser = await LoginCheck(user.Email, user.Password);
             if (validUser != null)
             {
-                var tokens = jwtGenService.GenerateToken(user.Email, validUser.Id);
+                var tokens = jwtGenService.GenerateToken(validUser.Email, validUser.Id, validUser.Name);
                 await AddTokenToDb(tokens, validUser);
                 return tokens;
             }
@@ -41,7 +41,7 @@ namespace MyMessenger.Application.Services
                 var user = await userManager.FindByIdAsync(userId);
                 if (VerifyTokenFromDb(tokens, user))
                 {
-                    var newTokens = jwtGenService.GenerateToken(user.Email, user.Id);
+                    var newTokens = jwtGenService.GenerateToken(user.Email, user.Id, user.Name);
                     await AddTokenToDb(newTokens, user);
                     return newTokens;
                 }
