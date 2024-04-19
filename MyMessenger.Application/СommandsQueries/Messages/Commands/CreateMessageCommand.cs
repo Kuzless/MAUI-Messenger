@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MyMessenger.Application.DTO.MessagesDTOs;
 
 namespace MyMessenger.Application.СommandsQueries.Messages.Commands
 {
@@ -8,11 +7,13 @@ namespace MyMessenger.Application.СommandsQueries.Messages.Commands
         public string UserId { get; set; }
         public int ChatId { get; set; }
         public string Text { get; set; }
-        public CreateMessageCommand(string UserId, int ChatId, string Text)
+        public DateTime DateTime { get; set; }
+        public CreateMessageCommand(string UserId, int ChatId, string Text, DateTime DateTime)
         {
             this.Text = Text;
             this.UserId = UserId;
             this.ChatId = ChatId;
+            this.DateTime = DateTime;
         }
     }
 }

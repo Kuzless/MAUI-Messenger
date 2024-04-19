@@ -14,7 +14,7 @@ namespace MyMessenger.Maui.Library
         }
         public async Task<HttpResponseMessage> GetAsync(string urlEnd, string token = "")
         {
-            token = AddHeaderToken(token);
+            token = token.Replace("\"", "");
             string urlController = url + urlEnd;
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await httpClient.GetAsync(urlController);
@@ -24,7 +24,7 @@ namespace MyMessenger.Maui.Library
 
         public async Task<HttpResponseMessage> PostAsync(string urlEnd, string content, string token = "")
         {
-            token = AddHeaderToken(token);
+            token = token.Replace("\"", "");
             string urlController = url + urlEnd;
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             StringContent httpContent = new StringContent(content, Encoding.UTF8, "application/json");
@@ -34,7 +34,7 @@ namespace MyMessenger.Maui.Library
         }
         public async Task<HttpResponseMessage> PutAsync(string urlEnd, string content, string token = "")
         {
-            token = AddHeaderToken(token);
+            token = token.Replace("\"", "");
             string urlController = url + urlEnd;
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             StringContent httpContent = new StringContent(content, Encoding.UTF8, "application/json");
@@ -44,26 +44,12 @@ namespace MyMessenger.Maui.Library
         }
         public async Task<HttpResponseMessage> DeleteAsync(string urlEnd, string token = "")
         {
-            token = AddHeaderToken(token);
+            token = token.Replace("\"", "");
             string urlController = url + urlEnd;
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await httpClient.DeleteAsync(urlController);
             response.EnsureSuccessStatusCode();
             return response;
-        }
-        private string AddHeaderToken(string token)
-        {
-            token = token.Replace("\"", "");
-            if (!httpClient.DefaultRequestHeaders.Contains("userAccessToken"))
-            {
-                httpClient.DefaultRequestHeaders.Add("userAccessToken", token);
-            }
-            else
-            {
-                httpClient.DefaultRequestHeaders.Remove("userAccessToken");
-                httpClient.DefaultRequestHeaders.Add("userAccessToken", token);
-            }
-            return token;
         }
     }
 }

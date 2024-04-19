@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using MyMessenger.Application.DTO.MessagesDTOs;
 using MyMessenger.Application.СommandsQueries.Messages.Commands;
-using MyMessenger.Application.СommandsQueries.Messages.Queries;
 using System.Security.Claims;
 
 namespace MyMessenger.Options.HubConfig
@@ -23,9 +22,8 @@ namespace MyMessenger.Options.HubConfig
         public async Task SendMessage(MessageDTO message)
         {
             var userId = Context.GetHttpContext().User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var messageId = await mediator.Send(new CreateMessageCommand(userId, message.ChatId, message.Text));
-            var newMessage = await mediator.Send(new GetMessageByIdQuery(messageId));
-            await Clients.Group(Convert.ToString(newMessage.ChatId)).SendAsync("ReceiveMessage", newMessage);
+            await mediator.Send(new CreateMessageCommand(userId, message.ChatId, message.Text, message.DateTime));
+            await Clients.Group(Convert.ToString(message.ChatId)).SendAsync("ReceiveMessage", message);
         }
     }
 }

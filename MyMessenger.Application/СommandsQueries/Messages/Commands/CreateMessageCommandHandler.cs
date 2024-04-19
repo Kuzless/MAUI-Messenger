@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using MyMessenger.Domain.Entities;
 using MyMessenger.Domain.Interfaces;
 
 namespace MyMessenger.Application.СommandsQueries.Messages.Commands
@@ -8,13 +9,16 @@ namespace MyMessenger.Application.СommandsQueries.Messages.Commands
     internal class CreateMessageCommandHandler : IRequestHandler<CreateMessageCommand, int>
     {
         private readonly IUnitOfWork unitOfWork;
-        public CreateMessageCommandHandler(IUnitOfWork unitOfWork)
+        private readonly IMapper mapper;
+        public CreateMessageCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
         public async Task<int> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
         {
-            var addedMessage = await unitOfWork.Message.AddMessage(request.UserId, request.ChatId, request.Text);
+            Message message = new Message() { UserId = request.UserId, ChatId = request.ChatId, Text = request.Text, DateTime = request.DateTime };
+            var addedMessage = await unitOfWork.Message.AddMessage(message);
             await unitOfWork.SaveAsync();
 
             return addedMessage.Id;

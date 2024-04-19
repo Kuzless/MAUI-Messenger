@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using MyMessenger.Maui.Library;
 using MyMessenger.Maui.Library.Interface;
 using MyMessenger.Maui.Services;
+using MyMessenger.Maui.Services.SignalR;
 using Syncfusion.Blazor;
 
 namespace MyMessenger.Maui
@@ -21,13 +22,18 @@ namespace MyMessenger.Maui
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
             builder.Services.AddSyncfusionBlazor();
+
             builder.Services.AddScoped<IHttpWrapper, HttpWrapper>();
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<MessageService>();
             builder.Services.AddScoped<ChatService>();
+            builder.Services.AddScoped<SignalRMessageService>();
+
             builder.Services.AddBlazoredLocalStorage();
+
             builder.Services.AddMauiBlazorWebView();
+
             builder.Services.AddAuthorization();
             builder.Services.AddAuthorizationCore();
             builder.Services.TryAddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();

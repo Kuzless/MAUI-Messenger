@@ -53,10 +53,6 @@ public class AuthService
         }
         return true;
     }
-   /* public async bool TokenExpirationCheck()
-    {
-
-    }*/
     public async Task<bool> Refresh()
     {
         var accessToken = await storage.GetItemAsStringAsync("accessToken");

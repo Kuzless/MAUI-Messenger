@@ -47,7 +47,7 @@ namespace MyMessenger.Controllers
         public async Task SendMessage([FromBody] MessageDTO message)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            await mediator.Send(new CreateMessageCommand(userid, message.ChatId, message.Text));
+            await mediator.Send(new CreateMessageCommand(userid, message.ChatId, message.Text, message.DateTime));
         }
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete("{id}")]
