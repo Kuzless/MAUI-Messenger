@@ -19,7 +19,9 @@
             <GridColumn>
                 <Template>
                     <button @onclick="() => GoToChat(((ChatDTO)context).Id)">Open</button>
-                    <button @onclick="() => DeleteChat((ChatDTO)context)">Delete</button>
+                    <button @onclick="() => ShowInviteToChat((ChatDTO)context)">Invite</button>
+                    <button @onclick="() => LeaveChat(((ChatDTO)context).Id)">Leave</button>
+                    <button @onclick="() => DeleteChat(((ChatDTO)context).Id)">Delete</button>
                 </Template>
             </GridColumn>
         </GridColumns>
@@ -35,6 +37,17 @@
             <input type="text" id="chatName" @bind="newChatName" required />
             <div style="margin-top: 10px;">
                 <button @onclick="AddChat">Save</button>
+            </div>
+        </div>
+    }
+    @if (showInviteMenu)
+    {
+        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: grey; padding: 20px; border-block-color: black;">
+            <label for="userName">Username:</label>
+            <input type="text" id="userName" @bind="userNameToInvite" required />
+            <div style="margin-top: 10px;">
+                <button @onclick="InviteToChat">Invite</button>
+                <button @onclick="CloseInviteMenu">Close</button>
             </div>
         </div>
     }
@@ -60,12 +73,18 @@ else
     private IEnumerable<ChatDTO> ChatsList;
     private AllDataRetrievalParametersDTO CurrentPage;
     private List<string> Columns = new List<string> { "Id", "Name" };
+    private ChatDTO currentChat = new ChatDTO();
+
     private bool isWindowVisible = false;
+    private bool showAddMenu = false;
+    private bool showInviteMenu = false;
+
     private int numberOfPages;
     private int currentPage;
     private int pageSize;
-    bool showAddMenu = false;
     string newChatName = "";
+    string userNameToInvite = "";
+
     private bool IsLoaded { get; set; } = false;
 
     protected override void OnInitialized()
@@ -78,26 +97,19 @@ else
         base.OnInitialized();
         IsLoaded = true;
     }
+
     private void ChangePage()
     {
         CurrentPage.PageNumber = currentPage;
         GetAllChats();
     }
+
     private async void GetAllChats()
     {
         DataForGridDTO<ChatDTO> newdata = await chatService.GetAllChats(CurrentPage);
         ChatsList = newdata.Data;
         numberOfPages = newdata.NumberOfPages;
         StateHasChanged();
-    }
-    private void ChangeParametersVisibility()
-    {
-        isWindowVisible = !isWindowVisible;
-    }
-
-    private void ChangeAddChatVisibility()
-    {
-        showAddMenu = !showAddMenu;
     }
 
     private async void AddChat()
@@ -109,13 +121,51 @@ else
             GetAllChats();
         }
     }
-    private async void DeleteChat(ChatDTO chat)
+
+    private async void DeleteChat(int id)
     {
-        await chatService.DeleteChat(chat.Id);
+        await chatService.DeleteChat(id);
         GetAllChats();
     }
+    private async void InviteToChat()
+    {
+        if (!string.IsNullOrEmpty(userNameToInvite))
+        {
+            await chatService.InviteToChat(currentChat, userNameToInvite);
+            GetAllChats();
+        }
+        currentChat = new ChatDTO();
+        userNameToInvite = "";
+    }
+    private async void LeaveChat(int chatId)
+    {
+        await chatService.LeaveChat(chatId);
+        GetAllChats();
+    }
+
     private void GoToChat(int id) {
         NavigationManager.NavigateTo($"/chatmessages/{id}");
+    }
+
+    private void ShowInviteToChat(ChatDTO chat)
+    {
+        currentChat = chat;
+        showInviteMenu = true;
+
+    }
+    private void CloseInviteMenu()
+    {
+        currentChat = new ChatDTO();
+        showInviteMenu = false;
+    }
+    private void ChangeParametersVisibility()
+    {
+        isWindowVisible = !isWindowVisible;
+    }
+
+    private void ChangeAddChatVisibility()
+    {
+        showAddMenu = !showAddMenu;
     }
 
     // Parameters

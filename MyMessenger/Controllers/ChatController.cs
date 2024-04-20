@@ -38,11 +38,10 @@ namespace MyMessenger.Controllers
             await mediator.Send(new CreateChatCommand(userid, chat.Name, userid));
         }
         [Authorize(AuthenticationSchemes = "Bearer")]
-        [HttpPost("member/")]
-        public async Task JoinChat([FromBody] ChatDTO chat)
+        [HttpPost("member/{username}")]
+        public async Task JoinChat([FromBody] ChatDTO chat, string username)
         {
-            var userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            await mediator.Send(new JoinChatCommand(userid, chat.Id));
+            await mediator.Send(new JoinChatCommand(username, chat.Id));
         }
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete("{id}")]
@@ -52,11 +51,11 @@ namespace MyMessenger.Controllers
             await mediator.Send(new DeleteChatCommand(userid, id));
         }
         [Authorize(AuthenticationSchemes = "Bearer")]
-        [HttpDelete("member/{id}")]
-        public async Task LeaveChat(int id)
+        [HttpDelete("member/{chatid}")]
+        public async Task LeaveChat(int chatId)
         {
             var userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            await mediator.Send(new LeaveChatCommand(userid, id));
+            await mediator.Send(new LeaveChatCommand(userid, chatId));
         }
     }
 }

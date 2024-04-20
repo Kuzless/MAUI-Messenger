@@ -10,5 +10,6 @@ namespace MyMessenger.Application.Services.Interfaces
     public interface IUserService
     {
         Task<User> GetUserById(string id);
+        Task<User> GetUserByUserName(string name);
     }
 }

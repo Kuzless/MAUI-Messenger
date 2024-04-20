@@ -1,6 +1,6 @@
 ﻿using MyMessenger.Domain.Entities;
 using MyMessenger.Domain.Interfaces;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyMessenger.Domain.Repositories
 {
@@ -16,9 +16,9 @@ namespace MyMessenger.Domain.Repositories
         {
             return dbContext.Set<Message>().Include(m => m.User).Where(m => m.ChatId == chatId);
         }
-        public Message GetMessageById(int id)
+        public async Task<Message> GetMessageById(int id)
         {
-            return dbContext.Set<Message>().Include(m => m.User).Where(m => m.Id == id).First();
+            return await dbContext.Set<Message>().Include(m => m.User).Where(m => m.Id == id).FirstAsync();
         }
     }
 }

@@ -15,6 +15,11 @@
             <GridColumn Field="@nameof(MessageDTO.Name)" HeaderText="Sender"></GridColumn>
             <GridColumn Field="@nameof(MessageDTO.Text)" HeaderText="Message"></GridColumn>
             <GridColumn Field="@nameof(MessageDTO.DateTime)" HeaderText="Time"></GridColumn>
+            <GridColumn>
+                <Template>
+                    <button @onclick="() => ShowUpdateMessage(((MessageDTO)context))">Update</button>
+                </Template>
+            </GridColumn>
         </GridColumns>
     </SfGrid>
 
@@ -27,6 +32,17 @@
             <input type="text" id="messageText" @bind="newMessage" required />
             <div style="margin-top: 10px;">
                 <button @onclick="AddMessage">Save</button>
+            </div>
+        </div>
+    }
+    @if (showUpdateMenu)
+    {
+        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: grey; padding: 20px; border-block-color: black;">
+            <label for="chatName">Text:</label>
+            <input type="text" id="newUpdateMessageText" @bind="newUpdateMessageText" required />
+            <div style="margin-top: 10px;">
+                <button @onclick="UpdateMessage">Update</button>
+                <button @onclick="CloseUpdateMessage">Close</button>
             </div>
         </div>
     }
@@ -43,7 +59,10 @@ else
     private int ChatId { get; set; }
     private bool isWindowVisible = false;
     bool showAddMenu = false;
+    bool showUpdateMenu = false;
     string newMessage = "";
+    string newUpdateMessageText = "";
+    MessageDTO currentMessage = new MessageDTO();
     private bool IsLoaded { get; set; } = false;
 
     private SfGrid<MessageDTO> grid;
@@ -53,6 +72,7 @@ else
     protected override async void OnInitialized()
     {
         chatHubService.OnReceiveMessage += ReceiveMessage;
+        chatHubService.OnReceiveUpdatedMessage += ReceiveUpdatedMessage;
         await chatHubService.InitializeHubConnection(id);
         ChatId = Convert.ToInt32(id);    
 
@@ -64,6 +84,13 @@ else
     private void ReceiveMessage(MessageDTO receivedMessage)
     {
         MessagesList.Add(receivedMessage);
+        grid.Refresh();
+    }
+    private void ReceiveUpdatedMessage(MessageDTO receivedMessage)
+    {
+        var message = MessagesList.First(m => m.Id == receivedMessage.Id);
+        var index = MessagesList.IndexOf(message);
+        MessagesList[index] = receivedMessage;
         grid.Refresh();
     }
     private async Task RetrieveData() 
@@ -84,6 +111,27 @@ else
             await chatHubService.SendMessage(new MessageDTO() { ChatId = ChatId, Text = newMessage, DateTime = DateTime.Now });
             showAddMenu = false;
         }
+        newMessage = "";
+    }
+    private void ShowUpdateMessage(MessageDTO message)
+    {
+        currentMessage = message;
+        showUpdateMenu = true;
+    }
+    private async Task UpdateMessage()
+    {
+        currentMessage.Text = newUpdateMessageText;
+        if (!string.IsNullOrEmpty(currentMessage.Text))
+        {
+            await chatHubService.UpdateMessage(currentMessage);
+            showUpdateMenu = false;
+        }
+        currentMessage = new MessageDTO();
+    }
+    private void CloseUpdateMessage()
+    {
+        currentMessage = new MessageDTO();
+        showUpdateMenu = false;
     }
 }
 

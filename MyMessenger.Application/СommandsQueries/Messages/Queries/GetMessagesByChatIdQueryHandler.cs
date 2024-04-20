@@ -4,11 +4,6 @@ using MyMessenger.Application.DTO;
 using MyMessenger.Application.DTO.MessagesDTOs;
 using MyMessenger.Domain.Entities;
 using MyMessenger.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyMessenger.Application.СommandsQueries.Messages.Queries
 {

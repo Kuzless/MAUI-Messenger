@@ -24,10 +24,19 @@ namespace MyMessenger.HubConfig
             var userId = Context.GetHttpContext().User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var name = Context.GetHttpContext().User.FindFirst("Name").Value;
 
-            await mediator.Send(new CreateMessageCommand(userId, message.ChatId, message.Text, message.DateTime));
+            var messageId = await mediator.Send(new CreateMessageCommand(userId, message.ChatId, message.Text, message.DateTime));
 
             message.Name = name;
+            message.Id = messageId;
             await Clients.Group(Convert.ToString(message.ChatId)).SendAsync("ReceiveMessage", message);
+        }
+        public async Task UpdateMessage(MessageDTO message)
+        {
+            var userId = Context.GetHttpContext().User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            await mediator.Send(new UpdateMessageCommand(message, userId));
+
+            await Clients.Group(Convert.ToString(message.ChatId)).SendAsync("ReceiveUpdatedMessage", message);
         }
     }
 }

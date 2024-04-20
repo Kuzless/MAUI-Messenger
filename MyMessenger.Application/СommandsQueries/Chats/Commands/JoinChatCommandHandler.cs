@@ -16,7 +16,7 @@ namespace MyMessenger.Application.СommandsQueries.Chats.Commands
         }
         public async Task Handle(JoinChatCommand request, CancellationToken cancellationToken)
         {
-            var user = await userService.GetUserById(request.UserId);
+            var user = await userService.GetUserByUserName(request.UserName);
             var chat = await unitOfWork.GetRepository<Chat>().GetById(request.Id);
             unitOfWork.Chat.AddMember(chat, user);
             await unitOfWork.SaveAsync();

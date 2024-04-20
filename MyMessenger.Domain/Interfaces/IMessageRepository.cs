@@ -6,6 +6,6 @@ namespace MyMessenger.Domain.Interfaces
     {
         Task<Message> AddMessage(Message message);
         IQueryable<Message> GetMessagesByChatId(int chatId);
-        Message GetMessageById(int id);
+        Task<Message> GetMessageById(int id);
     }
 }

@@ -16,8 +16,8 @@ namespace MyMessenger.Application.СommandsQueries.Messages.Commands
         }
         public async Task Handle(UpdateMessageCommand request, CancellationToken cancellationToken)
         {
-            var message = mapper.Map<Message>(request.MessageDTO);
-            message.UserId = request.UserId;
+            var message = await unitOfWork.Message.GetById(request.MessageDTO.Id);
+            message.Text = request.MessageDTO.Text;
             unitOfWork.GetRepository<Message>().Update(message);
             await unitOfWork.SaveAsync();
         }

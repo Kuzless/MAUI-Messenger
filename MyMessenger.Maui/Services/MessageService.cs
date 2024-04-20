@@ -3,6 +3,8 @@ using MyMessenger.Application.DTO;
 using MyMessenger.Maui.Library.Interface;
 using System.Net.Http.Json;
 using MyMessenger.Application.DTO.MessagesDTOs;
+using MyMessenger.Domain.Entities;
+using System.Text.Json;
 
 namespace MyMessenger.Maui.Services
 {

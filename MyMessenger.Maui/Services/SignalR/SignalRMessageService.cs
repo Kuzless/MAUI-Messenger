@@ -9,6 +9,8 @@ namespace MyMessenger.Maui.Services.SignalR
         private readonly ILocalStorageService storage;
         private HubConnection hubConnection;
         public event Action<MessageDTO> OnReceiveMessage;
+        public event Action<MessageDTO> OnReceiveUpdatedMessage;
+        public event Action<MessageDTO> OnDeleteMessage;
         public SignalRMessageService(ILocalStorageService storage)
         {
             this.storage = storage;
@@ -26,6 +28,10 @@ namespace MyMessenger.Maui.Services.SignalR
             {
                 OnReceiveMessage?.Invoke(receivedMessage);
             });
+            hubConnection.On<MessageDTO>("ReceiveUpdatedMessage", async (receivedMessage) =>
+            {
+                OnReceiveUpdatedMessage?.Invoke(receivedMessage);
+            });
 
             await hubConnection.StartAsync();
             await hubConnection.InvokeAsync("AddToGroup", chatId);
@@ -34,6 +40,10 @@ namespace MyMessenger.Maui.Services.SignalR
         public async Task SendMessage(MessageDTO messageToSend)
         {
             await hubConnection.SendAsync("SendMessage", messageToSend);
+        }
+        public async Task UpdateMessage(MessageDTO messageToUpdate)
+        {
+            await hubConnection.SendAsync("UpdateMessage", messageToUpdate);
         }
 
         public async void Dispose()

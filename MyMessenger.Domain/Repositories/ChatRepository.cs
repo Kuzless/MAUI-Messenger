@@ -1,7 +1,6 @@
 ﻿using MyMessenger.Domain.Entities;
 using MyMessenger.Domain.Interfaces;
-using System;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyMessenger.Domain.Repositories
 {

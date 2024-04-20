@@ -17,5 +17,10 @@ namespace MyMessenger.Application.Services
             var user = await userManager.FindByIdAsync(id);
             return user;
         }
+        public async Task<User> GetUserByUserName(string name)
+        {
+            var user = await userManager.FindByNameAsync(name);
+            return user;
+        }
     }
 }

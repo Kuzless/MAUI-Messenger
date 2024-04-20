@@ -7,7 +7,6 @@ MyMessenger.Database/
 # Ignore Visual Studio files
 .vs/
 *.vscode/
-*.sln
 *.suo
 *.bak
 *.cache
