@@ -67,7 +67,7 @@ else
     }
     private async void GetAllMessages()
     {
-        DataForGridDTO<MessageDTO> newdata = await messageService.GetAllMessages(CurrentPage);
+        DataForGridDTO<MessageDTO> newdata = await messageService.GetAll(CurrentPage, "Message/0");
         MessagesList = newdata.Data;
         numberOfPages = newdata.NumberOfPages;
         StateHasChanged();

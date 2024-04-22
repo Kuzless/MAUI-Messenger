@@ -62,7 +62,7 @@ else {
     }
     private async void GetAllUsers()
     {
-        DataForGridDTO<UserDTO> newdata = await userService.GetAllUsers(CurrentPage);
+        DataForGridDTO<UserDTO> newdata = await userService.GetAll(CurrentPage, "User");
         UsersList = newdata.Data;
         numberOfPages = newdata.NumberOfPages;
         StateHasChanged();

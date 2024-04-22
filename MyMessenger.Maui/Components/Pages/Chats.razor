@@ -106,7 +106,7 @@ else
 
     private async void GetAllChats()
     {
-        DataForGridDTO<ChatDTO> newdata = await chatService.GetAllChats(CurrentPage);
+        DataForGridDTO<ChatDTO> newdata = await chatService.GetAll(CurrentPage, "Chat");
         ChatsList = newdata.Data;
         numberOfPages = newdata.NumberOfPages;
         StateHasChanged();

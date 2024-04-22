@@ -96,7 +96,7 @@ else
     private async Task RetrieveData() 
     {
         CurrentPage = new AllDataRetrievalParametersDTO() { PageNumber = 1, PageSize = 9999, Sort = new Dictionary<string, bool>(), Subs = "" };
-        DataForGridDTO<MessageDTO> newData = await messageService.GetAllMessages(CurrentPage, ChatId);
+        DataForGridDTO<MessageDTO> newData = await messageService.GetAll(CurrentPage, $"Message/{ChatId}");
         MessagesList = newData.Data.ToList();
         StateHasChanged();
     } 
