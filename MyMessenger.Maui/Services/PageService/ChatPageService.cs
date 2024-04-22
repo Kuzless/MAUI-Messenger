@@ -2,7 +2,7 @@
 using MyMessenger.Application.DTO;
 using MyMessenger.Maui.Services;
 
-namespace MyMessenger.Maui.Components.Pages.PageService
+namespace MyMessenger.Maui.Services.PageService
 {
     public class ChatPageService
     {
@@ -16,12 +16,12 @@ namespace MyMessenger.Maui.Components.Pages.PageService
         public bool showInviteMenu { get; set; }
         public int numberOfPages { get; set; }
         public int currentPage { get; set; }
-        public int pageSize {  get; set; }
+        public int pageSize { get; set; }
         public string newChatName { get; set; }
         public string userNameToInvite { get; set; }
 
         public event Action OnDataChanged;
-        
+
         public ChatPageService(ChatService chatService)
         {
             this.chatService = chatService;
@@ -36,7 +36,7 @@ namespace MyMessenger.Maui.Components.Pages.PageService
             pageSize = 10;
             CurrentPage = new AllDataRetrievalParametersDTO() { PageNumber = currentPage, PageSize = pageSize, Sort = new Dictionary<string, bool>() { { "Name", false } }, Subs = "" };
             GetAllChats();
-            
+
         }
         public void ChangePage()
         {
@@ -86,7 +86,6 @@ namespace MyMessenger.Maui.Components.Pages.PageService
         {
             currentChat = chat;
             showInviteMenu = true;
-
         }
         public void CloseInviteMenu()
         {

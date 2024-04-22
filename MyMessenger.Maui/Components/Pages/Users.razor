@@ -4,13 +4,14 @@
 @using MyMessenger.Maui.Services
 @using MyMessenger.Maui.Components.Pages.ParametersPages
 @using BlazorPagination
+@using MyMessenger.Maui.Services.PageService
 @inject UserService userService
 
 <h1>Users</h1>
 @if (IsLoaded) {
-    <button @onclick="OpenPopup">Parameters</button>
+    <button @onclick="userPageService.OpenPopup">Parameters</button>
 
-    <SfGrid DataSource="@UsersList">
+    <SfGrid DataSource="@userPageService.UsersList">
         <GridColumns>
             <GridColumn Field="@nameof(UserDTO.Name)" HeaderText="Name"></GridColumn>
             <GridColumn Field="@nameof(UserDTO.UserName)" HeaderText="UserName"></GridColumn>
@@ -18,16 +19,16 @@
             <GridColumn Field="@nameof(UserDTO.PhoneNumber)" HeaderText="Phone"></GridColumn>
         </GridColumns>
     </SfGrid>
-    <BlazorPager CurrentPage="@currentPage"
-                 PageCount="@numberOfPages"
-                 OnPageChanged="(async x => { currentPage = x; ChangePage(); })"
+    <BlazorPager CurrentPage="@userPageService.currentPage"
+                 PageCount="@userPageService.numberOfPages"
+                 OnPageChanged="(async x => { userPageService.currentPage = x; userPageService.ChangePage(); })"
                  ShowFirstLast="false"
                  ShowPageNumbers="true"
-    VisiblePages=pageSize />
+                 VisiblePages=userPageService.pageSize />
 
-    if (isWindowVisible)
+    if (userPageService.isWindowVisible)
     {
-        <GenericParameters Columns="@Columns" CurrentPage="@CurrentPage" OnSave="@SaveChanges" OnClose="@ClosePopup"></GenericParameters>
+        <GenericParameters Columns="@userPageService.Columns" CurrentPage="@userPageService.CurrentPage" OnSave="@userPageService.SaveChanges" OnClose="@userPageService.ClosePopup"></GenericParameters>
     }
 } 
 else {
@@ -36,49 +37,18 @@ else {
 }
 
 @code {
-    private IEnumerable<UserDTO> UsersList;
-    private AllDataRetrievalParametersDTO CurrentPage;
-    private List<string> Columns = new List<string> { "Name", "UserName", "Email", "PhoneNumber" };
-    private bool isWindowVisible = false;
-    private int numberOfPages;
-    private int currentPage;
-    private int pageSize;
+    [Inject] private UserPageService userPageService { get; set; }
     private bool IsLoaded { get; set; } = false;
 
     protected override void OnInitialized()
     {
-        numberOfPages = 1;
-        currentPage = 1;
-        pageSize = 10;
-        CurrentPage = new AllDataRetrievalParametersDTO() { PageNumber = currentPage, PageSize = pageSize, Sort = new Dictionary<string, bool>() { { "Name", false } }, Subs = "" };
-        GetAllUsers();
+        userPageService.OnDataChanged += Refresh;
         base.OnInitialized();
         IsLoaded = true;
     }
-    private void ChangePage()
+    private void Refresh()
     {
-        CurrentPage.PageNumber = currentPage;
-        GetAllUsers();
-    }
-    private async void GetAllUsers()
-    {
-        DataForGridDTO<UserDTO> newdata = await userService.GetAll(CurrentPage, "User");
-        UsersList = newdata.Data;
-        numberOfPages = newdata.NumberOfPages;
         StateHasChanged();
     }
 
-    // Parameters
-    void SaveChanges()
-    {
-        GetAllUsers();
-    }
-    void OpenPopup()
-    {
-        isWindowVisible = true;
-    }
-    void ClosePopup()
-    {
-        isWindowVisible = false;
-    }
 }

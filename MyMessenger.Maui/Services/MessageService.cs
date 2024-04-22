@@ -6,8 +6,6 @@ namespace MyMessenger.Maui.Services
 {
     public class MessageService : GenericService<MessageDTO>
     {
-        private readonly IHttpWrapper httpWrapper;
-        private readonly ILocalStorageService storage;
         public MessageService(IHttpWrapper httpWrapper, ILocalStorageService storage) : base(httpWrapper, storage)
         {
         }

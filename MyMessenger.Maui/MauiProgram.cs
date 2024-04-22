@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using MyMessenger.Maui.Components.Pages.PageService;
 using MyMessenger.Maui.Library;
 using MyMessenger.Maui.Library.Interface;
 using MyMessenger.Maui.Services;
+using MyMessenger.Maui.Services.PageService;
 using MyMessenger.Maui.Services.SignalR;
 using Syncfusion.Blazor;
 
@@ -30,6 +30,8 @@ namespace MyMessenger.Maui
             builder.Services.AddScoped<MessageService>();
             builder.Services.AddScoped<ChatService>();
             builder.Services.AddTransient<ChatPageService>();
+            builder.Services.AddTransient<MessagePageService>();
+            builder.Services.AddTransient<UserPageService>();
             builder.Services.AddTransient<SignalRMessageService>();
 
             builder.Services.AddBlazoredLocalStorage();
