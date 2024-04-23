@@ -31,6 +31,7 @@ namespace MyMessenger.Maui
             builder.Services.AddScoped<ChatService>();
             builder.Services.AddTransient<ChatPageService>();
             builder.Services.AddTransient<MessagePageService>();
+            builder.Services.AddTransient<ChatMessagePageService>();
             builder.Services.AddTransient<UserPageService>();
             builder.Services.AddTransient<SignalRMessageService>();
 

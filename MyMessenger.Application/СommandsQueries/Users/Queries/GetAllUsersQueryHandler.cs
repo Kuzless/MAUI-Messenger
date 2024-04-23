@@ -24,7 +24,7 @@ namespace MyMessenger.Application.СommandsQueries.Users.Queries
             var queryResult = await unitOfWork.GetRepository<User>().FilterByQuery(dbQuery, query.Sort, skipSize, query.PageSize, query.Subs);
             var resultMapped = mapper.Map<IEnumerable<UserDTO>>(queryResult.Keys.First());
 
-            var numPages = (int)Math.Ceiling((double)queryResult.Values.First() / query.PageSize);
+            var numPages = (queryResult.Values.First() + query.PageSize - 1) / query.PageSize;
 
             DataForGridDTO <UserDTO> result = new DataForGridDTO<UserDTO>() { Data = resultMapped, NumberOfPages = numPages };
             return result;

@@ -1,6 +1,5 @@
 ﻿using MyMessenger.Application.DTO.ChatDTOs;
 using MyMessenger.Application.DTO;
-using MyMessenger.Maui.Services;
 
 namespace MyMessenger.Maui.Services.PageService
 {

@@ -24,7 +24,7 @@ namespace MyMessenger.Application.СommandsQueries.Chats.Queries
             var queryResult = await unitOfWork.GetRepository<Chat>().FilterByQuery(dbQuery, query.Sort, skipSize, query.PageSize, query.Subs);
             var resultMapped = mapper.Map<IEnumerable<ChatDTO>>(queryResult.Keys.First());
 
-            var numPages = (int)Math.Ceiling((double)queryResult.Values.First() / query.PageSize);
+            var numPages = (queryResult.Values.First() + query.PageSize - 1) / query.PageSize;
 
             DataForGridDTO<ChatDTO> result = new DataForGridDTO<ChatDTO>() { Data = resultMapped, NumberOfPages = numPages };
             return result;
