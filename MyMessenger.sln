@@ -13,6 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMessenger.Domain", "MyMes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMessenger.Maui", "MyMessenger.Maui\MyMessenger.Maui.csproj", "{C0EF9B51-C679-4198-B657-7BCBE45D792C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMessenger.Application.Tests", "MyMessenger.Application.Tests\MyMessenger.Application.Tests.csproj", "{5D109896-89C8-43FF-A714-6C1FE817D27E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2CAE68AB-886E-4AAC-A3BB-F261BA762845}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMessenger.Domain.Tests", "MyMessenger.Domain.Tests\MyMessenger.Domain.Tests.csproj", "{F46469B3-059E-467A-B6DC-2C3B09D355B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,9 +49,21 @@ Global
 		{C0EF9B51-C679-4198-B657-7BCBE45D792C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0EF9B51-C679-4198-B657-7BCBE45D792C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C0EF9B51-C679-4198-B657-7BCBE45D792C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5D109896-89C8-43FF-A714-6C1FE817D27E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D109896-89C8-43FF-A714-6C1FE817D27E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D109896-89C8-43FF-A714-6C1FE817D27E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D109896-89C8-43FF-A714-6C1FE817D27E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F46469B3-059E-467A-B6DC-2C3B09D355B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F46469B3-059E-467A-B6DC-2C3B09D355B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F46469B3-059E-467A-B6DC-2C3B09D355B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F46469B3-059E-467A-B6DC-2C3B09D355B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5D109896-89C8-43FF-A714-6C1FE817D27E} = {2CAE68AB-886E-4AAC-A3BB-F261BA762845}
+		{F46469B3-059E-467A-B6DC-2C3B09D355B8} = {2CAE68AB-886E-4AAC-A3BB-F261BA762845}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A33C780-A39C-48B9-8170-FE9757159B82}

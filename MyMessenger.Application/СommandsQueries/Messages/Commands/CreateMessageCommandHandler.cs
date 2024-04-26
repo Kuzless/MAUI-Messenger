@@ -6,7 +6,7 @@ using MyMessenger.Domain.Interfaces;
 namespace MyMessenger.Application.СommandsQueries.Messages.Commands
 {
 
-    internal class CreateMessageCommandHandler : IRequestHandler<CreateMessageCommand, int>
+    public class CreateMessageCommandHandler : IRequestHandler<CreateMessageCommand, int>
     {
         private readonly IUnitOfWork unitOfWork;
         public CreateMessageCommandHandler(IUnitOfWork unitOfWork)

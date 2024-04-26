@@ -8,9 +8,13 @@ namespace MyMessenger.Application.Tests.Commands
 {
     public class ChatCommandsTests
     {
-        private Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-        private Mock<IUserService> userServiceMock = new Mock<IUserService>();
-
+        private Mock<IUnitOfWork> unitOfWorkMock;
+        private Mock<IUserService> userServiceMock;
+        public ChatCommandsTests()
+        {
+            unitOfWorkMock = new Mock<IUnitOfWork>();
+            userServiceMock = new Mock<IUserService>();
+        }
         [Fact]
         public async Task CreateChatCommandHandler_InvokesAddChat()
         {

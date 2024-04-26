@@ -6,6 +6,7 @@ namespace MyMessenger.Domain
 {
     public class DatabaseContext : IdentityDbContext<User>
     {
+        public DatabaseContext() : base() { }
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
             Database.EnsureCreated();

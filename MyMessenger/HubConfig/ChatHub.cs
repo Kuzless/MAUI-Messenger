@@ -34,8 +34,7 @@ namespace MyMessenger.HubConfig
         {
             var userId = Context.GetHttpContext().User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            await mediator.Send(new UpdateMessageCommand(message, userId));
-
+            var response = await mediator.Send(new UpdateMessageCommand(message, userId));
             await Clients.Group(Convert.ToString(message.ChatId)).SendAsync("ReceiveUpdatedMessage", message);
         }
     }

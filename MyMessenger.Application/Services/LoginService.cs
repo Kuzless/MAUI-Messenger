@@ -71,7 +71,7 @@ namespace MyMessenger.Application.Services
             }
             return true;
         }
-        private SecurityToken? ValidateData(TokensDTO tokens)
+        internal SecurityToken? ValidateData(TokensDTO tokens)
         {
             var handler = new JwtSecurityTokenHandler();
             var tokenValidationParameters = new TokenValidationParameters

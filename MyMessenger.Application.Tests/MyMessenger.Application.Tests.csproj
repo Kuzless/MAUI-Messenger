@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyMessenger\MyMessenger.csproj" />
+    <ProjectReference Include="..\MyMessenger.Application\MyMessenger.Application.csproj" />
   </ItemGroup>
 
 </Project>
