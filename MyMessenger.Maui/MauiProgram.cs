@@ -39,7 +39,6 @@ namespace MyMessenger.Maui
 
             builder.Services.AddMauiBlazorWebView();
 
-            builder.Services.AddAuthorization();
             builder.Services.AddAuthorizationCore();
             builder.Services.TryAddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
             builder.Services.AddSingleton<CustomAuthService>();

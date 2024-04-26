@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
-
 public class CustomAuthStateProvider : AuthenticationStateProvider
 {
     private AuthenticationState currentUser;
