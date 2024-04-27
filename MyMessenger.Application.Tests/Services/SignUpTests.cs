@@ -57,6 +57,7 @@ namespace MyMessenger.Application.Tests.Services
 
             var result = await signUpService.SignUp(signUpDto);
 
+            Assert.NotNull(result);
             Assert.True(result.isSuccessful);
             Assert.Equal("User signed up successfully.", result.message);
         }
@@ -70,6 +71,7 @@ namespace MyMessenger.Application.Tests.Services
 
             var result = await signUpService.SignUp(signUpDto);
 
+            Assert.NotNull(result);
             Assert.False(result.isSuccessful);
             Assert.Equal("Failed to sign up.", result.message);
         }

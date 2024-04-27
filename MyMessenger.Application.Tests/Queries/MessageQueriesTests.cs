@@ -56,6 +56,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = await sut.Handle(query, CancellationToken.None);
 
+            Assert.NotNull(result);
             Assert.Equal(1, result.NumberOfPages);
         }
         [Fact]
@@ -77,6 +78,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = await sut.Handle(query, CancellationToken.None);
 
+            Assert.NotNull(result);
             Assert.Equal(messages.Count(), result.Data.Count());
             foreach (var dto in result.Data)
             {
@@ -124,6 +126,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = await sut.Handle(query, CancellationToken.None);
 
+            Assert.NotNull(result);
             Assert.Equal(1, result.NumberOfPages);
         }
         [Fact]
@@ -146,6 +149,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = await sut.Handle(query, CancellationToken.None);
 
+            Assert.NotNull(result);
             Assert.Equal(messages.Count(), result.Data.Count());
             foreach (var dto in result.Data)
             {
@@ -180,6 +184,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = await sut.Handle(query, CancellationToken.None);
 
+            Assert.NotNull(result);
             Assert.Equal(messageDto.Id, result.Id);
             Assert.Equal(messageDto.Text, result.Text);
         }

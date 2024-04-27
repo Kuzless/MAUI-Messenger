@@ -57,6 +57,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = await sut.Handle(query, CancellationToken.None);
 
+            Assert.NotNull(result);
             Assert.Equal(1, result.NumberOfPages);
         }
         [Fact]
@@ -79,6 +80,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = await sut.Handle(query, CancellationToken.None);
 
+            Assert.NotNull(result);
             Assert.Equal(chats.Count(), result.Data.Count());
         }
     }

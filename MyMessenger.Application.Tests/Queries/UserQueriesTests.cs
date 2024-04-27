@@ -61,6 +61,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = await sut.Handle(query, CancellationToken.None);
 
+            Assert.NotNull(result);
             Assert.Equal(1, result.NumberOfPages);
         }
         [Fact]
@@ -84,6 +85,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = await sut.Handle(query, CancellationToken.None);
 
+            Assert.NotNull(result);
             Assert.Equal(users.Count(), result.Data.Count());
         }
         [Fact]
@@ -112,6 +114,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = await sut.Handle(query, CancellationToken.None);
 
+            Assert.NotNull(result);
             Assert.Equal(userId, result.Id);
         }
         [Fact]
@@ -140,6 +143,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = sut.Handle(query, default);
 
+            Assert.NotNull(result);
             Assert.Equal(result.Result.accessToken, tokensDTO.accessToken);
             Assert.Equal(result.Result.refreshToken, tokensDTO.refreshToken);
         }
@@ -169,6 +173,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = sut.Handle(query, default);
 
+            Assert.NotNull(result);
             Assert.Equal(result.Result.accessToken, newTokensDTO.accessToken);
             Assert.Equal(result.Result.refreshToken, newTokensDTO.refreshToken);
         }
@@ -184,6 +189,7 @@ namespace MyMessenger.Application.Tests.Queries
 
             var result = sut.Handle(query, default);
 
+            Assert.NotNull(result);
             Assert.NotEqual(result.Result.accessToken, tokensDTO.accessToken);
             Assert.NotEqual(result.Result.refreshToken, tokensDTO.refreshToken);
         }

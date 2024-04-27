@@ -87,6 +87,7 @@ namespace MyMessenger.Application.Tests.Services
 
             var result = await sut.LoggingIn(loginDTO);
 
+            Assert.NotNull(result);
             Assert.Equal(tokensDTO, result);
         }
         [Fact]

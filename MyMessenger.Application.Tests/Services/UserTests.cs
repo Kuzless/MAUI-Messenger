@@ -59,6 +59,7 @@ namespace MyMessenger.Application.Tests.Services
 
             var result = await sut.GetUserById(userId);
 
+            Assert.NotNull(result);
             Assert.Equal(expectedUser, result);
         }
         [Fact]
@@ -95,6 +96,7 @@ namespace MyMessenger.Application.Tests.Services
 
             var result = await sut.GetUserByUserName(userName);
 
+            Assert.NotNull(result);
             Assert.Equal(expectedUser, result);
         }
     }

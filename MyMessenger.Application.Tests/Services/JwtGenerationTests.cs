@@ -15,7 +15,7 @@ namespace MyMessenger.Application.Tests.Services
             sut = new JWTGeneratorService(configuration.Object);
         }
         [Fact]
-        public void GenerateToken_ReturnsValidAccessToken()
+        public void GenerateToken_ReturnsValidTokens()
         {
             configuration.Setup(x => x["Jwt:SecretKey"]).Returns("SecretTestKey_1231235434123438_483750934392_4849732393438");
             configuration.Setup(x => x["Jwt:Issuer"]).Returns("issuer");
