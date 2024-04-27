@@ -1,4 +1,5 @@
 using Moq;
+using Xunit;
 using MyMessenger.Domain.Entities;
 using MyMessenger.Domain.Interfaces;
 using MyMessenger.Domain.Repositories;
@@ -23,7 +24,7 @@ namespace MyMessenger.Domain.Tests
         [Theory]
         [InlineData(typeof(Chat))]
         [InlineData(typeof(Message))]
-        public void UnitOfWork_GetRepository_ReturnsRepository(Type type)
+        public void UnitOfWork_GetRepository_ReturnsCorrectRepository(Type type)
         {
             var repositoryType = typeof(IGenericRepository<>).MakeGenericType(type);
 
@@ -32,7 +33,7 @@ namespace MyMessenger.Domain.Tests
             Assert.NotNull(repository);
             Assert.True(repositoryType.IsAssignableFrom(repository.GetType()));
         }
-            
+
         [Fact]
         public async Task UnitOfWork_SaveAsync_CallsSaveChangesAsync()
         {

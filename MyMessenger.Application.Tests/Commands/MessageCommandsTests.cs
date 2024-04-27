@@ -1,4 +1,7 @@
-﻿using Moq;
+﻿using Azure;
+using Moq;
+using MyMessenger.Application.DTO.MessagesDTOs;
+using MyMessenger.Application.СommandsQueries.Chats.Commands;
 using MyMessenger.Application.СommandsQueries.Messages.Commands;
 using MyMessenger.Domain.Entities;
 using MyMessenger.Domain.Interfaces;
@@ -62,12 +65,91 @@ namespace MyMessenger.Application.Tests.Commands
             await sut.Handle(command, default);
 
             unitOfWorkMock.Verify(uow => uow.GetRepository<Message>().GetById(messageId), Times.Once);
+            unitOfWorkMock.Verify(uow => uow.GetRepository<Message>().Delete(It.IsAny<Message>()), Times.Once);
             unitOfWorkMock.Verify(uow => uow.SaveAsync(), Times.Once);
+        }
+        [Fact]
+        public async Task DeleteMessageCommandHandler_DeletesMessage()
+        {
+            var userId = "UserId";
+            var messageId = 1;
+            var message = new Message { UserId = userId, Id = messageId, Text = "Message to delete" };
+            unitOfWorkMock.Setup(uow => uow.GetRepository<Message>().GetById(messageId)).Returns(Task.FromResult(message));
+            unitOfWorkMock.Setup(uow => uow.GetRepository<Message>().Delete(It.IsAny<Message>()));
+            var sut = new DeleteMessageCommandHandler(unitOfWorkMock.Object);
+            var command = new DeleteMessageCommand(messageId, userId);
+
+            var response = await sut.Handle(command, default);
+
+            Assert.True(response.isSuccessful);
+        }
+
+        [Fact]
+        public async Task DeleteMessageCommandHandler_ReturnsFailure_WhenUserIsNotOwner()
+        {
+            var userId = "UserId";
+            var messageId = 1;
+            var message = new Message { UserId = "UserId2", Id = messageId, Text = "Message to delete" };
+            unitOfWorkMock.Setup(uow => uow.GetRepository<Message>().GetById(messageId)).Returns(Task.FromResult(message));
+            var sut = new DeleteMessageCommandHandler(unitOfWorkMock.Object);
+            var command = new DeleteMessageCommand(messageId, userId);
+
+            var response = await sut.Handle(command, default);
+
+            Assert.False(response.isSuccessful);
         }
         [Fact]
         public async Task UpdateMessageCommandHandler_InvokesUpdateMessage()
         {
+            var userId = "UserId";
+            var messageId = 1;
+            var updatedMessage = new MessageDTO { Id = messageId };
+            var oldmessage = new Message { UserId = userId, Id = messageId };
+            unitOfWorkMock.Setup(uow => uow.Message.GetById(messageId)).Returns(Task.FromResult(oldmessage));
+            unitOfWorkMock.Setup(uow => uow.GetRepository<Message>().Update(It.IsAny<Message>()));
+            var sut = new UpdateMessageCommandHandler(unitOfWorkMock.Object);
+            var command = new UpdateMessageCommand(updatedMessage, userId);
 
+            var response = await sut.Handle(command, default);
+
+            unitOfWorkMock.Verify(uow => uow.Message.GetById(messageId), Times.Once);
+            unitOfWorkMock.Verify(uow => uow.GetRepository<Message>().Update(It.IsAny<Message>()), Times.Once);
+            unitOfWorkMock.Verify(uow => uow.SaveAsync(), Times.Once);
+        }
+        [Fact]
+        public async Task UpdateMessageCommandHandler_UpdatesMessage()
+        {
+            var userId = "UserId";
+            var messageId = 1;
+            var newText = "new message";
+            var updatedMessage = new MessageDTO { Id = messageId, Text = newText };
+            var oldmessage = new Message { UserId = userId, Id = messageId, Text = "old message" };
+            unitOfWorkMock.Setup(uow => uow.Message.GetById(messageId)).Returns(Task.FromResult(oldmessage));
+            unitOfWorkMock.Setup(uow => uow.GetRepository<Message>().Update(It.IsAny<Message>()));
+            var sut = new UpdateMessageCommandHandler(unitOfWorkMock.Object);
+            var command = new UpdateMessageCommand(updatedMessage, userId);
+
+            var response = await sut.Handle(command, default);
+
+            Assert.True(response.isSuccessful);
+            Assert.Equal(newText, oldmessage.Text);
+        }
+        [Fact]
+        public async Task UpdateMessageCommandHandler_ReturnsFailure_WhenUserIsNotOwner()
+        {
+            var userId = "UserId";
+            var messageId = 1;
+            var newText = "new message";
+            var updatedMessage = new MessageDTO { Id = messageId, Text = newText };
+            var oldmessage = new Message { UserId = "UserId2", Id = messageId, Text = "old message" };
+            unitOfWorkMock.Setup(uow => uow.Message.GetById(messageId)).Returns(Task.FromResult(oldmessage));
+            var sut = new UpdateMessageCommandHandler(unitOfWorkMock.Object);
+            var command = new UpdateMessageCommand(updatedMessage, userId);
+
+            var response = await sut.Handle(command, default);
+
+            Assert.False(response.isSuccessful);
+            Assert.NotEqual(newText, oldmessage.Text);
         }
     }
 }

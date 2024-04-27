@@ -47,6 +47,7 @@ namespace MyMessenger
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ISignUpService, SignUpService>();
             builder.Services.AddScoped<IJWTGeneratorService, JWTGeneratorService>();
+            builder.Services.AddScoped<ITokenValidatorService, TokenValidatorService>();
 
             //
 

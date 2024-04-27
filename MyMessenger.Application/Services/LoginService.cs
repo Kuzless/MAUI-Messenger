@@ -5,7 +5,6 @@ using MyMessenger.Application.Services.Interfaces;
 using MyMessenger.Application.Services.JwtAuth.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Microsoft.Extensions.Configuration;
 
 namespace MyMessenger.Application.Services
@@ -13,13 +12,13 @@ namespace MyMessenger.Application.Services
     public class LoginService : ILoginService
     {
         private UserManager<User> userManager;
-        private readonly IConfiguration configuration;
         private readonly IJWTGeneratorService jwtGenService;
-        public LoginService(UserManager<User> userManager, IJWTGeneratorService jwtGenService, IConfiguration configuration)
+        private readonly ITokenValidatorService tokenValidatorService;
+        public LoginService(UserManager<User> userManager, IJWTGeneratorService jwtGenService, ITokenValidatorService tokenValidatorService)
         {
             this.userManager = userManager;
             this.jwtGenService = jwtGenService;
-            this.configuration = configuration;
+            this.tokenValidatorService = tokenValidatorService;
         }
         public async Task<TokensDTO> LoggingIn(LoginDTO user)
         {
@@ -34,7 +33,7 @@ namespace MyMessenger.Application.Services
         }
         public async Task<TokensDTO> RefreshTokens(TokensDTO tokens)
         {
-            var token = ValidateData(tokens);
+            var token = tokenValidatorService.ValidateData(tokens);
             var userId = ((JwtSecurityToken)token).Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
             if (userId != null)
             {
@@ -70,20 +69,6 @@ namespace MyMessenger.Application.Services
                 return false;
             }
             return true;
-        }
-        internal SecurityToken? ValidateData(TokensDTO tokens)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Jwt:SecretKey"])),
-                ValidateIssuer = false,
-                ValidateLifetime = false,
-                ValidateAudience = false,
-            };
-            var principal = handler.ValidateToken(tokens.accessToken, tokenValidationParameters, out SecurityToken validatedToken);
-            return validatedToken;
         }
     }
 }
