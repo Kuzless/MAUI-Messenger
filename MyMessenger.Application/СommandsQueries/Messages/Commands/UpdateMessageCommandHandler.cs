@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using MyMessenger.Application.DTO;
 using MyMessenger.Domain.Entities;
 using MyMessenger.Domain.Interfaces;

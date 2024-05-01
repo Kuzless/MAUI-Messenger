@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using MyMessenger.Application.DTO;
 using MyMessenger.Application.DTO.AuthDTOs;
 using MyMessenger.Application.DTO.MessagesDTOs;
@@ -17,10 +16,12 @@ namespace MyMessenger.Application.Integration.Tests
     {
         private readonly WebApplicationFactory<Program> factory;
         private readonly HttpClient client;
-        public MessageControllerTests(MyMessengerWebApplicationFactory factory)
+        private readonly DatabaseContext context;
+        public MessageControllerTests(MyMessengerWebApplicationFactory factory) : base()
         {
             this.factory = factory;
             client = factory.CreateClient();
+            context = factory.databaseContext;
         }
         [Fact]
         public async Task GetMessagesByChatId_ReturnsData()
@@ -29,19 +30,14 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            //Act
+            var response = await client.GetAsync($"/api/Message/{1}");
 
-                //Act
-                var response = await client.GetAsync($"/api/Message/{75}");
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
 
-                //Assert
-                response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
-
-                Assert.NotNull(result);
-            }
+            Assert.NotNull(result);
         }
         [Fact]
         public async Task GetMessagesByChatId_WhenIdNotSpecified_ReturnsData()
@@ -50,19 +46,14 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            //Act
+            var response = await client.GetAsync($"/api/Message/{0}");
 
-                //Act
-                var response = await client.GetAsync($"/api/Message/{0}");
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
 
-                //Assert
-                response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
-
-                Assert.NotNull(result);
-            }
+            Assert.NotNull(result);
         }
         [Fact]
         public async Task GetMessagesByChatId_ReturnsMessages()
@@ -71,20 +62,15 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            //Act
+            var response = await client.GetAsync($"/api/Message/{1}");
 
-                //Act
-                var response = await client.GetAsync($"/api/Message/{75}");
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
 
-                //Assert
-                response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
-
-                Assert.NotNull(result);
-                Assert.NotEmpty(result.Data);
-            }
+            Assert.NotNull(result);
+            Assert.NotEmpty(result.Data);
         }
         [Fact]
         public async Task GetMessagesByChatId_WhenIdNotSpecified_ReturnsMessages()
@@ -93,20 +79,15 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            //Act
+            var response = await client.GetAsync($"/api/Message/{0}");
 
-                //Act
-                var response = await client.GetAsync($"/api/Message/{0}");
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
 
-                //Assert
-                response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
-
-                Assert.NotNull(result);
-                Assert.NotEmpty(result.Data);
-            }
+            Assert.NotNull(result);
+            Assert.NotEmpty(result.Data);
         }
         [Fact]
         public async Task GetMessagesByChatId_ReturnsMessagesFromSameChat()
@@ -115,20 +96,15 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            //Act
+            var response = await client.GetAsync($"/api/Message/{1}");
 
-                //Act
-                var response = await client.GetAsync($"/api/Message/{75}");
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
 
-                //Assert
-                response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
-
-                Assert.NotNull(result);
-                Assert.True(result.Data.All(message => message.ChatId == 75));
-            }
+            Assert.NotNull(result);
+            Assert.True(result.Data.All(message => message.ChatId == 1));
         }
         [Fact]
         public async Task GetMessagesByChatId_WhenIdNotSpecified_ReturnsAllUserMessages()
@@ -137,20 +113,15 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            //Act
+            var response = await client.GetAsync($"/api/Message/{0}");
 
-                //Act
-                var response = await client.GetAsync($"/api/Message/{0}");
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
 
-                //Assert
-                response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
-
-                Assert.NotNull(result);
-                Assert.True(result.Data.All(message => message.Name == "IntegrationTestsUser"));
-            }
+            Assert.NotNull(result);
+            Assert.True(result.Data.All(message => message.Name == "IntegrationTestsUser"));
         }
         [Fact]
         public async Task SendMessage_ReturnsSuccess()
@@ -159,30 +130,25 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
+            MessageDTO message = new MessageDTO() { DateTime = DateTime.Now, ChatId = 1, Text = "CreatedMessage" };
+
+            var json = JsonSerializer.Serialize(message);
+            StringContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            //Act
+            var response = await client.PostAsync("/api/Message", httpContent);
+
+            //Assert
+            var addedMessage = context.Messages.AsNoTracking().FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text);
+
+            response.EnsureSuccessStatusCode();
+
+            //CleanUp
+
+            if (addedMessage != null)
             {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-
-                MessageDTO message = new MessageDTO() { DateTime = DateTime.Now, ChatId = 75, Text = "CreatedMessage" };
-
-                var json = JsonSerializer.Serialize(message);
-                StringContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-                //Act
-                var response = await client.PostAsync("/api/Message", httpContent);
-
-                //Assert
-                var addedMessage = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text);
-
-                response.EnsureSuccessStatusCode();
-
-                //CleanUp
-
-                if (addedMessage != null)
-                {
-                    context.Messages.Remove(addedMessage);
-                    await context.SaveChangesAsync();
-                }
+                context.Messages.Remove(addedMessage);
+                await context.SaveChangesAsync();
             }
         }
         [Fact]
@@ -192,31 +158,26 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
+            MessageDTO message = new MessageDTO() { DateTime = DateTime.Now, ChatId = 1, Text = "CreatedMessage" };
+
+            var json = JsonSerializer.Serialize(message);
+            StringContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            //Act
+            var response = await client.PostAsync("/api/Message", httpContent);
+
+            //Assert
+            var addedMessage = context.Messages.AsNoTracking().FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text);
+
+            response.EnsureSuccessStatusCode();
+            Assert.NotNull(addedMessage);
+
+            //CleanUp
+
+            if (addedMessage != null)
             {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-
-                MessageDTO message = new MessageDTO() { DateTime = DateTime.Now, ChatId = 75, Text = "CreatedMessage" };
-
-                var json = JsonSerializer.Serialize(message);
-                StringContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-                //Act
-                var response = await client.PostAsync("/api/Message", httpContent);
-
-                //Assert
-                var addedMessage = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text);
-
-                response.EnsureSuccessStatusCode();
-                Assert.NotNull(addedMessage);
-
-                //CleanUp
-                
-                if (addedMessage != null)
-                {
-                    context.Messages.Remove(addedMessage);
-                    await context.SaveChangesAsync();
-                }
+                context.Messages.Remove(addedMessage);
+                await context.SaveChangesAsync();
             }
         }
         [Fact]
@@ -226,29 +187,25 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
+            Message oldMessage = context.Messages.FirstOrDefault(m => m.Id == 4);
+            MessageDTO message = new MessageDTO() { DateTime = DateTime.Now, ChatId = 1, Text = "UpdatedMessage", Id = 4 };
+
+            var json = JsonSerializer.Serialize(message);
+            StringContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            //Act
+            var response = await client.PutAsync("/api/Message", httpContent);
+
+            //Assert
+            Message addedMessage = context.Messages.AsNoTracking().FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text);
+
+            response.EnsureSuccessStatusCode();
+
+            //CleanUp
+            if (addedMessage != null)
             {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-                Message oldMessage = context.Messages.FirstOrDefault(m => m.Id == 250);
-                MessageDTO message = new MessageDTO() { DateTime = DateTime.Now, ChatId = 75, Text = "UpdatedMessage", Id = 250 };
-
-                var json = JsonSerializer.Serialize(message);
-                StringContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-                //Act
-                var response = await client.PutAsync("/api/Message", httpContent);
-
-                //Assert
-                Message addedMessage = context.Messages.AsNoTracking().FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text);
-
-                response.EnsureSuccessStatusCode();
-
-                //CleanUp
-                if (addedMessage != null)
-                {
-                    context.Messages.Update(oldMessage);
-                    await context.SaveChangesAsync();
-                }
+                context.Messages.Update(oldMessage);
+                await context.SaveChangesAsync();
             }
         }
         [Fact]
@@ -258,30 +215,26 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
+            Message oldMessage = context.Messages.FirstOrDefault(m => m.Id == 4);
+            MessageDTO message = new MessageDTO() { DateTime = DateTime.Now, ChatId = 1, Text = "UpdatedMessage", Id = 4 };
+
+            var json = JsonSerializer.Serialize(message);
+            StringContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            //Act
+            var response = await client.PutAsync("/api/Message", httpContent);
+
+            //Assert
+            Message addedMessage = context.Messages.AsNoTracking().FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text);
+
+            response.EnsureSuccessStatusCode();
+            Assert.False(oldMessage.Equals(addedMessage));
+
+            //CleanUp
+            if (addedMessage != null)
             {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-                Message oldMessage = context.Messages.FirstOrDefault(m => m.Id == 250);
-                MessageDTO message = new MessageDTO() { DateTime = DateTime.Now, ChatId = 75, Text = "UpdatedMessage", Id = 250 };
-
-                var json = JsonSerializer.Serialize(message);
-                StringContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-                //Act
-                var response = await client.PutAsync("/api/Message", httpContent);
-
-                //Assert
-                Message addedMessage = context.Messages.AsNoTracking().FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text);
-
-                response.EnsureSuccessStatusCode();
-                Assert.False(oldMessage.Equals(addedMessage));
-
-                //CleanUp
-                if (addedMessage != null)
-                {
-                    context.Messages.Update(oldMessage);
-                    await context.SaveChangesAsync();
-                }
+                context.Messages.Update(oldMessage);
+                await context.SaveChangesAsync();
             }
         }
         [Fact]
@@ -291,30 +244,26 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
+            Message oldMessage = context.Messages.FirstOrDefault(m => m.Id == 5);
+            MessageDTO message = new MessageDTO() { DateTime = DateTime.Now, ChatId = 1, Text = "UpdatedMessage", Id = 5 };
+
+            var json = JsonSerializer.Serialize(message);
+            StringContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            //Act
+            var response = await client.PutAsync("/api/Message", httpContent);
+
+            //Assert
+            Message addedMessage = context.Messages.AsNoTracking().FirstOrDefault(m => m.ChatId == oldMessage.ChatId && m.Text == oldMessage.Text);
+
+            response.EnsureSuccessStatusCode();
+            Assert.True(oldMessage.Text == addedMessage.Text);
+
+            //CleanUp
+            if (addedMessage != null)
             {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-                Message oldMessage = context.Messages.FirstOrDefault(m => m.Id == 220);
-                MessageDTO message = new MessageDTO() { DateTime = DateTime.Now, ChatId = 75, Text = "UpdatedMessage", Id = 220 };
-
-                var json = JsonSerializer.Serialize(message);
-                StringContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-                //Act
-                var response = await client.PutAsync("/api/Message", httpContent);
-
-                //Assert
-                Message addedMessage = context.Messages.AsNoTracking().FirstOrDefault(m => m.ChatId == oldMessage.ChatId && m.Text == oldMessage.Text);
-
-                response.EnsureSuccessStatusCode();
-                Assert.True(oldMessage.Text == addedMessage.Text);
-
-                //CleanUp
-                if (addedMessage != null)
-                {
-                    context.Messages.Update(oldMessage);
-                    await context.SaveChangesAsync();
-                }
+                context.Messages.Update(oldMessage);
+                await context.SaveChangesAsync();
             }
         }
         [Fact]
@@ -324,23 +273,19 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-                var dateTime = DateTime.Now;
-                Message message = new Message() { DateTime = dateTime, ChatId = 75, Text = "MessageToDelete", UserId = "adf40a57-3231-4ad5-9a8f-d5df39261b93" };
-                context.Messages.Add(message);
-                await context.SaveChangesAsync();
-                var messageToDelete = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
+            var dateTime = DateTime.Now;
+            Message message = new Message() { DateTime = dateTime, ChatId = 1, Text = "MessageToDelete", UserId = "e13fa002-a86a-419a-a829-6efb0e000c70" };
+            context.Messages.Add(message);
+            await context.SaveChangesAsync();
+            var messageToDelete = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
 
-                //Act
-                var response = await client.DeleteAsync($"/api/Message/{messageToDelete.Id}");
+            //Act
+            var response = await client.DeleteAsync($"/api/Message/{messageToDelete.Id}");
 
-                //Assert
-                var deletedMessage = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
+            //Assert
+            var deletedMessage = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
 
-                response.EnsureSuccessStatusCode();
-            }
+            response.EnsureSuccessStatusCode();
         }
         [Fact]
         public async Task DeleteMessage_WhenUserIsOwner_DeletesMessage()
@@ -349,24 +294,20 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-                var dateTime = DateTime.Now;
-                Message message = new Message() { DateTime = dateTime, ChatId = 75, Text = "MessageToDelete", UserId = "adf40a57-3231-4ad5-9a8f-d5df39261b93" };
-                context.Messages.Add(message);
-                await context.SaveChangesAsync();
-                var messageToDelete = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
+            var dateTime = DateTime.Now;
+            Message message = new Message() { DateTime = dateTime, ChatId = 1, Text = "MessageToDelete", UserId = "e13fa002-a86a-419a-a829-6efb0e000c70" };
+            context.Messages.Add(message);
+            await context.SaveChangesAsync();
+            var messageToDelete = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
 
-                //Act
-                var response = await client.DeleteAsync($"/api/Message/{messageToDelete.Id}");
+            //Act
+            var response = await client.DeleteAsync($"/api/Message/{messageToDelete.Id}");
 
-                //Assert
-                var deletedMessage = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
+            //Assert
+            var deletedMessage = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
 
-                response.EnsureSuccessStatusCode();
-                Assert.Null(deletedMessage);
-            }
+            response.EnsureSuccessStatusCode();
+            Assert.Null(deletedMessage);
         }
         [Fact]
         public async Task DeleteMessage_WhenUserIsNotOwner_DoesntDeletesMessage()
@@ -375,32 +316,29 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await Authorize();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
 
-            using (var scope = factory.Services.CreateScope())
+            var dateTime = DateTime.Now;
+            Message message = new Message() { DateTime = dateTime, ChatId = 1, Text = "MessageToDelete", UserId = "f7853dc7-6aaa-4f8f-873e-f30e2815b713" };
+            context.Messages.Add(message);
+            await context.SaveChangesAsync();
+            var messageToDelete = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
+
+            //Act
+            var response = await client.DeleteAsync($"/api/Message/{messageToDelete.Id}");
+
+            //Assert
+            var deletedMessage = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
+
+            response.EnsureSuccessStatusCode();
+            Assert.NotNull(deletedMessage);
+
+            //CleanUp
+
+            if (deletedMessage != null)
             {
-                var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-                var dateTime = DateTime.Now;
-                Message message = new Message() { DateTime = dateTime, ChatId = 75, Text = "MessageToDelete", UserId = "aa91b748-1ab4-47ce-942b-afc90d91baa4" };
-                context.Messages.Add(message);
+                context.Messages.Remove(deletedMessage);
                 await context.SaveChangesAsync();
-                var messageToDelete = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
-
-                //Act
-                var response = await client.DeleteAsync($"/api/Message/{messageToDelete.Id}");
-
-                //Assert
-                var deletedMessage = context.Messages.FirstOrDefault(m => m.ChatId == message.ChatId && m.Text == message.Text && m.DateTime == dateTime);
-
-                response.EnsureSuccessStatusCode();
-                Assert.NotNull(deletedMessage);
-
-                //CleanUp
-
-                if (deletedMessage != null)
-                {
-                    context.Messages.Remove(deletedMessage);
-                    await context.SaveChangesAsync();
-                }
             }
+
         }
         private async Task<TokensDTO> Authorize()
         {
