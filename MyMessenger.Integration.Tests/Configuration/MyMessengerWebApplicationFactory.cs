@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MyMessenger.Application.Integration.Tests
+namespace MyMessenger.Application.Integration.Tests.Configuration
 {
-    public class MyMessengerWebApplicationFactory : WebApplicationFactory<Program>
+    public class MyMessengerWebApplicationFactory : WebApplicationFactory<Program>, IDisposable
     {
         internal DatabaseContext databaseContext;
         private readonly string connectionString;
@@ -28,9 +28,7 @@ namespace MyMessenger.Application.Integration.Tests
             {
                 var configuration = config.Build();
 
-                var testConnectionString = configuration.GetConnectionString("TestConnection");
-
-                configuration["ConnectionStrings:DefaultConnection"] = testConnectionString;
+                configuration["ConnectionStrings:DefaultConnection"] = connectionString;
             });
 
             builder.ConfigureTestServices(services =>
@@ -40,6 +38,19 @@ namespace MyMessenger.Application.Integration.Tests
                     options.UseSqlServer(connectionString);
                 });
             });
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                databaseContext.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

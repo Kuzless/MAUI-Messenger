@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MyMessenger.Application.DTO;
 using MyMessenger.Application.DTO.AuthDTOs;
 using MyMessenger.Application.DTO.MessagesDTOs;
+using MyMessenger.Application.Integration.Tests.Configuration;
 using MyMessenger.Domain;
 using MyMessenger.Domain.Entities;
 using System.Net.Http.Headers;
@@ -10,18 +10,29 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
-namespace MyMessenger.Application.Integration.Tests
+namespace MyMessenger.Application.Integration.Tests.Controllets
 {
     public class MessageControllerTests : IClassFixture<MyMessengerWebApplicationFactory>
     {
-        private readonly WebApplicationFactory<Program> factory;
         private readonly HttpClient client;
         private readonly DatabaseContext context;
         public MessageControllerTests(MyMessengerWebApplicationFactory factory) : base()
         {
-            this.factory = factory;
             client = factory.CreateClient();
             context = factory.databaseContext;
+        }
+        [Fact]
+        public async Task GetMessagesByChatId_ReturnsSuccess()
+        {
+            //Arrange
+            var tokens = await Authorize();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
+
+            //Act
+            var response = await client.GetAsync($"/api/Message/{1}");
+
+            //Assert
+            response.EnsureSuccessStatusCode();
         }
         [Fact]
         public async Task GetMessagesByChatId_ReturnsData()
@@ -71,6 +82,24 @@ namespace MyMessenger.Application.Integration.Tests
 
             Assert.NotNull(result);
             Assert.NotEmpty(result.Data);
+        }
+        [Fact]
+        public async Task GetMessagesByChatId_ReturnsCorrectNumberOfMessages()
+        {
+            //Arrange
+            var tokens = await Authorize();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.accessToken);
+
+            //Act
+            var response = await client.GetAsync($"/api/Message/{1}");
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<DataForGridDTO<MessageDTO>>();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result.Data);
+            Assert.True(result.Data.Count() == 2);
         }
         [Fact]
         public async Task GetMessagesByChatId_WhenIdNotSpecified_ReturnsMessages()
@@ -348,5 +377,5 @@ namespace MyMessenger.Application.Integration.Tests
             var tokens = await tokenResponse.Content.ReadFromJsonAsync<TokensDTO>();
             return tokens;
         }
-    }       
+    }
 }
