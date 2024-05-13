@@ -5,6 +5,7 @@
 @using MyMessenger.Maui.Services
 @using MyMessenger.Maui.Services.PageService
 @using MyMessenger.Maui.Services.SignalR
+
 @inject SignalRMessageService chatHubService
 @inject MessageService messageService
 
@@ -60,6 +61,7 @@ else
     [Inject] 
     private ChatMessagePageService chatMessagePageService { get; set; }
     private bool IsLoaded { get; set; } = false;
+
     protected override async void OnInitialized()
     {
         chatMessagePageService.OnDataChanged += Refresh;
@@ -73,4 +75,3 @@ else
         StateHasChanged();
     }
 }
-

@@ -45,7 +45,6 @@ namespace MyMessenger.Maui.Services.SignalR
         {
             await hubConnection.SendAsync("UpdateMessage", messageToUpdate);
         }
-
         public async void Dispose()
         {
             if (hubConnection != null)

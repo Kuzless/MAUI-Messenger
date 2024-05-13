@@ -37,5 +37,22 @@ namespace MyMessenger.HubConfig
             var response = await mediator.Send(new UpdateMessageCommand(message, userId));
             await Clients.Group(Convert.ToString(message.ChatId)).SendAsync("ReceiveUpdatedMessage", message);
         }
+        public override Task OnConnectedAsync()
+        {
+            Console.WriteLine($"{Context.ConnectionId} connected");
+            return base.OnConnectedAsync();
+        }
+
+        public override async Task OnDisconnectedAsync(Exception e)
+        {
+            Console.WriteLine($"Disconnected {e?.Message} {Context.ConnectionId}");
+            await base.OnDisconnectedAsync(e);
+        }
+
+        public async Task Send(string message)
+        {
+            Console.WriteLine(message);
+            await Clients.Others.SendAsync("Receive", message);
+        }
     }
 }

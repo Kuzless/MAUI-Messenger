@@ -1,0 +1,39 @@
+﻿@page "/video"
+@using Blazored.LocalStorage;
+@inject IJSRuntime JSRuntime
+@inject ILocalStorageService storage;
+<div>
+    <button @onclick="Start">Start</button>
+</div>
+<div>
+    <video id="@options.VideoID"
+           style="background-color:lightblue;"
+           width="@options.Width" autoplay="true">
+        Click start to show video
+    </video>
+    <video id="remote"
+           style="background-color:lightblue;"
+           width="@options.Width" autoplay="true">
+        Click start to show video
+    </video>
+</div>
+
+@code {
+    WebCamOptions options = new WebCamOptions()
+        {
+            CanvasID = "canvas",
+            VideoID = "video"
+        };
+    protected override async void OnInitialized()
+    {
+        options.Width = 480;
+        options.AccessToken = (await storage.GetItemAsStringAsync("accessToken")).Replace("\"", "");
+        base.OnInitialized();
+    }
+    public async Task Start()
+    {
+        await JSRuntime.InvokeVoidAsync("WebCamFunctions.start", options);
+    }
+
+
+}
