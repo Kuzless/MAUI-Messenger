@@ -19,7 +19,7 @@ namespace MyMessenger.Maui.Services.SignalR
         {
             var token = (await storage.GetItemAsStringAsync("accessToken")).Replace("\"", "");
 
-            hubConnection = new HubConnectionBuilder().WithUrl("https://localhost:7081/chathub", options =>
+            hubConnection = new HubConnectionBuilder().WithUrl("https://mymessengerapp.azurewebsites.net/chathub", options =>
             {
                 options.AccessTokenProvider = () => Task.FromResult(token);
             }).Build();

@@ -9,6 +9,7 @@ let isConnected = false;
 
 let width = 100;
 let height = 0;    
+//const accessToken = localStorage.getItem('accessToken').replace("\"", "");
 
 var mediaConstraints = {
     audio: true, 
@@ -16,7 +17,7 @@ var mediaConstraints = {
 };
 
 const srConnection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:7081/chathub", { accessTokenFactory: () => options.AccessToken })
+    .withUrl("https://mymessengerapp.azurewebsites.net/chathub"/*, { accessTokenFactory: () => accessToken }*/)
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
@@ -33,6 +34,7 @@ async function start() {
     }
 };
 
+start();
 
 window.WebCamFunctions = {
     start: (options) => { onStart(options); }
@@ -114,16 +116,20 @@ function createPeerConnection() {
         }
     }
 
-    rtcConnection.ontrack = function (event) {
-        if (event.streams && event.streams[0]) {
-            otherVideo.srcObject = event.streams[0];
-        } else {
-            if (!otherVideo.srcObject) {
-                otherVideo.srcObject = new MediaStream();
+    rtcConnection.onaddstream = function (event) {
+        if (event.stream) {
+            otherVideo = document.getElementById('remote');
+            if (otherVideo) {
+                otherVideo.srcObject = event.stream;
+                otherVideo.play();
+            } else {
+                console.error("otherVideo element not found.");
             }
-            otherVideo.srcObject.addTrack(event.track);
+        } else {
+            console.error("No stream available in the event.");
         }
     };
+
     rtcConnection.onnegotiationneeded = function () {
         if (isConnected) {
             rtcConnection.createOffer()

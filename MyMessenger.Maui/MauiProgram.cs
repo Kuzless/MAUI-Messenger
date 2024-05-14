@@ -43,10 +43,10 @@ namespace MyMessenger.Maui
             builder.Services.TryAddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
             builder.Services.AddSingleton<CustomAuthService>();
 
-#if DEBUG
+//#if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
-#endif
+//#endif
 
             return builder.Build();
         }

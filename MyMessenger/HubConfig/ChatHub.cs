@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace MyMessenger.HubConfig
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
     public class ChatHub : Hub
     {
         private readonly IMediator mediator;

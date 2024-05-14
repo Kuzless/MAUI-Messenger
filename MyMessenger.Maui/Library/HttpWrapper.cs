@@ -7,7 +7,7 @@ namespace MyMessenger.Maui.Library
     public class HttpWrapper : IHttpWrapper
     {
         private readonly HttpClient httpClient;
-        private readonly string url = "https://localhost:7081/api/";
+        private readonly string url = "https://mymessengerapp.azurewebsites.net/api/";
         public HttpWrapper()
         {
             httpClient = new HttpClient();
