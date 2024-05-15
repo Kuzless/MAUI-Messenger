@@ -6,7 +6,7 @@
     <button @onclick="Start">Start</button>
 </div>
 <div>
-    <video id="@options.VideoID"
+    <video muted id="@options.VideoID"
            style="background-color:lightblue;"
            width="@options.Width" autoplay="true">
         Click start to show video
@@ -17,6 +17,7 @@
         Click start to show video
     </video>
 </div>
+<script src="js/webcam.js"></script>
 
 @code {
     WebCamOptions options = new WebCamOptions()

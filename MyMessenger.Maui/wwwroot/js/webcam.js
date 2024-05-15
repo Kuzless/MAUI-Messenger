@@ -9,7 +9,7 @@ let isConnected = false;
 
 let width = 100;
 let height = 0;    
-//const accessToken = localStorage.getItem('accessToken').replace("\"", "");
+const accessToken = localStorage.getItem('accessToken').slice(1, -1);
 
 var mediaConstraints = {
     audio: true, 
@@ -17,7 +17,7 @@ var mediaConstraints = {
 };
 
 const srConnection = new signalR.HubConnectionBuilder()
-    .withUrl("https://mymessengerapp.azurewebsites.net/chathub"/*, { accessTokenFactory: () => accessToken }*/)
+    .withUrl("https://mymessengerapp.azurewebsites.net/chathub", { accessTokenFactory: () => accessToken })
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
