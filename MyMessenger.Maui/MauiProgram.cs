@@ -34,6 +34,7 @@ namespace MyMessenger.Maui
             builder.Services.AddTransient<ChatMessagePageService>();
             builder.Services.AddTransient<UserPageService>();
             builder.Services.AddTransient<SignalRMessageService>();
+            builder.Services.AddTransient<UserSettingsService>();
 
             builder.Services.AddBlazoredLocalStorage();
 

@@ -15,7 +15,7 @@ namespace MyMessenger.Application.Services
         }
         public async Task<ResponseDTO> SignUp(SignUpDTO user)
         {
-            User newuser = new User() { Email = user.Email, Name = user.Name, UserName = user.UserName };
+            User newuser = new User() { Email = user.Email, Name = user.Name, UserName = user.UserName, PhoneNumber = "" };
             var result = await userManager.CreateAsync(newuser, user.Password);
             if (result.Succeeded)
             {

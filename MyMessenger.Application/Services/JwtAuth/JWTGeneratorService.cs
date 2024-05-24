@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Castle.Core.Logging;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MyMessenger.Application.DTO.AuthDTOs;
 using MyMessenger.Application.Services.JwtAuth.Interfaces;
@@ -12,9 +15,11 @@ namespace MyMessenger.Application.Services.JwtAuth
     public class JWTGeneratorService : IJWTGeneratorService
     {
         private readonly IConfiguration configuration;
-        public JWTGeneratorService(IConfiguration configuration)
+        private readonly IJWTKeyRetrievalService keyRetrievalService;
+        public JWTGeneratorService(IConfiguration configuration, IJWTKeyRetrievalService keyRetrievalService)
         {
             this.configuration = configuration;
+            this.keyRetrievalService = keyRetrievalService;
         }
         public TokensDTO GenerateToken(string email, string id, string name)
         {
@@ -24,7 +29,7 @@ namespace MyMessenger.Application.Services.JwtAuth
                 new Claim(JwtRegisteredClaimNames.Sub, id),
                 new Claim(JwtRegisteredClaimNames.Email, email)
             };
-            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Jwt:SecretKey"]));
+            SymmetricSecurityKey? securityKey = keyRetrievalService.GetJwtSecretKey();
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
                 configuration["Jwt:Issuer"],

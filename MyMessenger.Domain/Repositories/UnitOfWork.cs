@@ -9,14 +9,16 @@ namespace MyMessenger.Domain.Repositories
         private bool disposed;
         public IChatRepository Chat { get; private set; }
         public IMessageRepository Message { get; private set; }
-
+        public IUserRepository User { get; private set; }
         public UnitOfWork(DatabaseContext context)
         {
             this.context = context;
             Chat = new ChatRepository(context);
             Message = new MessageRepository(context);
+            User = new UserRepository(context);
             repos[typeof(Entities.Chat)] = Chat;
             repos[typeof(Entities.Message)] = Message;
+            repos[typeof(Entities.User)] = User;
         }
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : class
         {

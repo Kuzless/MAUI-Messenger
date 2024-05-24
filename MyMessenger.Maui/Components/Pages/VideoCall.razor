@@ -2,11 +2,14 @@
 @using Blazored.LocalStorage;
 @inject IJSRuntime JSRuntime
 @inject ILocalStorageService storage;
+@implements IDisposable
 <div>
-    <button @onclick="Start">Start</button>
+    <label for="connectionId">Enter Connection ID:</label>
+    <input id="connectionId" @bind="connectionId" />
+    <button @onclick="StartCall">Start Call</button>
 </div>
 <div>
-    <video id="@options.VideoID"
+    <video muted id="@options.VideoID"
            style="background-color:lightblue;"
            width="@options.Width" autoplay="true">
         Click start to show video
@@ -17,23 +20,26 @@
         Click start to show video
     </video>
 </div>
+<script src="js/webcam.js"></script>
 
 @code {
+    private string connectionId;
     WebCamOptions options = new WebCamOptions()
         {
-            CanvasID = "canvas",
             VideoID = "video"
         };
     protected override async void OnInitialized()
     {
         options.Width = 480;
-        options.AccessToken = (await storage.GetItemAsStringAsync("accessToken")).Replace("\"", "");
         base.OnInitialized();
     }
-    public async Task Start()
+    async Task StartCall()
     {
+        options.ConnectionId = connectionId;
         await JSRuntime.InvokeVoidAsync("WebCamFunctions.start", options);
     }
-
-
+    public void Dispose()
+    {
+        JSRuntime.InvokeVoidAsync("WebCamFunctions.dispose");
+    }
 }

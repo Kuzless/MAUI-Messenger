@@ -2,6 +2,7 @@
 obj/
 bin/
 MyMessenger.Database/
+MyMessenger/appsettings.Development.json
 
 # Ignore Visual Studio files
 .vs/

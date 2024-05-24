@@ -6,5 +6,6 @@
         Task<HttpResponseMessage> PostAsync(string urlEnd, string content, string token = "");
         Task<HttpResponseMessage> DeleteAsync(string urlEnd, string token = "");
         Task<HttpResponseMessage> PutAsync(string urlEnd, string content, string token = "");
+        Task<HttpResponseMessage> PostImageAsync(string urlEnd, MultipartFormDataContent content, string token = "");
     }
 }

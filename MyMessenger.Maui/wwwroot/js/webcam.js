@@ -8,16 +8,16 @@ let streaming = false;
 let isConnected = false;
 
 let width = 100;
-let height = 0;    
-//const accessToken = localStorage.getItem('accessToken').replace("\"", "");
+let height = 0;
+const accessToken = localStorage.getItem('accessToken').slice(1, -1);
 
 var mediaConstraints = {
-    audio: true, 
-    video: true 
+    audio: true,
+    video: true
 };
 
 const srConnection = new signalR.HubConnectionBuilder()
-    .withUrl("https://mymessengerapp.azurewebsites.net/chathub"/*, { accessTokenFactory: () => accessToken }*/)
+    .withUrl("https://mymessengerapp.azurewebsites.net/chathub", { accessTokenFactory: () => accessToken })
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
@@ -37,8 +37,10 @@ async function start() {
 start();
 
 window.WebCamFunctions = {
-    start: (options) => { onStart(options); }
+    start: (options) => { onStart(options); },
+    dispose: () => { dispose(); }
 };
+
 
 function onStart(options) {
     video = document.getElementById(options.videoID);
@@ -70,6 +72,7 @@ function onStart(options) {
             streaming = true;
         }
     }, false);
+    video.muted = true;
 }
 
 srConnection.on("Receive", data => {
@@ -141,4 +144,10 @@ function createPeerConnection() {
                 })
         }
     }
+}
+function dispose() {
+    rtcConnection.close();
+    rtcConnection = null;
+    myVideoStream.getTracks().forEach(track => track.stop());
+    myVideoStream = null;
 }

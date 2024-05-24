@@ -1,26 +1,31 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MyMessenger.Application.DTO.AuthDTOs;
 using MyMessenger.Application.Services.Interfaces;
+using MyMessenger.Application.Services.JwtAuth.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 
 namespace MyMessenger.Application.Services
 {
     public class TokenValidatorService : ITokenValidatorService
     {
         private readonly IConfiguration configuration;
-        public TokenValidatorService(IConfiguration configuration)
+        private readonly IJWTKeyRetrievalService keyRetrievalService;
+        public TokenValidatorService(IConfiguration configuration, IJWTKeyRetrievalService keyRetrievalService)
         {
             this.configuration = configuration;
+            this.keyRetrievalService = keyRetrievalService;
         }
         public SecurityToken? ValidateData(TokensDTO tokens)
         {
             var handler = new JwtSecurityTokenHandler();
+            SymmetricSecurityKey? securityKey = keyRetrievalService.GetJwtSecretKey();
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Jwt:SecretKey"])),
+                IssuerSigningKey = securityKey,
                 ValidateIssuer = false,
                 ValidateLifetime = false,
                 ValidateAudience = false,

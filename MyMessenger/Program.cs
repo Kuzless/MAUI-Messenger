@@ -16,6 +16,12 @@ using System.Reflection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MyMessenger.HubConfig;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Extensions.Configuration.AzureKeyVault;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Identity;
+using Azure.Storage.Blobs;
 
 namespace MyMessenger
 {
@@ -24,14 +30,37 @@ namespace MyMessenger
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            string secretKey = "";
+            string blobConnection = "";
             builder.Services.AddControllers();
 
             // 
 
-            builder.Services.AddDbContext<DatabaseContext>(options => {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-                options.UseLazyLoadingProxies();
-            });
+            if (builder.Environment.IsProduction())
+            {
+                var keyVault = builder.Configuration.GetSection("Keyvault:KeyvaultUrl");
+                var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(new AzureServiceTokenProvider().KeyVaultTokenCallback));
+                builder.Configuration.AddAzureKeyVault(keyVault.Value!.ToString(), new DefaultKeyVaultSecretManager());
+                var client = new SecretClient(new Uri(keyVault.Value!.ToString()), new DefaultAzureCredential());
+                builder.Services.AddDbContext<DatabaseContext>(options => {
+                    options.UseSqlServer(client.GetSecret("DatabaseConnectionString").Value.Value.ToString());
+                    options.UseLazyLoadingProxies();
+                });
+                secretKey = client.GetSecret("JWTSecretKey").Value.Value.ToString();
+                blobConnection = client.GetSecret("BlobConnectionString").Value.Value.ToString();
+            }
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddDbContext<DatabaseContext>(options => {
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                    options.UseLazyLoadingProxies();
+                });
+                secretKey = builder.Configuration["Jwt:SecretKey"];
+                blobConnection = builder.Configuration["Keyvault:BlobConnection"];
+            }
+
+            //
+
             builder.Services.AddIdentity<User, IdentityRole>(options =>
                     {
                         options.User.RequireUniqueEmail = true;
@@ -48,6 +77,9 @@ namespace MyMessenger
             builder.Services.AddScoped<ISignUpService, SignUpService>();
             builder.Services.AddScoped<IJWTGeneratorService, JWTGeneratorService>();
             builder.Services.AddScoped<ITokenValidatorService, TokenValidatorService>();
+            builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
+            builder.Services.AddScoped<IJWTKeyRetrievalService, JWTKeyRetrievalService>();
+            builder.Services.AddSingleton(x => new BlobServiceClient(blobConnection));
 
             //
 
@@ -62,10 +94,10 @@ namespace MyMessenger
                         builder =>
                         {
                             builder
-                            .WithOrigins("https://0.0.0.0") // specify the exact origin
+                            .WithOrigins("https://0.0.0.0")
                             .AllowAnyHeader()
                             .AllowAnyMethod()
-                            .AllowCredentials(); // allow credentials
+                            .AllowCredentials();
                         });
             });
 
@@ -109,18 +141,11 @@ namespace MyMessenger
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
                     ValidAudience = builder.Configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
             });
 
             var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            /*if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }*/
             app.UseCors("AllowAll");
             app.UseSwagger();
             app.UseSwaggerUI();

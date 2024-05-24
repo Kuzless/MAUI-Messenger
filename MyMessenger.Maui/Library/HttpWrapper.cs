@@ -21,7 +21,6 @@ namespace MyMessenger.Maui.Library
             response.EnsureSuccessStatusCode();
             return response;
         }
-
         public async Task<HttpResponseMessage> PostAsync(string urlEnd, string content, string token = "")
         {
             token = token.Replace("\"", "");
@@ -48,6 +47,15 @@ namespace MyMessenger.Maui.Library
             string urlController = url + urlEnd;
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await httpClient.DeleteAsync(urlController);
+            response.EnsureSuccessStatusCode();
+            return response;
+        }
+        public async Task<HttpResponseMessage> PostImageAsync(string urlEnd, MultipartFormDataContent content, string token = "")
+        {
+            token = token.Replace("\"", "");
+            string urlController = url + urlEnd;
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await httpClient.PostAsync(urlController, content);
             response.EnsureSuccessStatusCode();
             return response;
         }

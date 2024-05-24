@@ -1,12 +1,13 @@
-﻿using MediatR;
-using MyMessenger.Domain.Entities;
+﻿
+using MediatR;
+using MyMessenger.Application.DTO.UserDTOs;
 
 namespace MyMessenger.Application.СommandsQueries.Users.Queries
 {
-    public class GetUserByIdQuery : IRequest<User>
+    public class GetUserDTOByIdQuery : IRequest<UserDTO>
     {
         public string UserId { get; set; }
-        public GetUserByIdQuery(string userId)
+        public GetUserDTOByIdQuery(string userId)
         {
 
             UserId = userId;

@@ -10,6 +10,10 @@
         {
             get;
         }
+        IUserRepository User
+        {
+            get;
+        }
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
          Task SaveAsync();
     }

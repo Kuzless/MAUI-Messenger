@@ -8,7 +8,7 @@
     @if (IsLoaded)
     {
         <h3>Login</h3>
-        <InputText type="text" class="@((string.IsNullOrWhiteSpace(Email) && ButtonClicked ? "element auth-required" : "element"))" placeholder="Enter your username" @bind-Value="@Email"></InputText>
+        <InputText type="text" class="@((string.IsNullOrWhiteSpace(Email) && ButtonClicked ? "element auth-required" : "element"))" placeholder="Enter your email" @bind-Value="@Email"></InputText>
         <br>
         <InputText type="text" class="@((string.IsNullOrWhiteSpace(Password) && ButtonClicked ? "element auth-required" : "element"))" placeholder="Enter your password" @bind-Value="@Password" isPassword="true"></InputText>
         <br>
