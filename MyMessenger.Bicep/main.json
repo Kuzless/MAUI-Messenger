@@ -1,0 +1,502 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.27.1.19265",
+      "templateHash": "3114564720343778074"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[deployment().location]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2024-03-01",
+      "name": "Messenger",
+      "location": "[parameters('location')]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "MyMessengerPlan",
+      "resourceGroup": "Messenger",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', 'Messenger'), '2024-03-01', 'full').location]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.27.1.19265",
+              "templateHash": "16214399568033472195"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Web/serverfarms",
+              "apiVersion": "2023-12-01",
+              "name": "MyMessengerPlan",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "F1",
+                "capacity": 1
+              }
+            }
+          ],
+          "outputs": {
+            "appServicePlanId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Web/serverfarms', 'MyMessengerPlan')]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', 'Messenger')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "MyMessengerApp",
+      "resourceGroup": "Messenger",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', 'Messenger'), '2024-03-01', 'full').location]"
+          },
+          "appServicePlanId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'Messenger'), 'Microsoft.Resources/deployments', 'MyMessengerPlan'), '2022-09-01').outputs.appServicePlanId.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.27.1.19265",
+              "templateHash": "1897430998311357077"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            },
+            "appServicePlanId": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Web/sites",
+              "apiVersion": "2021-01-15",
+              "name": "MyMessengerApp",
+              "location": "[parameters('location')]",
+              "identity": {
+                "type": "SystemAssigned"
+              },
+              "properties": {
+                "serverFarmId": "[parameters('appServicePlanId')]"
+              }
+            },
+            {
+              "type": "Microsoft.ApiManagement/service",
+              "apiVersion": "2023-05-01-preview",
+              "name": "MyMessengerapi",
+              "location": "[parameters('location')]",
+              "sku": {
+                "capacity": 0,
+                "name": "Consumption"
+              },
+              "properties": {
+                "virtualNetworkType": "None",
+                "publisherEmail": "mykhailo.riazhskyi@hneu.net",
+                "publisherName": "Михайло Ряжський"
+              }
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/apis",
+              "apiVersion": "2023-05-01-preview",
+              "name": "[format('{0}/{1}', 'MyMessengerapi', 'MyMessengerApp')]",
+              "properties": {
+                "displayName": "MyMessengerApp",
+                "path": "api",
+                "protocols": [
+                  "https"
+                ],
+                "serviceUrl": "[format('https://{0}.azurewebsites.net', 'MyMessengerApp')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service', 'MyMessengerapi')]",
+                "[resourceId('Microsoft.Web/sites', 'MyMessengerApp')]"
+              ]
+            }
+          ],
+          "outputs": {
+            "webAppId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Web/sites', 'MyMessengerApp'), '2021-01-15', 'full').identity.principalId]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'Messenger'), 'Microsoft.Resources/deployments', 'MyMessengerPlan')]",
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', 'Messenger')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "rbmessengerimageblob",
+      "resourceGroup": "Messenger",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', 'Messenger'), '2024-03-01', 'full').location]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.27.1.19265",
+              "templateHash": "5935550654241789610"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2023-04-01",
+              "name": "rbmessengerimageblob",
+              "location": "[parameters('location')]",
+              "kind": "StorageV2",
+              "sku": {
+                "name": "Standard_LRS"
+              },
+              "properties": {
+                "publicNetworkAccess": "Enabled",
+                "allowBlobPublicAccess": true,
+                "accessTier": "Hot"
+              }
+            },
+            {
+              "type": "Microsoft.Storage/storageAccounts/blobServices",
+              "apiVersion": "2023-04-01",
+              "name": "[format('{0}/{1}', 'rbmessengerimageblob', 'default')]",
+              "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', 'rbmessengerimageblob')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+              "apiVersion": "2019-06-01",
+              "name": "[format('{0}/{1}/{2}', 'rbmessengerimageblob', 'default', 'avatar')]",
+              "properties": {
+                "publicAccess": "Blob",
+                "metadata": {}
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', 'rbmessengerimageblob', 'default')]"
+              ]
+            }
+          ],
+          "outputs": {
+            "blobConnectionString": {
+              "type": "string",
+              "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix=core.windows.net', 'rbmessengerimageblob', listKeys(resourceId('Microsoft.Storage/storageAccounts', 'rbmessengerimageblob'), '2023-04-01').keys[0].value)]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', 'Messenger')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "RBMessengerKeyvault",
+      "resourceGroup": "Messenger",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', 'Messenger'), '2024-03-01', 'full').location]"
+          },
+          "webAppId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'Messenger'), 'Microsoft.Resources/deployments', 'MyMessengerApp'), '2022-09-01').outputs.webAppId.value]"
+          },
+          "dbConStr": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'Messenger'), 'Microsoft.Resources/deployments', 'newserver1234123'), '2022-09-01').outputs.dbConnectionString.value]"
+          },
+          "blobConStr": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'Messenger'), 'Microsoft.Resources/deployments', 'rbmessengerimageblob'), '2022-09-01').outputs.blobConnectionString.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.27.1.19265",
+              "templateHash": "4787148322573654696"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            },
+            "webAppId": {
+              "type": "string"
+            },
+            "dbConStr": {
+              "type": "string"
+            },
+            "blobConStr": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.KeyVault/vaults",
+              "apiVersion": "2019-09-01",
+              "name": "RBMessengerKeyvault",
+              "location": "[parameters('location')]",
+              "properties": {
+                "enabledForDeployment": true,
+                "enabledForTemplateDeployment": true,
+                "enabledForDiskEncryption": true,
+                "tenantId": "[subscription().tenantId]",
+                "accessPolicies": [
+                  {
+                    "tenantId": "[subscription().tenantId]",
+                    "objectId": "0231332b-245e-4115-b129-58b5f1109b20",
+                    "permissions": {
+                      "keys": [
+                        "all"
+                      ],
+                      "secrets": [
+                        "all"
+                      ]
+                    }
+                  },
+                  {
+                    "tenantId": "[subscription().tenantId]",
+                    "objectId": "[parameters('webAppId')]",
+                    "permissions": {
+                      "keys": [
+                        "all"
+                      ],
+                      "secrets": [
+                        "all"
+                      ]
+                    }
+                  }
+                ],
+                "sku": {
+                  "name": "standard",
+                  "family": "A"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2023-07-01",
+              "name": "[format('{0}/{1}', 'RBMessengerKeyvault', 'DatabaseConnectionString')]",
+              "properties": {
+                "value": "[parameters('dbConStr')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', 'RBMessengerKeyvault')]"
+              ]
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2023-07-01",
+              "name": "[format('{0}/{1}', 'RBMessengerKeyvault', 'JWTSecretKey')]",
+              "properties": {
+                "value": "prod_secret_key_private_123012301230"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', 'RBMessengerKeyvault')]"
+              ]
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2023-07-01",
+              "name": "[format('{0}/{1}', 'RBMessengerKeyvault', 'BlobConnectionString')]",
+              "properties": {
+                "value": "[parameters('blobConStr')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', 'RBMessengerKeyvault')]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'Messenger'), 'Microsoft.Resources/deployments', 'newserver1234123')]",
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', 'Messenger')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'Messenger'), 'Microsoft.Resources/deployments', 'rbmessengerimageblob')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'Messenger'), 'Microsoft.Resources/deployments', 'MyMessengerApp')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "newserver1234123",
+      "resourceGroup": "Messenger",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', 'Messenger'), '2024-03-01', 'full').location]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.27.1.19265",
+              "templateHash": "5497442911560275817"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "login": "Kuzless",
+            "pass": "123QwE321",
+            "serverName": "newserver1234123",
+            "dbName": "Messenger",
+            "adminLogin": "[variables('login')]",
+            "adminPassword": "[variables('pass')]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Sql/servers",
+              "apiVersion": "2023-08-01-preview",
+              "name": "newserver1234123",
+              "location": "[parameters('location')]",
+              "properties": {
+                "administratorLogin": "[variables('login')]",
+                "administratorLoginPassword": "[variables('pass')]",
+                "publicNetworkAccess": "Enabled"
+              }
+            },
+            {
+              "type": "Microsoft.Sql/servers/firewallRules",
+              "apiVersion": "2023-08-01-preview",
+              "name": "[format('{0}/{1}', 'newserver1234123', 'AllowAllWindowsAzureIps')]",
+              "properties": {
+                "startIpAddress": "0.0.0.0",
+                "endIpAddress": "0.0.0.0"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', 'newserver1234123')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Sql/servers/firewallRules",
+              "apiVersion": "2023-08-01-preview",
+              "name": "[format('{0}/{1}', 'newserver1234123', 'AllConnectionsAllowed')]",
+              "properties": {
+                "startIpAddress": "0.0.0.0",
+                "endIpAddress": "255.255.255.255"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', 'newserver1234123')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Sql/servers/databases",
+              "apiVersion": "2023-08-01-preview",
+              "name": "[format('{0}/{1}', 'newserver1234123', 'Messenger')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "GP_S_Gen5",
+                "tier": "GeneralPurpose",
+                "family": "Gen5",
+                "capacity": 2
+              },
+              "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": 34359738368,
+                "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                "zoneRedundant": false,
+                "readScale": "Disabled",
+                "autoPauseDelay": 60,
+                "requestedBackupStorageRedundancy": "Local",
+                "isLedgerOn": false,
+                "useFreeLimit": true,
+                "freeLimitExhaustionBehavior": "AutoPause",
+                "availabilityZone": "NoPreference"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', 'newserver1234123')]"
+              ]
+            }
+          ],
+          "outputs": {
+            "dbConnectionString": {
+              "type": "string",
+              "value": "[format('Server=tcp:{0},1433;Initial Catalog={1};Persist Security Info=False;User ID={2};Password={3};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;', reference(variables('serverName')).fullyQualifiedDomainName, variables('dbName'), variables('adminLogin'), variables('adminPassword'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', 'Messenger')]"
+      ]
+    }
+  ]
+}

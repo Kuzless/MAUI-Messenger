@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMessenger.Integration.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMessenger.Tests", "MyMessenger.Tests\MyMessenger.Tests.csproj", "{F7049637-E282-480A-B05A-7FA625458F47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMessenger.Bicep", "MyMessenger.Bicep\MyMessenger.Bicep.csproj", "{17484EDE-0103-4392-B319-CFF540BEF6E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{F7049637-E282-480A-B05A-7FA625458F47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7049637-E282-480A-B05A-7FA625458F47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7049637-E282-480A-B05A-7FA625458F47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17484EDE-0103-4392-B319-CFF540BEF6E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17484EDE-0103-4392-B319-CFF540BEF6E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17484EDE-0103-4392-B319-CFF540BEF6E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17484EDE-0103-4392-B319-CFF540BEF6E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
