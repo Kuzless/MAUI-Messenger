@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-black">
+  <div class="container">
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <ng-container *ngIf="!isLoggedIn; else LoggedIn">
+          <li class="nav-item">
+            <a class="nav-link" href="login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="register">Register</a>
+          </li>
+        </ng-container>
+        <ng-template #LoggedIn>
+          <li class="nav-item" (click)="logout()">
+            <a class="nav-link" href="#">Logout</a>
+          </li>
+        </ng-template>
+
+        <li class="nav-item">
+      </ul>
+    </div>
+  </div>
+</nav>
+<br>
+  

@@ -94,10 +94,10 @@ namespace MyMessenger
                         builder =>
                         {
                             builder
-                            .WithOrigins("https://0.0.0.0")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials();
+                            .WithOrigins("http://localhost:4200")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials();
                         });
             });
 
@@ -150,6 +150,7 @@ namespace MyMessenger
             app.UseSwagger();
             app.UseSwaggerUI();
             app.MapHub<ChatHub>("/chathub");
+            app.MapControllers().RequireCors("AllowAll");
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="auth-container">
+        <h3>Login</h3>
+        <input type="text" class="form-control mb-3" placeholder="Enter your email" [(ngModel)]="email">
+        <input type="password" class="form-control mb-3" placeholder="Enter your password" [(ngModel)]="password">
+        <button class="btn btn-primary btn-block" (click)="login()">Login</button>
+        <p *ngIf="!loginSuccessfully" class="mt-3">An error occurred.<br>Please recheck your credentials.</p>
+      </div>
+    </div>
+  </div>
+</div>
