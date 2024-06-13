@@ -13,35 +13,30 @@ export class WrapperService {
   constructor(private http: HttpClient) {}
 
   async getAsync(urlEnd: string, token = ''): Promise<any> {
-    token = token.replace('"', '');
     const urlController = this.url + urlEnd;
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return firstValueFrom(this.http.get<any>(urlController, { headers }));
   }
 
   async postAsync(urlEnd: string, content: any, token = ''): Promise<any> {
-    token = token.replace('"', '');
     const urlController = this.url + urlEnd;
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return firstValueFrom(this.http.post<any>(urlController, content, { headers }));
   }
 
   async putAsync(urlEnd: string, content: any, token = ''): Promise<any> {
-    token = token.replace('"', '');
     const urlController = this.url + urlEnd;
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return firstValueFrom(this.http.put<any>(urlController, content, { headers }));
   }
 
   async deleteAsync(urlEnd: string, token = ''): Promise<any> {
-    token = token.replace('"', '');
     const urlController = this.url + urlEnd;
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return firstValueFrom(this.http.delete<any>(urlController, { headers }));
   }
 
   async postImageAsync(urlEnd: string, content: FormData, token = ''): Promise<any> {
-    token = token.replace('"', '');
     const urlController = this.url + urlEnd;
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return firstValueFrom(this.http.post<any>(urlController, content, { headers }));

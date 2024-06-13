@@ -3,7 +3,16 @@
     <div class="col-md-6">
       <div class="auth-container">
         <h3>Users</h3>
-        <button type="button" class="btn btn-primary" (click)="openPopup()">Parameters</button>
+        <button (click)="openPopup()">Parameters</button>
+        <div *ngIf="isParametersVisible">
+          <app-parameters 
+            [currentPage]="currentPage" 
+            [columns]="columns" 
+            (onOpen)="openPopup()"
+            (onClose)="closePopup()" 
+            (onSave)="saveChanges()">
+          </app-parameters>
+        </div>
       </div>
     </div>
     <ag-grid-angular

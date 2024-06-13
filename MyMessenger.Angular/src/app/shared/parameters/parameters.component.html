@@ -1,0 +1,25 @@
+<div class="parameters">
+    <div class="content">
+      <div class="search-bar">
+        <h3>Search</h3>
+        <input type="text" [(ngModel)]="currentPage.subs" placeholder="Search..." />
+      </div>
+      <h3>Sort</h3>
+      <div class="dropdown">
+        <select (change)="sortByColumn($event)">
+          <option *ngFor="let column of columns" [value]="column">{{ column }}</option>
+        </select>
+      </div>
+      <br />
+      <div class="radio-group2">
+        <input type="radio" id="radio11" name="radioGroup2" [(ngModel)]="sortType" [value]="true" (click)="changeSortType()" />
+        <label for="radio11">Asc</label>
+        <input type="radio" id="radio22" name="radioGroup2" [(ngModel)]="sortType" [value]="false" (click)="changeSortType()" />
+        <label for="radio22">Desc</label>
+      </div>
+      <br />
+      <button (click)="saveAndClose()">Apply</button>
+      <button (click)="closePopup()">Close</button>
+    </div>
+  </div>
+  

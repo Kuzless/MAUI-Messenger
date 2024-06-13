@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { DataGrid } from '../models/datagrid';
 import { DataRetrieval } from '../models/dataretrieval';
