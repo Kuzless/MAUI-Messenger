@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../services/user.service';
+import { Subscription } from 'rxjs';
+
 import { AgGridModule } from 'ag-grid-angular'; 
+import { ColDef, SizeColumnsToFitGridStrategy } from 'ag-grid-community';
+
 import { User } from '../../models/user';
-import { ColDef } from 'ag-grid-community';
 import { DataRetrieval } from '../../models/dataretrieval';
 import { DataGrid } from '../../models/datagrid';
-import { Subscription } from 'rxjs';
-import { ParametersComponent } from '../../shared/parameters/parameters.component';
-import { ViewChild } from '@angular/core';
 
+import { UserService } from '../../services/user.service';
+
+import { ParametersComponent } from '../../shared/parameters/parameters.component';
 
 @Component({
   selector: 'app-users',
@@ -22,11 +24,20 @@ import { ViewChild } from '@angular/core';
 export class UsersComponent {
   @ViewChild(ParametersComponent) parametersComponent!: ParametersComponent;
   columns: string[] = ["Name", "UserName", "Email", "Phone"];
+  autoSizeStrategy: SizeColumnsToFitGridStrategy = {
+    type: 'fitGridWidth',
+    defaultMinWidth: 100,
+  };
+  defaultColDef = {
+    resizable: false,
+    sortable: false,
+    suppressMovable: true
+  };
   columnDefs: ColDef<User>[] = [
-    { headerName: this.columns[0], field: "name", sortable: false },
-    { headerName: this.columns[1], field: "userName", sortable: false },
-    { headerName: this.columns[2], field: "email", sortable: false },
-    { headerName: this.columns[3], field: "phoneNumber", sortable: false }
+    { headerName: this.columns[0], field: "name" },
+    { headerName: this.columns[1], field: "userName" },
+    { headerName: this.columns[2], field: "email" },
+    { headerName: this.columns[3], field: "phoneNumber" }
   ];
   isParametersVisible: boolean = false;
   pageSize: number = 10;
@@ -35,7 +46,6 @@ export class UsersComponent {
   isWindowVisible = false;
   numberOfPages = 1;
   currentPageNumber = 1;
-  onOpen!: Subscription;
   onSave!: Subscription;
   onClose!: Subscription;
 
@@ -63,14 +73,9 @@ export class UsersComponent {
   // Parameters
   saveChanges(): void {
     this.getAllUsers();
-    this.isParametersVisible = false;
   }
 
-  openPopup(): void {
-    this.isParametersVisible = true;
-  }
-
-  closePopup(): void {
-    this.isParametersVisible = false;
+  changePopupVisibility(): void {
+    this.isParametersVisible = !this.isParametersVisible;
   }
 }

@@ -1,25 +1,29 @@
-<div class="parameters">
-    <div class="content">
-      <div class="search-bar">
-        <h3>Search</h3>
-        <input type="text" [(ngModel)]="currentPage.subs" placeholder="Search..." />
-      </div>
-      <h3>Sort</h3>
-      <div class="dropdown">
-        <select (change)="sortByColumn($event)">
-          <option *ngFor="let column of columns" [value]="column">{{ column }}</option>
-        </select>
-      </div>
-      <br />
-      <div class="radio-group2">
-        <input type="radio" id="radio11" name="radioGroup2" [(ngModel)]="sortType" [value]="true" (click)="changeSortType()" />
-        <label for="radio11">Asc</label>
-        <input type="radio" id="radio22" name="radioGroup2" [(ngModel)]="sortType" [value]="false" (click)="changeSortType()" />
-        <label for="radio22">Desc</label>
-      </div>
-      <br />
-      <button (click)="saveAndClose()">Apply</button>
-      <button (click)="closePopup()">Close</button>
+<div class="container">
+    <div class="parameters">
+        <div class="content">
+            <div class="search-bar form-group">
+                <h3>Search</h3>
+                <input type="text" [(ngModel)]="currentPage.subs" class="form-control" placeholder="Search...">
+            </div>
+            <h3>Sort</h3>
+            <div class="dropdown">
+                <select (change)="sortByColumn($event)" class="form-control">
+                  <option *ngFor="let column of columns" [value]="column">{{ column }}</option>
+                </select>
+            </div>
+            <br />
+            <div class="radio-group2">
+                <input type="radio" id="radio11" name="radioGroup2" [(ngModel)]="sortType" [value]="false" (click)="changeSortType()" class="form-check-input">
+                <label for="radio11" class="form-check-label">Ascending</label>
+            </div>
+            <div class="mt-2"></div> <!-- Добавляем отступ -->
+            <div class="radio-group2">
+                <input type="radio" id="radio22" name="radioGroup2" [(ngModel)]="sortType" [value]="true" (click)="changeSortType()" class="form-check-input">
+                <label for="radio22" class="form-check-label">Descending</label>
+            </div>
+            <br />
+            <button (click)="saveAndClose()" class="btn btn-primary">Apply</button>
+        </div>
     </div>
-  </div>
-  
+</div>
+      

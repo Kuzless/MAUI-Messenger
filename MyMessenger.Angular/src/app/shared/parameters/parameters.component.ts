@@ -1,7 +1,6 @@
-import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { OnChanges } from '@angular/core';
 
 @Component({
   selector: 'app-parameters',
@@ -36,14 +35,6 @@ export class ParametersComponent implements OnChanges {
     this.onSave.emit();
   }
 
-  openPopup() {
-    this.onOpen.emit();
-  }
-
-  closePopup() {
-    this.onClose.emit();
-  }
-
   sortByColumn(event: any) {
     const column = event.target.value;
     this.selectedColumn = column;
@@ -51,6 +42,7 @@ export class ParametersComponent implements OnChanges {
   }
   
   changeSortType() {
+    this.sortType = !this.sortType;
     this.sort[this.selectedColumn] = this.sortType;
   }
 }
