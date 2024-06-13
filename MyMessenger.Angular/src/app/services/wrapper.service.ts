@@ -8,7 +8,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class WrapperService {
 
-  private url = 'https://localhost:7081/api/';
+  private url = 'https://mymessengerapp.azurewebsites.net/api/';
 
   constructor(private http: HttpClient) {}
 

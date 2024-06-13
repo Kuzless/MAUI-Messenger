@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -19,16 +18,13 @@ export class RegisterComponent {
   email: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService) {}
 
   async signUp() {
     this.signUpAttempted = true;
-    if (this.name && this.username && this.email && this.password) {
-      (await this.authService.signUp(this.name, this.username, this.email, this.password))
-        .subscribe((success: boolean) => {
-          console.log(success);
-          this.signUpSuccessfully = success;
-        });
-    }
+    (await this.authService.signUp(this.name, this.username, this.email, this.password))
+      .subscribe((success: boolean) => {
+        this.signUpSuccessfully = success;
+    });
   }
 }

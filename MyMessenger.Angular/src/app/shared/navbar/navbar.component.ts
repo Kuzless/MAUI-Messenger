@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 
@@ -9,12 +9,11 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   isLoggedIn!: boolean;
 
-  constructor(private authService: AuthService) { }
-
-  ngOnInit() {
+  constructor(private authService: AuthService) 
+  {
     this.authService.isLoggedIn.subscribe((loggedIn: boolean) => {
       this.isLoggedIn = loggedIn;
     });

@@ -5,9 +5,9 @@ import { Subscription } from 'rxjs';
 import { AgGridModule } from 'ag-grid-angular'; 
 import { ColDef, SizeColumnsToFitGridStrategy } from 'ag-grid-community';
 
-import { User } from '../../models/user';
-import { DataRetrieval } from '../../models/dataretrieval';
-import { DataGrid } from '../../models/datagrid';
+import { User } from './models/user';
+import { DataRetrieval } from '../../shared/models/dataretrieval';
+import { DataGrid } from '../../shared/models/datagrid';
 
 import { UserService } from '../../services/user.service';
 
@@ -47,7 +47,6 @@ export class UsersComponent {
   numberOfPages = 1;
   currentPageNumber = 1;
   onSave!: Subscription;
-  onClose!: Subscription;
 
   constructor(private userService: UserService) { 
     this.currentPage = {
@@ -68,11 +67,6 @@ export class UsersComponent {
     const newData: DataGrid<User> = await this.userService.getAll(this.currentPage, 'User');
     this.usersList = newData.data;
     this.numberOfPages = newData.numberOfPages;
-  }
-
-  // Parameters
-  saveChanges(): void {
-    this.getAllUsers();
   }
 
   changePopupVisibility(): void {

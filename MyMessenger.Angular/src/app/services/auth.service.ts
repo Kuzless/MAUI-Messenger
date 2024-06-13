@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { WrapperService } from './wrapper.service';
 import { Observable, of, BehaviorSubject } from 'rxjs';
-import { Response } from '../models/response';
+import { Response } from './models/response';
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +10,15 @@ export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(this.isLogged());
   isLoggedIn = this.loggedIn.asObservable();
 
-  constructor(private http: HttpClient, private wrapper: WrapperService) { }
+  constructor(private wrapper: WrapperService) { }
 
   async login(email: string, password: string): Promise<boolean> {
     const data = { Email: email, Password: password };
-    const response = await this.wrapper.postAsync('Auth/', data);
-    if (response && response.accessToken && response.refreshToken) {
-      localStorage.setItem('accessToken', response.accessToken);
-      localStorage.setItem('refreshToken', response.refreshToken);
-      this.loggedIn.next(true);
+    try{
+      const response = await this.wrapper.postAsync('Auth/', data);
+      this.handleLoginResponse(response);
       return true;
-    } else {
+    } catch {
       console.error('Invalid login credentials.');
       return false;
     }
@@ -33,11 +30,14 @@ export class AuthService {
       return of(responseModel.isSuccessful);
   }
 
-  isLogged() {
-    if (typeof window !== 'undefined') {
-      return !!localStorage.getItem('accessToken');
-    }
-    return false;
+  isLogged(): boolean {
+    return typeof window !== 'undefined' && !!localStorage.getItem('accessToken');
+  }
+
+  private handleLoginResponse(response: any): void {
+    localStorage.setItem('accessToken', response.accessToken);
+    localStorage.setItem('refreshToken', response.refreshToken);
+    this.loggedIn.next(true);
   }
   
   logout() {

@@ -12,8 +12,6 @@ import { FormsModule } from '@angular/forms';
 export class ParametersComponent implements OnChanges {
   @Input() currentPage: any;
   @Input() columns!: string[];
-  @Output() onOpen: EventEmitter<void> = new EventEmitter<void>();
-  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
   @Output() onSave: EventEmitter<void> = new EventEmitter<void>();
 
   sortType: boolean;

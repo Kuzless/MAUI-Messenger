@@ -98,7 +98,18 @@ namespace MyMessenger
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
                                 .AllowCredentials();
+                            builder
+                            .WithOrigins("http://0.0.0.0")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials();
+                            builder
+                            .WithOrigins("https://angularmessengerapp.azurewebsites.net")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials();
                         });
+
             });
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
