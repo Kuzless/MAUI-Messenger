@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
@@ -7,7 +7,6 @@ import { ColDef, SizeColumnsToFitGridStrategy } from 'ag-grid-community';
 
 import { User } from './models/user';
 import { DataRetrieval } from '../../shared/models/dataretrieval';
-import { DataGrid } from '../../shared/models/datagrid';
 
 import { UserService } from '../../services/user.service';
 
@@ -21,7 +20,7 @@ import { ParametersComponent } from '../../shared/parameters/parameters.componen
   styleUrl: './users.component.css'
 })
 
-export class UsersComponent {
+export class UsersComponent implements OnInit {
   @ViewChild(ParametersComponent) parametersComponent!: ParametersComponent;
   columns: string[] = ["Name", "UserName", "Email", "Phone"];
   autoSizeStrategy: SizeColumnsToFitGridStrategy = {
@@ -42,13 +41,15 @@ export class UsersComponent {
   isParametersVisible: boolean = false;
   pageSize: number = 10;
   usersList: User[] = [];
-  currentPage: DataRetrieval;
+  currentPage: DataRetrieval = new DataRetrieval;
   isWindowVisible = false;
   numberOfPages = 1;
   currentPageNumber = 1;
   onSave!: Subscription;
 
-  constructor(private userService: UserService) { 
+  constructor(private userService: UserService) { }
+
+  ngOnInit(): void {
     this.currentPage = {
       pageNumber: this.currentPageNumber,
       pageSize: this.pageSize,
@@ -63,10 +64,11 @@ export class UsersComponent {
     this.getAllUsers();
   }
 
-  async getAllUsers(): Promise<void> {
-    const newData: DataGrid<User> = await this.userService.getAll(this.currentPage, 'User');
-    this.usersList = newData.data;
-    this.numberOfPages = newData.numberOfPages;
+  getAllUsers(): void {
+    this.userService.getAll<User>(this.currentPage, 'User').subscribe(data => {
+      this.usersList = data.data;
+      this.numberOfPages = data.numberOfPages;
+    })
   }
 
   changePopupVisibility(): void {

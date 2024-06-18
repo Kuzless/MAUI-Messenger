@@ -1,33 +1,39 @@
 import { Injectable } from '@angular/core';
-import { WrapperService } from './wrapper.service';
-import { Observable, of, BehaviorSubject } from 'rxjs';
+import { Observable, of, BehaviorSubject, map } from 'rxjs';
 import { Response } from './models/response';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private baseUrl = environment.baseUrl;
   private loggedIn = new BehaviorSubject<boolean>(this.isLogged());
   isLoggedIn = this.loggedIn.asObservable();
 
-  constructor(private wrapper: WrapperService) { }
+  constructor(private http: HttpClient) { }
 
-  async login(email: string, password: string): Promise<boolean> {
+  login(email: string, password: string): Observable<boolean> {
     const data = { Email: email, Password: password };
     try{
-      const response = await this.wrapper.postAsync('Auth/', data);
-      this.handleLoginResponse(response);
-      return true;
+      return this.http.post(this.baseUrl + 'Auth/', data)
+        .pipe(map(
+          tokens => {
+            this.handleLoginResponse(tokens);
+            return true;
+      }))
     } catch {
-      console.error('Invalid login credentials.');
-      return false;
+      return of(false);
     }
   }
-  async signUp(name: string, username: string, email: string, password: string): Promise<Observable<boolean>> {
-      const data = { Name: name, UserName: username, Email: email, Password: password };
-      const response = await this.wrapper.postAsync('Auth/sign', data);
-      const responseModel : Response = new Response(response)
-      return of(responseModel.isSuccessful);
+  signUp(name: string, username: string, email: string, password: string): Observable<boolean> {
+    const data = { Name: name, UserName: username, Email: email, Password: password };
+    return this.http.post<Response>(this.baseUrl + 'Auth/sign', data)
+      .pipe(
+        map(response => {
+          return response.isSuccessful;
+        }))
   }
 
   isLogged(): boolean {

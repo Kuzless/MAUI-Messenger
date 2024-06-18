@@ -21,10 +21,10 @@ export class RegisterComponent {
   constructor(private authService: AuthService) {}
 
   async signUp() {
-    this.signUpAttempted = true;
-    (await this.authService.signUp(this.name, this.username, this.email, this.password))
-      .subscribe((success: boolean) => {
+    this.authService.signUp(this.name, this.username, this.email, this.password)
+      .subscribe(success => {
         this.signUpSuccessfully = success;
+        this.signUpAttempted = true;
     });
   }
 }

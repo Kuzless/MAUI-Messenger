@@ -9,9 +9,11 @@ using MyMessenger.Application.Services.JwtAuth.Interfaces;
 using MyMessenger.Application.СommandsQueries.Chats.Commands;
 using MyMessenger.Application.СommandsQueries.Chats.Queries;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Cors;
 
 namespace MyMessenger.Controllers
 {
+    [DisableCors]
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]

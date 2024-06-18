@@ -14,14 +14,17 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  loginSuccessfully: boolean = true;
+  loginSuccessfully = true;
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  async login(): Promise<void> {
-    this.loginSuccessfully = await this.authService.login(this.email, this.password);
-    if (this.loginSuccessfully) {
-      this.router.navigate(['users'])
-    }
+  login(): void {
+    this.authService.login(this.email, this.password).subscribe(bool => {
+      if(bool) {
+        this.router.navigate(['users'])
+      } else {
+        this.loginSuccessfully = bool;
+      }
+    })
   }
 }
