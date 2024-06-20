@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required]]
     })
   }
-  isEmailInvalid(controlName: string): boolean {
+  isFormInvalid(controlName: string): boolean {
     const control = this.loginForm.controls[controlName];
     
     const result = control.invalid && control.touched;

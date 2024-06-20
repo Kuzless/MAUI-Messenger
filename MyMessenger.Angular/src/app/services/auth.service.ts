@@ -33,6 +33,9 @@ export class AuthService {
       .pipe(
         map(response => {
           return response.isSuccessful;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          return of(false);
         }))
   }
 

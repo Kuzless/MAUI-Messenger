@@ -3,19 +3,28 @@
       <div class="col-md-6">
         <div class="auth-container">
           <h3>Sign Up</h3>
-            <input type="text" class="form-control mb-3" placeholder="Enter your name" [(ngModel)]="name">
-            <input type="text" class="form-control mb-3" placeholder="Enter your username" [(ngModel)]="username">
-            <input type="text" class="form-control mb-3" placeholder="Enter your email" [(ngModel)]="email">
-            <input type="password" class="form-control mb-3" placeholder="Enter your password" [(ngModel)]="password">
-            <button type="button" class="btn btn-primary btn-block" (click)="signUp()" title="Sign Up">Sign Up</button>
-          <ng-container *ngIf="signUpAttempted">
-            <p *ngIf="signUpSuccessfully; else error" class="mt-3 text-success">Sign-up successful!</p>
-            <ng-template #error>
-              <p class="mt-3 text-danger">An error occurred during sign-up.<br>Please try again.</p>
-            </ng-template>
-          </ng-container>
-        </div>
+          <form [formGroup]="registerForm" (submit)="signUp()">
+            <div class="form-group">
+              <input type="text" class="form-control mb-3" placeholder="Enter your name" formControlName="name">
+              <div *ngIf="isFormInvalid('name')" class="error-message">Name field shouldn't be empty</div>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control mb-3" placeholder="Enter your username" formControlName="username">
+              <div *ngIf="isFormInvalid('username')" class="error-message">Username field shouldn't be empty<br>Wrong email format</div>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control mb-3" placeholder="Enter your email" formControlName="email">
+              <div *ngIf="isFormInvalid('email')" class="error-message">Email field shouldn't be empty<br>Wrong email format</div>
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control mb-3" placeholder="Enter your password" formControlName="password">
+              <div *ngIf="isFormInvalid('password')" class="error-message">Password field shouldn't be empty<br>Password should contain at least 2 uppercase, 2 lowercase, 2 special characters and 2 digits</div>
+              <button type="submit" class="btn btn-primary btn-block" [disabled]="registerForm.invalid">Sign Up</button>
+            </div>
+            <p *ngIf="signUpAttempted" class="error-message">An error occurred during sign-up.<br>Please try again.</p>
+        </form>
       </div>
     </div>
   </div>
+</div>
   
