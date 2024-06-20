@@ -1,2 +1,17 @@
 @import '@ag-grid-community/styles/ag-grid.css';
 @import '@ag-grid-community/styles/ag-theme-alpine.css';
+input.ng-touched.ng-invalid{
+  border-color: red;
+ }
+
+.error-message {
+  font-size: 12px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.form-group .error-message {
+  margin-top: -18px;
+}

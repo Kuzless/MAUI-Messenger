@@ -1,0 +1,17 @@
+input.ng-touched.ng-invalid{
+    border-color: red;
+   }
+
+   .error-message {
+    font-size: 12px; 
+    margin-top: 4px; 
+    margin-bottom: 4px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }

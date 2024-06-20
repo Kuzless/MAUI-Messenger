@@ -7,9 +7,9 @@ import { AuthorizedGuard } from './services/authorized.guard';
 
 
 export const routes: Routes = [
-    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent, canActivate: [AuthorizedGuard] },
     { path: 'register', component: RegisterComponent, canActivate: [AuthorizedGuard]},
     { path: 'users', component: UsersComponent, canActivate: [UnauthorizedGuard]},
-    { path: '**', redirectTo: '/users' }
+    { path: '**', redirectTo: 'users' }
 ];

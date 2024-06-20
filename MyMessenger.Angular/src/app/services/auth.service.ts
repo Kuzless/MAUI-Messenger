@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, BehaviorSubject, map } from 'rxjs';
+import { Observable, of, BehaviorSubject, map, catchError } from 'rxjs';
 import { Response } from './models/response';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -16,16 +16,16 @@ export class AuthService {
 
   login(email: string, password: string): Observable<boolean> {
     const data = { Email: email, Password: password };
-    try{
-      return this.http.post(this.baseUrl + 'Auth/', data)
-        .pipe(map(
-          tokens => {
-            this.handleLoginResponse(tokens);
-            return true;
-      }))
-    } catch {
+    return this.http.post(this.baseUrl + 'Auth/', data)
+      .pipe(
+        map(
+        tokens => {
+          this.handleLoginResponse(tokens);
+          return true;
+    }),
+    catchError((error: HttpErrorResponse) => {
       return of(false);
-    }
+    }))
   }
   signUp(name: string, username: string, email: string, password: string): Observable<boolean> {
     const data = { Name: name, UserName: username, Email: email, Password: password };
