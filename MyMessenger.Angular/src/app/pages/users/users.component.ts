@@ -5,12 +5,12 @@ import { Subscription } from 'rxjs';
 import { AgGridModule } from 'ag-grid-angular'; 
 import { ColDef, SizeColumnsToFitGridStrategy } from 'ag-grid-community';
 
-import { User } from './models/user';
-import { DataRetrieval } from '../../shared/models/dataretrieval';
+import { User } from './interfaces/user';
+import { DataRetrieval } from '../../shared/interfaces/dataretrieval';
 
-import { UserService } from '../../services/user.service';
+import { UserService } from './services/user.service';
 
-import { ParametersComponent } from '../../shared/parameters/parameters.component';
+import { ParametersComponent } from '../../shared/components/parameters/parameters.component';
 
 @Component({
   selector: 'app-users',

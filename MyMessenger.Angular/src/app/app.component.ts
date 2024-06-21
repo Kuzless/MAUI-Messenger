@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { NavbarComponent } from './shared/navbar/navbar.component'
+import { NavbarComponent } from './layout/navbar/navbar.component'
 import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
-import { ParametersComponent } from './shared/parameters/parameters.component';
+import { ParametersComponent } from './shared/components/parameters/parameters.component';
 
 @Component({
   selector: 'app-root',
