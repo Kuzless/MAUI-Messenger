@@ -1,46 +1,50 @@
-import { Component, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-parameters',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './parameters.component.html',
   styleUrl: './parameters.component.css'
 })
-export class ParametersComponent implements OnChanges {
+export class ParametersComponent implements OnInit {
   @Input() currentPage: any;
   @Input() columns!: string[];
   @Output() onSave: EventEmitter<void> = new EventEmitter<void>();
 
-  sortType: boolean;
-  selectedColumn!: string;
-  sort: { [key: string]: boolean } = {};
+  parametersForm!: FormGroup;
+  sortRule: { [key: string]: boolean } = {};
 
-  constructor() {
-    this.sortType = false;
+  constructor(private fb: FormBuilder) {
   }
+  ngOnInit(): void {
+    this.parametersForm = this.fb.group({
+      substring: '',
+      sort: this.columns[0],
+      sortType: false
+    })
+    this.parametersForm.get('substring')?.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      )
+      .subscribe(() => {
+        this.onSave.emit();
+      })
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.columns = changes['columns'].currentValue;
-    this.selectedColumn = this.columns[0];
-    this.sort[this.columns[0]] = this.sortType;
-  }
+    this.parametersForm.get('sort')?.valueChanges
+      .subscribe(value => {
+        this.currentPage.sort = { [value]: this.parametersForm.controls['sortType'].value }
+        this.onSave.emit();
+      })
 
-  saveAndClose() {
-    this.currentPage.sort = this.sort;
-    this.onSave.emit();
-  }
-
-  sortByColumn(event: any) {
-    const column = event.target.value;
-    this.selectedColumn = column;
-    this.sort = { [this.selectedColumn]: this.sortType };
-  }
-  
-  changeSortType() {
-    this.sortType = !this.sortType;
-    this.sort[this.selectedColumn] = this.sortType;
+    this.parametersForm.get('sortType')?.valueChanges
+      .subscribe(value => {
+        this.currentPage.sort = { [this.parametersForm.controls['sort'].value]: value }
+        this.onSave.emit();
+      })
   }
 }

@@ -22,7 +22,7 @@ import { ParametersComponent } from '../../shared/components/parameters/paramete
 
 export class UsersComponent implements OnInit {
   @ViewChild(ParametersComponent) parametersComponent!: ParametersComponent;
-  columns: string[] = ["Name", "UserName", "Email", "Phone"];
+  columns: string[] = ["Name", "UserName", "Email", "PhoneNumber"];
   autoSizeStrategy: SizeColumnsToFitGridStrategy = {
     type: 'fitGridWidth',
     defaultMinWidth: 100,
@@ -30,13 +30,21 @@ export class UsersComponent implements OnInit {
   defaultColDef = {
     resizable: false,
     sortable: false,
-    suppressMovable: true
+    suppressMovable: true,
   };
   columnDefs: ColDef<User>[] = [
     { headerName: this.columns[0], field: "name" },
     { headerName: this.columns[1], field: "userName" },
     { headerName: this.columns[2], field: "email" },
-    { headerName: this.columns[3], field: "phoneNumber" }
+    { headerName: this.columns[3], field: "phoneNumber",
+      cellRenderer: function(params: any) {
+        return `<a href="tel:${params.value}">${params.value}</a>`;
+      }
+     },
+    { headerName: '', 
+      cellRenderer: function() {
+        return '<span><img src="assets/call.jpg"/></span>'
+    }}
   ];
   isParametersVisible: boolean = false;
   pageSize: number = 10;
