@@ -1,24 +1,15 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-black">
   <div class="container">
+    <button type="button" (click)="toggleSidebar()" style="padding: 0; margin-left: 10%;">
+      <img src="assets/menu.png" style="width: 30px; height: 30px;">
+    </button>    
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <ng-container *ngIf="!isLoggedIn; else LoggedIn">
-          <li class="nav-item">
-            <a class="nav-link" href="login">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="register">Register</a>
-          </li>
-        </ng-container>
-        <ng-template #LoggedIn>
-          <li class="nav-item" (click)="logout()">
-            <a class="nav-link" href="login">Logout</a>
-          </li>
-        </ng-template>
-        <li class="nav-item">
+      <ul class="navbar-nav ms-auto text-white">
+        Messenger
       </ul>
     </div>
   </div>
 </nav>
 <br>
-  
+
+

@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required]]
     })
   }
+  
   isFormInvalid(controlName: string): boolean {
     const control = this.loginForm.controls[controlName];
     
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit {
     
     return result;
   }
+
   login(): void {
     this.authService.login(this.loginForm.controls['email'].value, this.loginForm.controls['password'].value).subscribe(bool => {
       if(bool) {

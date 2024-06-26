@@ -27,6 +27,7 @@ export class AuthService {
       return of(false);
     }))
   }
+  
   signUp(name: string, username: string, email: string, password: string): Observable<boolean> {
     const data = { Name: name, UserName: username, Email: email, Password: password };
     return this.http.post<Response>(this.baseUrl + 'Auth/sign', data)

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../pages/auth/service/auth.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,15 +9,11 @@ import { CommonModule } from '@angular/common';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  isLoggedIn!: boolean;
 
-  constructor(private authService: AuthService) 
-  {
-    this.authService.isLoggedIn.subscribe((loggedIn: boolean) => {
-      this.isLoggedIn = loggedIn;
-    });
-  }
-  logout() {
-    this.authService.logout();
+  toggleSidebar() {
+    const sidebar = document.querySelector('#sidebar');
+    if (sidebar) {
+      sidebar.classList.toggle('active');
+    }
   }
 }

@@ -29,6 +29,7 @@ export class UserService {
       of({ data: [], numberOfPages: 1 }
     )));
   }
+  
   setUrlParams(data: DataRetrieval) : HttpParams {
     var params = new HttpParams()
       .set('PageNumber', data.pageNumber.toString())
