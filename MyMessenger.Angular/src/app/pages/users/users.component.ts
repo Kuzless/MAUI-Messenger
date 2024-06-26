@@ -43,7 +43,7 @@ export class UsersComponent implements OnInit {
      },
     { headerName: '', 
       cellRenderer: function() {
-        return '<span><img src="assets/call.jpg"/></span>'
+        return '<img src="assets/call.png"/>'
     }}
   ];
   isParametersVisible: boolean = false;
