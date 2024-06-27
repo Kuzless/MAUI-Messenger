@@ -4,6 +4,7 @@ import { DataRetrieval } from '../../../shared/interfaces/dataretrieval';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { User } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -45,5 +46,27 @@ export class UserService {
       }
     }
     return params;
+  }
+
+  getCurrentUser() {
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + this.accessToken
+    })
+    return this.http.get<User>(this.baseUrl + 'User/current', { headers })
+    .pipe(
+      map(user => {
+        if(user.userName == 'admin') {
+          user.permissions = ['View', 'Write'];
+        } else {
+          user.permissions = ['View'];
+        }
+      return user;
+    }));
+  }
+
+  hasPermission(permission: string) {
+    return this.getCurrentUser().pipe(
+      map(user => user.permissions.includes(permission))
+    );
   }
 }

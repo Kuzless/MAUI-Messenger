@@ -12,10 +12,12 @@ import { UserService } from './services/user.service';
 
 import { ParametersComponent } from '../../shared/components/parameters/parameters.component';
 
+import { PermissionsCheckDirective } from '../../directives/permissions-check.directive';
+
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [AgGridModule, CommonModule, ParametersComponent],
+  imports: [AgGridModule, CommonModule, ParametersComponent, PermissionsCheckDirective],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
