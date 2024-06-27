@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { ZoomDirective } from '../../directives/zoom.directive';
+
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ZoomDirective],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
