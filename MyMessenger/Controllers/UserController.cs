@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using MyMessenger.Application.DTO;
 using MyMessenger.Application.Services.Interfaces;
@@ -9,6 +10,7 @@ using System.Security.Claims;
 
 namespace MyMessenger.Controllers
 {
+    [DisableCors]
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
