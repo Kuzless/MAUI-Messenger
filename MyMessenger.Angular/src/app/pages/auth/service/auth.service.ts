@@ -5,43 +5,54 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private baseUrl = environment.baseUrl;
   private loggedIn = new BehaviorSubject<boolean>(this.isLogged());
   isLoggedIn = this.loggedIn.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<boolean> {
     const data = { Email: email, Password: password };
-    return this.http.post(this.baseUrl + 'Auth/', data)
-      .pipe(
-        map(
-        tokens => {
-          this.handleLoginResponse(tokens);
-          return true;
-    }),
-    catchError((error: HttpErrorResponse) => {
-      return of(false);
-    }))
+    return this.http.post(this.baseUrl + 'Auth/', data).pipe(
+      map((tokens) => {
+        this.handleLoginResponse(tokens);
+        return true;
+      }),
+      catchError((error: HttpErrorResponse) => {
+        return of(false);
+      })
+    );
   }
-  
-  signUp(name: string, username: string, email: string, password: string): Observable<boolean> {
-    const data = { Name: name, UserName: username, Email: email, Password: password };
-    return this.http.post<Response>(this.baseUrl + 'Auth/sign', data)
-      .pipe(
-        map(response => {
-          return response.isSuccessful;
-        }),
-        catchError((error: HttpErrorResponse) => {
-          return of(false);
-        }))
+
+  signUp(
+    name: string,
+    username: string,
+    email: string,
+    password: string
+  ): Observable<boolean> {
+    const data = {
+      Name: name,
+      UserName: username,
+      Email: email,
+      Password: password,
+    };
+    return this.http.post<Response>(this.baseUrl + 'Auth/sign', data).pipe(
+      map((response) => {
+        return response.isSuccessful;
+      }),
+      catchError((error: HttpErrorResponse) => {
+        return of(false);
+      })
+    );
   }
 
   isLogged(): boolean {
-    return typeof window !== 'undefined' && !!localStorage.getItem('accessToken');
+    return (
+      typeof window !== 'undefined' && !!localStorage.getItem('accessToken')
+    );
   }
 
   private handleLoginResponse(response: any): void {
@@ -49,7 +60,7 @@ export class AuthService {
     localStorage.setItem('refreshToken', response.refreshToken);
     this.loggedIn.next(true);
   }
-  
+
   logout() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');

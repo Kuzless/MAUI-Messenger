@@ -1,15 +1,21 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-black">
   <div class="container">
-    <button type="button" (click)="toggleSidebar()" style="padding: 0; margin-left: 10%;">
-      <img src="assets/menu.png" style="width: 30px; height: 30px;">
-    </button>    
+    <button
+      type="button"
+      (click)="toggleSidebar()"
+      style="padding: 0; margin-left: 10%"
+    >
+      <img src="assets/menu.png" style="width: 30px; height: 30px" />
+    </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul [appZoom]="20" style="font-size: 20px;" class="navbar-nav ms-auto text-white">
+      <ul
+        [appZoom]="20"
+        style="font-size: 20px"
+        class="navbar-nav ms-auto text-white"
+      >
         Messenger
       </ul>
     </div>
   </div>
 </nav>
-<br>
-
-
+<br />

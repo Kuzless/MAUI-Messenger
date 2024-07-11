@@ -13,7 +13,7 @@ export const errorHandlerInterceptor: HttpInterceptorFn = (req, next) => {
       } else {
         console.error('An error occurred:', err);
       }
-      return throwError(() => err); 
+      return throwError(() => err);
     })
-  );;
+  );
 };

@@ -8,10 +8,9 @@ import { ZoomDirective } from '../../directives/zoom.directive';
   standalone: true,
   imports: [CommonModule, ZoomDirective],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
-
   toggleSidebar() {
     const sidebar = document.querySelector('#sidebar');
     if (sidebar) {

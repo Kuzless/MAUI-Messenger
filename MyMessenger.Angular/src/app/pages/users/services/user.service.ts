@@ -7,31 +7,30 @@ import { environment } from '../../../../environments/environment';
 import { User } from '../interfaces/user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-
   private baseUrl = environment.baseUrl;
-  private accessToken = localStorage.getItem("accessToken") || '';
+  private accessToken = localStorage.getItem('accessToken') || '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAll<T>(data: DataRetrieval, endpoint: string): Observable<DataGrid<T>> {
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + this.accessToken
-    })
+      Authorization: 'Bearer ' + this.accessToken,
+    });
     var params = this.setUrlParams(data);
-    return this.http.get<DataGrid<T>>(this.baseUrl + endpoint, { headers , params })
-    .pipe(
-      map(dataGrid => {
-      return dataGrid;
-    }),
-    catchError(() => 
-      of({ data: [], numberOfPages: 1 }
-    )));
+    return this.http
+      .get<DataGrid<T>>(this.baseUrl + endpoint, { headers, params })
+      .pipe(
+        map((dataGrid) => {
+          return dataGrid;
+        }),
+        catchError(() => of({ data: [], numberOfPages: 1 }))
+      );
   }
-  
-  setUrlParams(data: DataRetrieval) : HttpParams {
+
+  setUrlParams(data: DataRetrieval): HttpParams {
     var params = new HttpParams()
       .set('PageNumber', data.pageNumber.toString())
       .set('PageSize', data.pageSize.toString());
@@ -50,23 +49,23 @@ export class UserService {
 
   getCurrentUser() {
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + this.accessToken
-    })
-    return this.http.get<User>(this.baseUrl + 'User/current', { headers })
-    .pipe(
-      map(user => {
-        if(user.userName == 'admin') {
+      Authorization: 'Bearer ' + this.accessToken,
+    });
+    return this.http.get<User>(this.baseUrl + 'User/current', { headers }).pipe(
+      map((user) => {
+        if (user.userName == 'admin') {
           user.permissions = ['View', 'Write'];
         } else {
           user.permissions = ['View'];
         }
-      return user;
-    }));
+        return user;
+      })
+    );
   }
 
   hasPermission(permission: string) {
     return this.getCurrentUser().pipe(
-      map(user => user.permissions.includes(permission))
+      map((user) => user.permissions.includes(permission))
     );
   }
 }

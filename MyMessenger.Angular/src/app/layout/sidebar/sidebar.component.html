@@ -1,24 +1,41 @@
 <div id="sidebar" class="bg-dark text-white">
-    <div class="p-4">
-        <ng-container *ngIf="!isLoggedIn; else LoggedIn">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="btn btn-outline-light btn-block mb-3 menu-button" href="login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-light btn-block mb-3 menu-button" href="register">Register</a>
-                </li>
-            </ul>
-        </ng-container>
-        <ng-template #LoggedIn>
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="btn btn-outline-light btn-block mb-3 menu-button" href="users">Users</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-light btn-block mb-3 menu-button" href="#" (click)="logout()">Logout</a>
-                </li>
-            </ul>
-        </ng-template>
-    </div>
+  <div class="p-4">
+    <ng-container *ngIf="!isLoggedIn; else LoggedIn">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a
+            class="btn btn-outline-light btn-block mb-3 menu-button"
+            href="login"
+            >Login</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="btn btn-outline-light btn-block mb-3 menu-button"
+            href="register"
+            >Register</a
+          >
+        </li>
+      </ul>
+    </ng-container>
+    <ng-template #LoggedIn>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a
+            class="btn btn-outline-light btn-block mb-3 menu-button"
+            href="users"
+            >Users</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="btn btn-outline-light btn-block mb-3 menu-button"
+            href="#"
+            (click)="logout()"
+            >Logout</a
+          >
+        </li>
+      </ul>
+    </ng-template>
+  </div>
 </div>
