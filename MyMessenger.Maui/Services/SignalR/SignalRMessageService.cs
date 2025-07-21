@@ -1,6 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.SignalR.Client;
-using MyMessenger.Application.DTO.MessagesDTOs;
+using MyMessenger.Maui.Models;
 
 namespace MyMessenger.Maui.Services.SignalR
 {
@@ -19,7 +19,7 @@ namespace MyMessenger.Maui.Services.SignalR
         {
             var token = (await storage.GetItemAsStringAsync("accessToken")).Replace("\"", "");
 
-            hubConnection = new HubConnectionBuilder().WithUrl("https://mymessengerapp.azurewebsites.net/chathub", options =>
+            hubConnection = new HubConnectionBuilder().WithUrl("https://localhost:7081/chathub", options =>
             {
                 options.AccessTokenProvider = () => Task.FromResult(token);
             }).Build();

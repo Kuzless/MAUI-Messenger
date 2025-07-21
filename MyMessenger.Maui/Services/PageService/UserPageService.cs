@@ -1,5 +1,4 @@
-﻿using MyMessenger.Application.DTO.UserDTOs;
-using MyMessenger.Application.DTO;
+﻿using MyMessenger.Maui.Models;
 
 namespace MyMessenger.Maui.Services.PageService
 {

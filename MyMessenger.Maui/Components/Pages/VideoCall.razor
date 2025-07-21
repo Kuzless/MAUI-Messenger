@@ -32,10 +32,15 @@
     {
         options.Width = 480;
         base.OnInitialized();
+		await Task.CompletedTask;
     }
     async Task StartCall()
     {
-        options.ConnectionId = connectionId;
+        if (string.IsNullOrWhiteSpace(connectionId))
+        {
+            return;
+        }
+        options.ConnectionId = connectionId.Trim();
         await JSRuntime.InvokeVoidAsync("WebCamFunctions.start", options);
     }
     public void Dispose()

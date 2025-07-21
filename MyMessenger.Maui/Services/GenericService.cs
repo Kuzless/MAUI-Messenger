@@ -1,5 +1,5 @@
 ﻿using Blazored.LocalStorage;
-using MyMessenger.Application.DTO;
+using MyMessenger.Maui.Models;
 using MyMessenger.Maui.Library.Interface;
 using System.Net.Http.Json;
 

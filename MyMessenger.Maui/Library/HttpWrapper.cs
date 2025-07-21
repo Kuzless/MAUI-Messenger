@@ -6,18 +6,18 @@ namespace MyMessenger.Maui.Library
 {
     public class HttpWrapper : IHttpWrapper
     {
-        private readonly HttpClient httpClient;
-        private readonly string url = "https://mymessengerapp.azurewebsites.net/api/";
-        public HttpWrapper()
+        private readonly HttpClient _httpClient;
+        private readonly string url = "https://localhost:7081/api/";
+        public HttpWrapper(HttpClient httpClient)
         {
-            httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
         public async Task<HttpResponseMessage> GetAsync(string urlEnd, string token = "")
         {
             token = token.Replace("\"", "");
             string urlController = url + urlEnd;
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HttpResponseMessage response = await httpClient.GetAsync(urlController);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await _httpClient.GetAsync(urlController);
             response.EnsureSuccessStatusCode();
             return response;
         }
@@ -25,9 +25,9 @@ namespace MyMessenger.Maui.Library
         {
             token = token.Replace("\"", "");
             string urlController = url + urlEnd;
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             StringContent httpContent = new StringContent(content, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await httpClient.PostAsync(urlController, httpContent);
+            HttpResponseMessage response = await _httpClient.PostAsync(urlController, httpContent);
             response.EnsureSuccessStatusCode();
             return response;
         }
@@ -35,9 +35,9 @@ namespace MyMessenger.Maui.Library
         {
             token = token.Replace("\"", "");
             string urlController = url + urlEnd;
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             StringContent httpContent = new StringContent(content, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await httpClient.PutAsync(urlController, httpContent);
+            HttpResponseMessage response = await _httpClient.PutAsync(urlController, httpContent);
             response.EnsureSuccessStatusCode();
             return response;
         }
@@ -45,8 +45,8 @@ namespace MyMessenger.Maui.Library
         {
             token = token.Replace("\"", "");
             string urlController = url + urlEnd;
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HttpResponseMessage response = await httpClient.DeleteAsync(urlController);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await _httpClient.DeleteAsync(urlController);
             response.EnsureSuccessStatusCode();
             return response;
         }
@@ -54,8 +54,8 @@ namespace MyMessenger.Maui.Library
         {
             token = token.Replace("\"", "");
             string urlController = url + urlEnd;
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HttpResponseMessage response = await httpClient.PostAsync(urlController, content);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await _httpClient.PostAsync(urlController, content);
             response.EnsureSuccessStatusCode();
             return response;
         }

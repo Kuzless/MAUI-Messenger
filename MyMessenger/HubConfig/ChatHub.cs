@@ -11,10 +11,48 @@ namespace MyMessenger.HubConfig
     public class ChatHub : Hub
     {
         private readonly IMediator mediator;
+        private static readonly Dictionary<string, HashSet<string>> SharedIdToConnections = new();
+
         public ChatHub(IMediator mediator)
         {
             this.mediator = mediator;
         }
+        public Task RegisterSharedId(string sharedId)
+        {
+            lock (SharedIdToConnections)
+            {
+                if (!SharedIdToConnections.ContainsKey(sharedId))
+                    SharedIdToConnections[sharedId] = new HashSet<string>();
+                SharedIdToConnections[sharedId].Add(Context.ConnectionId);
+            }
+            return Task.CompletedTask;
+        }
+        public override async Task OnDisconnectedAsync(Exception e)
+        {
+            lock (SharedIdToConnections)
+            {
+                foreach (var set in SharedIdToConnections.Values)
+                    set.Remove(Context.ConnectionId);
+            }
+            Console.WriteLine($"Disconnected {e?.Message} {Context.ConnectionId}");
+            await base.OnDisconnectedAsync(e);
+        }
+        public async Task SendToSharedId(string sharedId, string message)
+        {
+            HashSet<string> targets;
+            lock (SharedIdToConnections)
+            {
+                if (!SharedIdToConnections.TryGetValue(sharedId, out targets))
+                    return;
+                targets = new HashSet<string>(targets);
+            }
+            foreach (var connId in targets)
+            {
+                if (connId != Context.ConnectionId)
+                    await Clients.Client(connId).SendAsync("Receive", message);
+            }
+        }
+
         public async Task AddToGroup(string ChatId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, ChatId);
@@ -41,17 +79,6 @@ namespace MyMessenger.HubConfig
         {
             Console.WriteLine($"{Context.ConnectionId} connected");
             return base.OnConnectedAsync();
-        }
-
-        public override async Task OnDisconnectedAsync(Exception e)
-        {
-            Console.WriteLine($"Disconnected {e?.Message} {Context.ConnectionId}");
-            await base.OnDisconnectedAsync(e);
-        }
-
-        public async Task Send(string message)
-        {
-            await Clients.Others.SendAsync("Receive", message);
         }
     }
 }

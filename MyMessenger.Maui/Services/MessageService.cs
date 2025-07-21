@@ -1,6 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using MyMessenger.Maui.Library.Interface;
-using MyMessenger.Application.DTO.MessagesDTOs;
+using MyMessenger.Maui.Models;
 
 namespace MyMessenger.Maui.Services
 {

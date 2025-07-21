@@ -41,6 +41,9 @@
         <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
     </PropertyGroup>
+    <PropertyGroup>
+      <WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
+    </PropertyGroup>
 
     <ItemGroup>
         <!-- App Icon -->
@@ -70,10 +73,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="Syncfusion.Blazor" Version="25.1.38" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\MyMessenger.Application\MyMessenger.Application.csproj" />
     </ItemGroup>
 
 </Project>

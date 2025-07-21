@@ -1,6 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Forms;
-using MyMessenger.Application.DTO.UserDTOs;
+using MyMessenger.Maui.Models;
 using MyMessenger.Maui.Library.Interface;
 using System.Net.Http.Json;
 

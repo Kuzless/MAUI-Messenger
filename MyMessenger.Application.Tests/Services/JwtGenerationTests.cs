@@ -2,18 +2,23 @@
 using Microsoft.Extensions.Configuration;
 using Moq;
 using MyMessenger.Application.Services.JwtAuth;
+using MyMessenger.Application.Services.JwtAuth.Interfaces;
 
 namespace MyMessenger.Application.Tests.Services
 {
     public class JwtGenerationTests
     {
         private Mock<IConfiguration> configuration;
+        private Mock<IJWTKeyRetrievalService> keyRetrievalService;
         private JWTGeneratorService sut;
+
         public JwtGenerationTests()
         {
             configuration = new Mock<IConfiguration>();
-            sut = new JWTGeneratorService(configuration.Object);
+            keyRetrievalService = new Mock<IJWTKeyRetrievalService>();
+            sut = new JWTGeneratorService(configuration.Object, keyRetrievalService.Object);
         }
+
         [Fact]
         public void GenerateToken_ReturnsValidTokens()
         {

@@ -17,11 +17,11 @@ namespace MyMessenger.Controllers
     public class UserController : Controller
     {
         private readonly IMediator mediator;
-        private readonly IBlobStorageService blob;
-        public UserController(IMediator mediator, IBlobStorageService blob)
+        //private readonly IBlobStorageService blob;
+        public UserController(IMediator mediator)
         {
             this.mediator = mediator;
-            this.blob = blob;
+            //this.blob = blob;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllUsers([FromQuery] AllDataRetrievalParametersDTO data)
@@ -36,10 +36,11 @@ namespace MyMessenger.Controllers
             string? imageUrl;
             using (var stream = image.OpenReadStream())
             {
-                imageUrl = await blob.UploadImageAsync(stream, $"{userid}", image.FileName);
+                //imageUrl = await blob.UploadImageAsync(stream, $"{userid}", image.FileName);
             }
-            await mediator.Send(new UpdateImageCommand(userid, imageUrl));
-            return Ok(imageUrl);
+            //await mediator.Send(new UpdateImageCommand(userid, imageUrl));
+            //return Ok(imageUrl);
+            return Ok();
         }
         [HttpGet("current")]
         public async Task<IActionResult> GetUser()

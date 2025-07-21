@@ -10,7 +10,6 @@ using MyMessenger.Application.Services;
 using MyMessenger.Application.Services.Interfaces;
 using MyMessenger.Application.Services.JwtAuth;
 using MyMessenger.Application.Services.JwtAuth.Interfaces;
-using MyMessenger.Application.ÑommandsQueries.Users.Queries;
 using MyMessenger.Options;
 using System.Reflection;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +21,7 @@ using Microsoft.Extensions.Configuration.AzureKeyVault;
 using Azure.Security.KeyVault.Secrets;
 using Azure.Identity;
 using Azure.Storage.Blobs;
+using MyMessenger.Application.Ð¡ommandsQueries.Users.Queries;
 
 namespace MyMessenger
 {
@@ -91,26 +91,18 @@ namespace MyMessenger
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
-                        builder =>
-                        {
-                            builder
-                            .WithOrigins("http://localhost:4200")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .AllowCredentials();
-                            builder
-                            .WithOrigins("http://0.0.0.0")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .AllowCredentials();
-                            builder
-                            .WithOrigins("https://angularmessengerapp.azurewebsites.net")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .AllowCredentials();
-                        });
-
+                    builder =>
+                    {
+                        builder
+                            .SetIsOriginAllowed(_ => true)
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
+                    });
             });
+
+
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -153,6 +145,19 @@ namespace MyMessenger
                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
                     ValidAudience = builder.Configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chathub"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

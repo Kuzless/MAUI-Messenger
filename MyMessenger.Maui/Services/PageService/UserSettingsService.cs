@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
-using MyMessenger.Application.DTO.UserDTOs;
+using MyMessenger.Maui.Models;
 
 namespace MyMessenger.Maui.Services.PageService
 {

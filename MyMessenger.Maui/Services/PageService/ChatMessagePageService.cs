@@ -1,5 +1,4 @@
-﻿using MyMessenger.Application.DTO.MessagesDTOs;
-using MyMessenger.Application.DTO;
+﻿using MyMessenger.Maui.Models;
 using Syncfusion.Blazor.Grids;
 using MyMessenger.Maui.Services.SignalR;
 

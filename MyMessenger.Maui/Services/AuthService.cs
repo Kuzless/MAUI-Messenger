@@ -1,9 +1,8 @@
 using System.Text.Json;
 using Blazored.LocalStorage;
 using MyMessenger.Maui.Library.Interface;
-using MyMessenger.Application.DTO.AuthDTOs;
+using MyMessenger.Maui.Models;
 using System.Security.Claims;
-using MyMessenger.Application.DTO;
 
 namespace MyMessenger.Maui.Services;
 
