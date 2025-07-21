@@ -1,50 +1,116 @@
-﻿@page "/video"
-@using Blazored.LocalStorage;
+﻿@using Blazored.LocalStorage;
 @inject IJSRuntime JSRuntime
 @inject ILocalStorageService storage;
 @implements IDisposable
-<div>
-    <label for="connectionId">Enter Connection ID:</label>
-    <input id="connectionId" @bind="connectionId" />
-    <button @onclick="StartCall">Start Call</button>
-</div>
-<div>
-    <video muted id="@options.VideoID"
-           style="background-color:lightblue;"
-           width="@options.Width" autoplay="true">
-        Click start to show video
-    </video>
-    <video id="remote"
-           style="background-color:lightblue;"
-           width="@options.Width" autoplay="true">
-        Click start to show video
-    </video>
+
+<div style="position:relative;">
+    <div style="display:flex;gap:1rem;justify-content:center;">
+        <div style="position:relative;width:480px;height:360px;">
+            <video muted id="@options.VideoID"
+                   style="background-color:black;width:480px;height:360px;display:block;"
+                   autoplay="true">
+            </video>
+            <div style="position:absolute;top:0;left:0;width:480px;height:360px;background:black;display:flex;align-items:center;justify-content:center;color:white;font-size:1.25rem;" id="localPlaceholder">
+                Click start to show video
+            </div>
+        </div>
+        <div style="position:relative;width:480px;height:360px;">
+            <video id="remote"
+                   style="background-color:black;width:480px;height:360px;display:block;"
+                   autoplay="true">
+            </video>
+            <div style="position:absolute;top:0;left:0;width:480px;height:360px;background:black;display:flex;align-items:center;justify-content:center;color:white;font-size:1.25rem;" id="remotePlaceholder">
+                Click start to show video
+            </div>
+        </div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:1rem;gap:1rem;">
+        <button @onclick="() => OnClose.InvokeAsync()" style="width:56px;height:56px;border-radius:50%;background:#e74c3c;border:none;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:2rem;color:white;">&#128222;</span>
+        </button>
+        <button @onclick="ToggleMic"
+                style="width:56px;height:56px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;
+                background:@(micMuted ? "#e74c3c" : "#3498db");">
+            <span style="font-size:2rem;color:white;">
+                @(micMuted ? "🔇" : "🎤")
+            </span>
+        </button>
+        <button @onclick="ToggleCamera"
+                style="width:56px;height:56px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;
+                background:@(cameraOff ? "#e74c3c" : "#27ae60");">
+            <span style="font-size:2rem;color:white;">
+                @(cameraOff ? "🚫" : "📷")
+            </span>
+        </button>
+    </div>
 </div>
 <script src="js/webcam.js"></script>
 
 @code {
-    private string connectionId;
+    [Parameter]
+    public string ChatId { get; set; }
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
     WebCamOptions options = new WebCamOptions()
-        {
-            VideoID = "video"
-        };
+    {
+        VideoID = "video"
+    };
+
     protected override async void OnInitialized()
     {
         options.Width = 480;
+        if (!string.IsNullOrWhiteSpace(ChatId))
+        {
+            shouldStartCall = true;
+        }
         base.OnInitialized();
-		await Task.CompletedTask;
+        await Task.CompletedTask;
     }
+
+    private bool shouldStartCall = false;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (shouldStartCall && JSRuntime != null)
+        {
+            var videoExists = await JSRuntime.InvokeAsync<bool>("eval", $"!!document.getElementById('{options.VideoID}')");
+            if (videoExists)
+            {
+                shouldStartCall = false;
+                await StartCall();
+            }
+        }
+    }
+
     async Task StartCall()
     {
-        if (string.IsNullOrWhiteSpace(connectionId))
+        if (string.IsNullOrWhiteSpace(ChatId))
         {
             return;
         }
-        options.ConnectionId = connectionId.Trim();
+        options.ConnectionId = ChatId.Trim();
         await JSRuntime.InvokeVoidAsync("WebCamFunctions.start", options);
+        // Hide placeholders after starting video
+        await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('localPlaceholder').style.display='none';");
+        await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('remotePlaceholder').style.display='none';");
     }
-    public void Dispose()
+
+    public async void Dispose()
     {
-        JSRuntime.InvokeVoidAsync("WebCamFunctions.dispose");
+        await JSRuntime.InvokeVoidAsync("WebCamFunctions.dispose");
+    }
+    private bool micMuted = false;
+    private bool cameraOff = false;
+
+    private async Task ToggleMic()
+    {
+        micMuted = !micMuted;
+        await JSRuntime.InvokeVoidAsync("WebCamFunctions.toggleMic", micMuted);
+    }
+
+    private async Task ToggleCamera()
+    {
+        cameraOff = !cameraOff;
+        await JSRuntime.InvokeVoidAsync("WebCamFunctions.toggleCamera", cameraOff);
     }
 }

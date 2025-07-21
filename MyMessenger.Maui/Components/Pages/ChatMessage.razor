@@ -27,6 +27,7 @@
 
         <div style="display:flex;justify-content:flex-end;gap:1rem;">
             <button class="btn-main" style="width:180px;margin-top:1rem;" @onclick="chatMessagePageService.ChangeAddMessageVisibility">New</button>
+            <button class="btn-main" style="width:180px;margin-top:1rem;" @onclick="OpenCallModal">Call</button>
         </div>
 
         @if (chatMessagePageService.showAddMenu)
@@ -68,12 +69,33 @@
     }
 </div>
 
+@if (showCallModal)
+{
+    <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;">
+        <div class="card flex-center" style="position:relative;min-width:320px;">
+            <VideoCall ChatId="@id" OnClose="CloseCallModal" />
+        </div>
+    </div>
+}
+
 @code {
     [Parameter]
     public string id { get; set; }
-    [Inject] 
+    [Inject]
     private ChatMessagePageService chatMessagePageService { get; set; }
     private bool IsLoaded { get; set; } = false;
+
+    private bool showCallModal = false;
+
+    void OpenCallModal()
+    {
+        showCallModal = true;
+    }
+
+    void CloseCallModal()
+    {
+        showCallModal = false;
+    }
 
     protected override async void OnInitialized()
     {

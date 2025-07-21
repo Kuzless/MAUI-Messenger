@@ -46,6 +46,18 @@ window.WebCamFunctions = {
   dispose: () => {
     dispose();
   },
+  toggleMic: (mute) => {
+    if (myVideoStream) {
+      myVideoStream
+        .getAudioTracks()
+        .forEach((track) => (track.enabled = !mute));
+    }
+  },
+  toggleCamera: (off) => {
+    if (myVideoStream) {
+      myVideoStream.getVideoTracks().forEach((track) => (track.enabled = !off));
+    }
+  },
 };
 
 async function onStart(options) {
@@ -64,6 +76,8 @@ async function onStart(options) {
     .getUserMedia(mediaConstraints)
     .then(function (stream) {
       video.srcObject = stream;
+      var localPlaceholder = document.getElementById("localPlaceholder");
+      if (localPlaceholder) localPlaceholder.style.display = "none";
       myVideoStream = stream;
 
       rtcConnection.addStream(myVideoStream);
@@ -109,6 +123,10 @@ srConnection.on("Receive", (data) => {
           video.srcObject = stream;
 
           rtcConnection.addStream(myVideoStream);
+          var remotePlaceholder = document.getElementById("remotePlaceholder");
+          if (remotePlaceholder) remotePlaceholder.style.display = "none";
+          var remotePlaceholder = document.getElementById("remotePlaceholder");
+          if (remotePlaceholder) remotePlaceholder.style.display = "none";
         })
         .then(function () {
           return rtcConnection.createAnswer();
