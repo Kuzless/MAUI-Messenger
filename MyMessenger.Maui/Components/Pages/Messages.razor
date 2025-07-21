@@ -6,38 +6,42 @@
 @using MyMessenger.Maui.Services.PageService
 @inject MessageService messageService
 
-<h1>Your Messages</h1>
-@if (IsLoaded)
-{
-    <button @onclick="messagePageService.OpenPopup">Parameters</button>
-
-    <SfGrid DataSource="@messagePageService.MessagesList">
-        <GridColumns>
-            <GridColumn Field="@nameof(MessageDTO.Text)" HeaderText="Message"></GridColumn>
-            <GridColumn Field="@nameof(MessageDTO.DateTime)" HeaderText="Time"></GridColumn>
-            <GridColumn>
-                <Template>
-                    <button @onclick="() => messagePageService.DeleteMessage((MessageDTO)context)">Delete</button>
-                </Template>
-            </GridColumn>
-        </GridColumns>
-    </SfGrid>
-    <BlazorPager CurrentPage="@messagePageService.currentPage"
-                 PageCount="@messagePageService.numberOfPages"
-                 OnPageChanged="(async x => { messagePageService.currentPage = x; messagePageService.ChangePage(); })"
-                 ShowFirstLast="false"
-                 ShowPageNumbers="true"
-                 VisiblePages=messagePageService.pageSize />
-    if (messagePageService.isWindowVisible)
+<div class="card" style="margin-top:2rem;">
+    <h1 class="text-accent">Your Messages</h1>
+    @if (IsLoaded)
     {
-        <GenericParameters Columns="@messagePageService.Columns" CurrentPage="@messagePageService.CurrentPage" OnSave="@messagePageService.SaveChanges" OnClose="@messagePageService.ClosePopup"></GenericParameters>
+        <div style="display:flex;justify-content:flex-end;gap:1rem;margin-bottom:1rem;">
+            <button class="btn-main" style="width:180px;" @onclick="messagePageService.OpenPopup">Parameters</button>
+        </div>
+
+        <SfGrid DataSource="@messagePageService.MessagesList">
+            <GridColumns>
+                <GridColumn Field="@nameof(MessageDTO.Text)" HeaderText="Message"></GridColumn>
+                <GridColumn Field="@nameof(MessageDTO.DateTime)" HeaderText="Time"></GridColumn>
+                <GridColumn>
+                    <Template>
+                        <button class="btn-main" @onclick="() => messagePageService.DeleteMessage((MessageDTO)context)">Delete</button>
+                    </Template>
+                </GridColumn>
+            </GridColumns>
+        </SfGrid>
+        <BlazorPager CurrentPage="@messagePageService.currentPage"
+                     PageCount="@messagePageService.numberOfPages"
+                     OnPageChanged="(async x => { messagePageService.currentPage = x; messagePageService.ChangePage(); })"
+                     ShowFirstLast="false"
+                     ShowPageNumbers="true"
+                     VisiblePages=messagePageService.pageSize />
+        if (messagePageService.isWindowVisible)
+        {
+            <GenericParameters Columns="@messagePageService.Columns" CurrentPage="@messagePageService.CurrentPage" OnSave="@messagePageService.SaveChanges" OnClose="@messagePageService.ClosePopup"></GenericParameters>
+        }
     }
-}
-else
-{
-    <br>
-    <h3>Loading...</h3>
-}
+    else
+    {
+        <br>
+        <h3 class="muted">Loading...</h3>
+    }
+</div>
 
 @code {
     [Inject] private MessagePageService messagePageService { get; set; }

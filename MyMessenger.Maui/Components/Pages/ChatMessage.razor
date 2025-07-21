@@ -8,51 +8,65 @@
 @inject SignalRMessageService chatHubService
 @inject MessageService messageService
 
-<h1>Messages</h1>
-@if (IsLoaded)
-{
-    <SfGrid DataSource="@chatMessagePageService.MessagesList" @ref="chatMessagePageService.grid">
-        <GridColumns>
-            <GridColumn Field="@nameof(MessageDTO.Name)" HeaderText="Sender"></GridColumn>
-            <GridColumn Field="@nameof(MessageDTO.Text)" HeaderText="Message"></GridColumn>
-            <GridColumn Field="@nameof(MessageDTO.DateTime)" HeaderText="Time"></GridColumn>
-            <GridColumn>
-                <Template>
-                    <button @onclick="() => chatMessagePageService.ShowUpdateMessage(((MessageDTO)context))">Update</button>
-                </Template>
-            </GridColumn>
-        </GridColumns>
-    </SfGrid>
-
-    <button @onclick="chatMessagePageService.ChangeAddMessageVisibility">Add</button>
-
-    @if (chatMessagePageService.showAddMenu)
+<div class="card" style="margin-top:2rem;">
+    <h1 class="text-accent">Messages</h1>
+    @if (IsLoaded)
     {
-        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: grey; padding: 20px; border-block-color: black;">
-            <label for="chatName">Text:</label>
-            <input type="text" id="messageText" @bind="chatMessagePageService.newMessage" required />
-            <div style="margin-top: 10px;">
-                <button @onclick="chatMessagePageService.AddMessage">Save</button>
-            </div>
+        <SfGrid DataSource="@chatMessagePageService.MessagesList" @ref="chatMessagePageService.grid">
+            <GridColumns>
+                <GridColumn Field="@nameof(MessageDTO.Name)" HeaderText="Sender"></GridColumn>
+                <GridColumn Field="@nameof(MessageDTO.Text)" HeaderText="Message"></GridColumn>
+                <GridColumn Field="@nameof(MessageDTO.DateTime)" HeaderText="Time"></GridColumn>
+                <GridColumn>
+                    <Template>
+                        <button class="btn-main" @onclick="() => chatMessagePageService.ShowUpdateMessage(((MessageDTO)context))">Update</button>
+                    </Template>
+                </GridColumn>
+            </GridColumns>
+        </SfGrid>
+
+        <div style="display:flex;justify-content:flex-end;gap:1rem;">
+            <button class="btn-main" style="width:180px;margin-top:1rem;" @onclick="chatMessagePageService.ChangeAddMessageVisibility">New</button>
         </div>
+
+        @if (chatMessagePageService.showAddMenu)
+        {
+            <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;">
+                <div class="card flex-center" style="position:relative;min-width:320px;">
+                    <button @onclick="chatMessagePageService.ChangeAddMessageVisibility" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:2rem;line-height:1;color:#888;cursor:pointer;z-index:1001;">×</button>
+                    <div style="width:100%;text-align:center;">
+                        <label for="chatName">Text:</label>
+                        <input type="text" id="messageText" @bind="chatMessagePageService.newMessage" required style="width:100%;margin-bottom:1rem;" />
+                        <div class="flex-center" style="margin-top: 10px;">
+                            <button class="btn-main" @onclick="chatMessagePageService.AddMessage">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (chatMessagePageService.showUpdateMenu)
+        {
+            <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;">
+                <div class="card flex-center" style="position:relative;min-width:320px;">
+                    <button @onclick="chatMessagePageService.CloseUpdateMessage" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:2rem;line-height:1;color:#888;cursor:pointer;z-index:1001;">×</button>
+                    <div style="width:100%;text-align:center;">
+                        <label for="chatName">Text:</label>
+                        <input type="text" id="newUpdateMessageText" @bind="chatMessagePageService.newUpdateMessageText" required style="width:100%;margin-bottom:1rem;" />
+                        <div class="flex-center" style="margin-top: 10px;gap:1rem;">
+                            <button class="btn-main" @onclick="chatMessagePageService.UpdateMessage">Update</button>
+                            <button class="btn-main" @onclick="chatMessagePageService.CloseUpdateMessage">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     }
-    @if (chatMessagePageService.showUpdateMenu)
+    else
     {
-        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: grey; padding: 20px; border-block-color: black;">
-            <label for="chatName">Text:</label>
-            <input type="text" id="newUpdateMessageText" @bind="chatMessagePageService.newUpdateMessageText" required />
-            <div style="margin-top: 10px;">
-                <button @onclick="chatMessagePageService.UpdateMessage">Update</button>
-                <button @onclick="chatMessagePageService.CloseUpdateMessage">Close</button>
-            </div>
-        </div>
+        <br>
+        <h3 class="muted">Loading...</h3>
     }
-}
-else
-{
-    <br>
-    <h3>Loading...</h3>
-}
+</div>
 
 @code {
     [Parameter]

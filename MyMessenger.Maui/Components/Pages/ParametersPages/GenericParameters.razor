@@ -1,29 +1,30 @@
 ﻿@using MyMessenger.Maui.Models
-<div class="parameters">
-    <div class="content">
-        <div class="search-bar">
-            <h3>Search</h3>
-            <input type="text" @bind="CurrentPage.Subs" placeholder="Search..." />
+<div class="parameters" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;">
+    <div class="content" style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-width:320px;">
+        <button @onclick="ClosePopup" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:2rem;line-height:1;color:#888;cursor:pointer;z-index:1001;">×</button>
+        <div class="search-bar" style="width:100%;max-width:340px;">
+            <h3 class="text-accent" style="margin-bottom:1rem;">Search</h3>
+            <input type="text" @bind="CurrentPage.Subs" placeholder="Search..." style="width:100%;margin-bottom:1rem;" />
         </div>
-        <h3>Sort</h3>
-        <div class="dropdown">
-            <select @onchange="(e) => SortByColumn(e)">
+        <h3 class="text-accent" style="margin-bottom:1rem;">Sort</h3>
+        <div class="dropdown" style="width:100%;max-width:340px;margin-bottom:1rem;">
+            <select @onchange="(e) => SortByColumn(e)" style="width:100%;">
                 @foreach (var column in Columns)
                 {
                     <option value="@column">@column</option>
                 }
             </select>
         </div>
-        <br />
-        <div class="radio-group2">
+        <div class="radio-group2" style="margin-bottom:1rem;">
             <input type="radio" id="radio11" name="radioGroup2" checked="true" value="value1" @onclick="() => { SortType = false; ChangeSortType(); }" />
-            <label for="radio11">Asc</label>
+            <label for="radio11" style="margin-right:1rem;">Asc</label>
             <input type="radio" id="radio22" name="radioGroup2" value="value2" @onclick="() => { SortType = true; ChangeSortType(); }" />
             <label for="radio22">Desc</label>
         </div>
-        <br />
-        <button @onclick="SaveAndClose">Apply</button>
-        <button @onclick="ClosePopup">Close</button>
+        <div style="display:flex;justify-content:center;gap:1rem;width:100%;max-width:340px;">
+            <button class="btn-main" style="flex:1;" @onclick="SaveAndClose">Apply</button>
+            <button class="btn-main" style="flex:1;" @onclick="ClosePopup">Close</button>
+        </div>
     </div>
 </div>
 

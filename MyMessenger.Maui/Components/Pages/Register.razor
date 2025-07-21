@@ -3,36 +3,38 @@
 @using MyMessenger.Maui.Services
 @inject AuthService authService
 
-<div class="auth-container">
-    <h3>Sign Up</h3>
-    @if (IsLoaded)
-    {
-        <InputText type="text" class="@((string.IsNullOrWhiteSpace(Name) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your name" @bind-Value="@Name"></InputText>
-        <br>
-        <InputText type="text" class="@((string.IsNullOrWhiteSpace(Username) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your username" @bind-Value="@Username"></InputText>
-        <br>
-        <InputText type="text" class="@((string.IsNullOrWhiteSpace(Email) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your email" @bind-Value="@Email"></InputText>
-        <br>
-        <InputText type="text" class="@((string.IsNullOrWhiteSpace(Password) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your password" @bind-Value="@Password" isPassword="true"></InputText>
-        <br>
-        <button type="button" class="btn-primary" style="width: 350px" title="Sign Up" @onclick="SignUp">Sign Up</button>
-        @if (SignUpAttempted)
+<div class="flex-center" style="min-height: 80vh;">
+    <div class="card" style="width: 370px;">
+        <h2 class="text-accent" style="margin-bottom:1.5rem;">Sign Up</h2>
+        @if (IsLoaded)
         {
-            @if (SignUpSuccessfully)
+            <InputText type="text" class="@((string.IsNullOrWhiteSpace(Name) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your name" @bind-Value="@Name"></InputText>
+            <br>
+            <InputText type="text" class="@((string.IsNullOrWhiteSpace(Username) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your username" @bind-Value="@Username"></InputText>
+            <br>
+            <InputText type="text" class="@((string.IsNullOrWhiteSpace(Email) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your email" @bind-Value="@Email"></InputText>
+            <br>
+            <InputText type="text" class="@((string.IsNullOrWhiteSpace(Password) && SignUpClicked ? "element auth-required" : "element"))" placeholder="Enter your password" @bind-Value="@Password" isPassword="true"></InputText>
+            <br>
+            <button type="button" class="btn-main" style="width: 100%;" title="Sign Up" @onclick="SignUp">Sign Up</button>
+            @if (SignUpAttempted)
             {
-                <p>Sign-up successful!</p>
-            }
-            else
-            {
-                <p>An error occurred during sign-up.<br>Please try again.</p>
+                @if (SignUpSuccessfully)
+                {
+                    <p class="muted" style="margin-top:1rem;">Sign-up successful!</p>
+                }
+                else
+                {
+                    <p class="muted" style="margin-top:1rem;">An error occurred during sign-up.<br>Please try again.</p>
+                }
             }
         }
-    }
-    else
-    {
-        <br>
-        <h3>Loading...</h3>
-    }
+        else
+        {
+            <br>
+            <h3 class="muted">Loading...</h3>
+        }
+    </div>
 </div>
 
 

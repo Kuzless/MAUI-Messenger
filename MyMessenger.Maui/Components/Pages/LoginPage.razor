@@ -4,25 +4,27 @@
 @inject AuthService authService
 @inject NavigationManager NavigationManager
 
-<div class="auth-container">
-    @if (IsLoaded)
-    {
-        <h3>Login</h3>
-        <InputText type="text" class="@((string.IsNullOrWhiteSpace(Email) && ButtonClicked ? "element auth-required" : "element"))" placeholder="Enter your email" @bind-Value="@Email"></InputText>
-        <br>
-        <InputText type="text" class="@((string.IsNullOrWhiteSpace(Password) && ButtonClicked ? "element auth-required" : "element"))" placeholder="Enter your password" @bind-Value="@Password" isPassword="true"></InputText>
-        <br>
-        <button type="submit" class="btn-primary" style="width: 350px" title="Login" @onclick="Login">Login</button>
-        @if (!LoginSuccessfully)
+<div class="flex-center" style="min-height: 80vh;">
+    <div class="card" style="width: 370px;">
+        @if (IsLoaded)
         {
-            <p>An error occurred.<br>Please recheck your credentials.</p>
+            <h2 class="text-accent" style="margin-bottom:1.5rem;">Login</h2>
+            <InputText type="text" class="@((string.IsNullOrWhiteSpace(Email) && ButtonClicked ? "element auth-required" : "element"))" placeholder="Enter your email" @bind-Value="@Email"></InputText>
+            <br>
+            <InputText type="text" class="@((string.IsNullOrWhiteSpace(Password) && ButtonClicked ? "element auth-required" : "element"))" placeholder="Enter your password" @bind-Value="@Password" isPassword="true"></InputText>
+            <br>
+            <button type="submit" class="btn-main" style="width: 100%;" title="Login" @onclick="Login">Login</button>
+            @if (!LoginSuccessfully)
+            {
+                <p class="muted" style="margin-top:1rem;">An error occurred.<br>Please recheck your credentials.</p>
+            }
         }
-    }
-    else
-    {
-        <br>
-        <h3>Loading...</h3>
-    }
+        else
+        {
+            <br>
+            <h3 class="muted">Loading...</h3>
+        }
+    </div>
 </div>
 
 

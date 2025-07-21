@@ -2,34 +2,36 @@
 @using System.IO
 @using MyMessenger.Maui.Services.PageService
 
-<h1 class="mt-5">Settings</h1>
-
-@if (IsLoaded)
-{
-    <div class="container mt-3">
-        <div class="row">
-            <div class="col-md-4">
-                <img src="@userSettings.user.Image" alt="Avatar" class="img-fluid rounded" />
-                <InputFile accept="image/*" OnChange="@userSettings.DownloadImage" class="mt-3" style="position: relative; overflow: hidden;">
-                    <button type="button" class="btn btn-primary">Select Image</button>
-                </InputFile>
+<div class="card" style="max-width:700px;margin:2rem auto;">
+    <h2 class="text-accent" style="margin-bottom:1.5rem;">Settings</h2>
+    @if (IsLoaded)
+    {
+        <div class="flex-center gap-2" style="flex-wrap:wrap;">
+            <div style="flex:1;min-width:220px;max-width:260px;">
+                <img src="@userSettings.user.Image" alt="Avatar" style="width:100%;border-radius:var(--border-radius);box-shadow:var(--shadow);" />
             </div>
-            <div class="col-md-8">
-                <label for="name" class="form-label">Name:</label>
-                <input id="name" @bind="@userSettings.user.Name" class="form-control" />
-                <label for="phoneNumber" class="form-label mt-3">Phone Number:</label>
-                <input id="phoneNumber" @bind="@userSettings.user.PhoneNumber" class="form-control" />
-                <button @onclick="userSettings.UpdateInfo" class="btn btn-primary mt-3">Save</button>
+            <div style="flex:2;min-width:220px;">
+                <label for="name" style="font-weight:600;">Name:</label>
+                <input id="name" @bind="@userSettings.user.Name" class="form-control" style="margin-bottom:1rem;" />
+                <label for="phoneNumber" style="font-weight:600;">Phone Number:</label>
+                <input id="phoneNumber" @bind="@userSettings.user.PhoneNumber" class="form-control" style="margin-bottom:1rem;" />
+                <div class="flex-center" style="gap:1rem;">
+                    <label style="flex:1; margin-bottom:0;">
+                        <input type="file" accept="image/*" style="display:none;" @OnChange="userSettings.DownloadImage" />
+                        <span class="btn-main" style="width:100%;display:inline-block;cursor:pointer;text-align:center;">Select Image</span>
+                    </label>
+                    <button @onclick="userSettings.UpdateInfo" class="btn-main" style="flex:1;">Save</button>
+                </div>
             </div>
         </div>
-    </div>
-}
-else
-{
-    <div class="container mt-3">
-        <h3>Loading...</h3>
-    </div>
-}
+    }
+    else
+    {
+        <div class="flex-center" style="min-height:120px;">
+            <h3 class="muted">Loading...</h3>
+        </div>
+    }
+</div>
 
 @code {
     [Inject] private UserSettingsService userSettings { get; set; }

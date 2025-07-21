@@ -6,34 +6,38 @@
 @using MyMessenger.Maui.Services.PageService
 @inject UserService userService
 
-<h1>Users</h1>
-@if (IsLoaded) {
-    <button @onclick="userPageService.OpenPopup">Parameters</button>
+<div class="card" style="margin-top:2rem;">
+    <h1 class="text-accent">Users</h1>
+    @if (IsLoaded) {
+        <div style="display:flex;justify-content:flex-end;gap:1rem;margin-bottom:1rem;">
+            <button class="btn-main" style="width:180px;" @onclick="userPageService.OpenPopup">Parameters</button>
+        </div>
 
-    <SfGrid DataSource="@userPageService.UsersList">
-        <GridColumns>
-            <GridColumn Field="@nameof(UserDTO.Name)" HeaderText="Name"></GridColumn>
-            <GridColumn Field="@nameof(UserDTO.UserName)" HeaderText="UserName"></GridColumn>
-            <GridColumn Field="@nameof(UserDTO.Email)" HeaderText="Email"></GridColumn>
-            <GridColumn Field="@nameof(UserDTO.PhoneNumber)" HeaderText="Phone"></GridColumn>
-        </GridColumns>
-    </SfGrid>
-    <BlazorPager CurrentPage="@userPageService.currentPage"
-                 PageCount="@userPageService.numberOfPages"
-                 OnPageChanged="(async x => { userPageService.currentPage = x; userPageService.ChangePage(); })"
-                 ShowFirstLast="false"
-                 ShowPageNumbers="true"
-                 VisiblePages=userPageService.pageSize />
+        <SfGrid DataSource="@userPageService.UsersList">
+            <GridColumns>
+                <GridColumn Field="@nameof(UserDTO.Name)" HeaderText="Name"></GridColumn>
+                <GridColumn Field="@nameof(UserDTO.UserName)" HeaderText="UserName"></GridColumn>
+                <GridColumn Field="@nameof(UserDTO.Email)" HeaderText="Email"></GridColumn>
+                <GridColumn Field="@nameof(UserDTO.PhoneNumber)" HeaderText="Phone"></GridColumn>
+            </GridColumns>
+        </SfGrid>
+        <BlazorPager CurrentPage="@userPageService.currentPage"
+                     PageCount="@userPageService.numberOfPages"
+                     OnPageChanged="(async x => { userPageService.currentPage = x; userPageService.ChangePage(); })"
+                     ShowFirstLast="false"
+                     ShowPageNumbers="true"
+                     VisiblePages=userPageService.pageSize />
 
-    if (userPageService.isWindowVisible)
-    {
-        <GenericParameters Columns="@userPageService.Columns" CurrentPage="@userPageService.CurrentPage" OnSave="@userPageService.SaveChanges" OnClose="@userPageService.ClosePopup"></GenericParameters>
+        if (userPageService.isWindowVisible)
+        {
+            <GenericParameters Columns="@userPageService.Columns" CurrentPage="@userPageService.CurrentPage" OnSave="@userPageService.SaveChanges" OnClose="@userPageService.ClosePopup"></GenericParameters>
+        }
     }
-} 
-else {
-    <br>
-    <h3>Loading...</h3>
-}
+    else {
+        <br>
+        <h3 class="muted">Loading...</h3>
+    }
+</div>
 
 @code {
     [Inject] private UserPageService userPageService { get; set; }

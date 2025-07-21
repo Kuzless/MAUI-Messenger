@@ -6,67 +6,84 @@
 @using MyMessenger.Maui.Services.PageService
 @inject NavigationManager NavigationManager
 
-<h1>Chats</h1>
-@if (IsLoaded)
-{
-    <button @onclick="chatPageService.OpenPopup">Parameters</button>
-
-    <SfGrid DataSource="@chatPageService.ChatsList">
-        <GridColumns>
-            <GridColumn Field="@nameof(ChatDTO.Id)" HeaderText="Id"></GridColumn>
-            <GridColumn Field="@nameof(ChatDTO.Name)" HeaderText="Name"></GridColumn>
-            <GridColumn>
-                <Template>
-                    <button @onclick="() => GoToChat(((ChatDTO)context).Id)">Open</button>
-                    <button @onclick="() => chatPageService.ShowInviteToChat((ChatDTO)context)">Invite</button>
-                    <button @onclick="() => chatPageService.LeaveChat(((ChatDTO)context).Id)">Leave</button>
-                    <button @onclick="() => chatPageService.DeleteChat(((ChatDTO)context).Id)">Delete</button>
-                </Template>
-            </GridColumn>
-        </GridColumns>
-    </SfGrid>
-
-
-    <button @onclick="chatPageService.ChangeAddChatVisibility">Add</button>
-
-    @if (chatPageService.showAddMenu)
+<div class="card" style="margin-top:2rem;">
+    <h1 class="text-accent">Chats</h1>
+    @if (IsLoaded)
     {
-        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: grey; padding: 20px; border-block-color: black;">
-            <label for="chatName">Chat Name:</label>
-            <input type="text" id="chatName" @bind="chatPageService.newChatName" required />
-            <div style="margin-top: 10px;">
-                <button @onclick="chatPageService.AddChat">Save</button>
-            </div>
+        <div style="display:flex;justify-content:flex-end;gap:1rem;margin-bottom:1rem;">
+            <button class="btn-main" style="width:180px;" @onclick="chatPageService.OpenPopup">Parameters</button>
         </div>
-    }
-    @if (chatPageService.showInviteMenu)
-    {
-        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: grey; padding: 20px; border-block-color: black;">
-            <label for="userName">Username:</label>
-            <input type="text" id="userName" @bind="chatPageService.userNameToInvite" required />
-            <div style="margin-top: 10px;">
-                <button @onclick="chatPageService.InviteToChat">Invite</button>
-                <button @onclick="chatPageService.CloseInviteMenu">Close</button>
-            </div>
-        </div>
-    }
-    <BlazorPager CurrentPage="@chatPageService.currentPage"
-                 PageCount="@chatPageService.numberOfPages"
-                 OnPageChanged="(async x => { chatPageService.currentPage = x; chatPageService.ChangePage(); })"
-                 ShowFirstLast="false"
-                 ShowPageNumbers="true"
-                 VisiblePages=chatPageService.pageSize />
 
-    if (chatPageService.isWindowVisible)
-    {
-        <GenericParameters Columns="@chatPageService.Columns" CurrentPage="@chatPageService.CurrentPage" OnSave="@chatPageService.SaveChanges" OnClose="@chatPageService.ClosePopup"></GenericParameters>
+        <SfGrid DataSource="@chatPageService.ChatsList">
+            <GridColumns>
+                <GridColumn Field="@nameof(ChatDTO.Id)" HeaderText="Id"></GridColumn>
+                <GridColumn Field="@nameof(ChatDTO.Name)" HeaderText="Name"></GridColumn>
+                <GridColumn>
+                    <Template>
+                        <div class="grid-actions" style="justify-content:center;">
+                            <button class="btn-main" @onclick="() => GoToChat(((ChatDTO)context).Id)">Open</button>
+                            <button class="btn-main" @onclick="() => chatPageService.ShowInviteToChat((ChatDTO)context)">Invite</button>
+                            <button class="btn-main" @onclick="() => chatPageService.LeaveChat(((ChatDTO)context).Id)">Leave</button>
+                            <button class="btn-main" @onclick="() => chatPageService.DeleteChat(((ChatDTO)context).Id)">Delete</button>
+                        </div>
+                    </Template>
+                </GridColumn>
+            </GridColumns>
+        </SfGrid>
+
+        <div style="display:flex;justify-content:flex-end;gap:1rem;">
+            <button class="btn-main" style="width:180px;margin-top:1rem;" @onclick="chatPageService.ChangeAddChatVisibility">Add</button>
+        </div>
+
+        @if (chatPageService.showAddMenu)
+        {
+            <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;">
+                <div class="card flex-center" style="position:relative;min-width:320px;">
+                    <button @onclick="chatPageService.ChangeAddChatVisibility" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:2rem;line-height:1;color:#888;cursor:pointer;z-index:1001;">×</button>
+                    <div>
+                        <label for="chatName">Chat Name:</label>
+                        <input type="text" id="chatName" @bind="chatPageService.newChatName" required />
+                        <div class="flex-center" style="margin-top: 10px;">
+                            <button class="btn-main" @onclick="chatPageService.AddChat">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (chatPageService.showInviteMenu)
+        {
+            <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;">
+                <div class="card flex-center" style="position:relative;min-width:320px;">
+                    <button @onclick="chatPageService.CloseInviteMenu" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:2rem;line-height:1;color:#888;cursor:pointer;z-index:1001;">×</button>
+                    <div>
+                        <label for="userName">Username:</label>
+                        <input type="text" id="userName" @bind="chatPageService.userNameToInvite" required />
+                        <div class="flex-center" style="margin-top: 10px;">
+                            <button class="btn-main" @onclick="chatPageService.InviteToChat">Invite</button>
+                            <button class="btn-main" style="margin-left: 1rem;" @onclick="chatPageService.CloseInviteMenu">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <BlazorPager CurrentPage="@chatPageService.currentPage"
+                     PageCount="@chatPageService.numberOfPages"
+                     OnPageChanged="(async x => { chatPageService.currentPage = x; chatPageService.ChangePage(); })"
+                     ShowFirstLast="false"
+                     ShowPageNumbers="true"
+                     VisiblePages=chatPageService.pageSize />
+
+        if (chatPageService.isWindowVisible)
+        {
+            <GenericParameters Columns="@chatPageService.Columns" CurrentPage="@chatPageService.CurrentPage" OnSave="@chatPageService.SaveChanges" OnClose="@chatPageService.ClosePopup"></GenericParameters>
+        }
     }
-}
-else
-{
-    <br>
-    <h3>Loading...</h3>
-}
+    else
+    {
+        <br>
+        <h3 class="muted">Loading...</h3>
+    }
+</div>
 
 @code {
     [Inject] private ChatPageService chatPageService { get; set; }
